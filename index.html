@@ -42,10 +42,20 @@
 
   <style>
     /* Custom scrollbars */
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: #f1f5f9; }
-    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    ::-webkit-scrollbar { 
+        width: 6px; 
+        height: 6px; 
+    }
+    ::-webkit-scrollbar-track { 
+        background: #f1f5f9; 
+    }
+    ::-webkit-scrollbar-thumb { 
+        background: #cbd5e1; 
+        border-radius: 4px; 
+    }
+    ::-webkit-scrollbar-thumb:hover { 
+        background: #94a3b8; 
+    }
     .glass-card {
       background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(10px);
@@ -1008,8 +1018,6 @@
         lbl_comm_purpose: "Committee Mandate / Purpose",
         placeholder_comm_purpose: "e.g. Collective equipment purchase",
         btn_create_comm: "Create Committee",
-
-        // JS Messages
         js_reset_msg: "Application reset to initial seed state",
         js_mgr_active: "Manager mode active. 2FA dual-authorization enabled.",
         js_emp_active: "Field Officer mode active.",
@@ -1181,8 +1189,6 @@
         lbl_comm_purpose: "समिति का उद्देश्य",
         placeholder_comm_purpose: "उदा. सामूहिक उपकरण खरीद",
         btn_create_comm: "समिति बनाएं",
-
-        // JS Messages
         js_reset_msg: "एप्लिकेशन प्रारंभिक डेटा पर रीसेट हो गया है",
         js_mgr_active: "मैनेजर मोड सक्रिय। 2FA दोहरा प्रमाणीकरण सक्षम है।",
         js_emp_active: "फील्ड ऑफिसर मोड सक्रिय।",
@@ -1237,32 +1243,188 @@
       lang: 'en', // 'en' or 'hi'
       voiceFeedback: true,
       shgs: [
-        { id: 'SHG-101', name: 'Pragati Mahila SHG', location: 'Ward 4, Kalyanpur', leader: 'Sunita Sharma', createdDate: '2026-01-15' },
-        { id: 'SHG-102', name: 'Udaan Krishi SHG', location: 'Bikramganj Agri Zone', leader: 'Manju Devi', createdDate: '2026-02-10' },
-        { id: 'SHG-103', name: 'Shakti Vikas Samuh', location: 'Danapur Sector 3', leader: 'Kavita Kumari', createdDate: '2026-03-01' }
+        { 
+          id: 'SHG-101', 
+          name: 'Pragati Mahila SHG', 
+          location: 'Ward 4, Kalyanpur', 
+          leader: 'Sunita Sharma', 
+          createdDate: '2026-01-15' 
+        },
+        { 
+          id: 'SHG-102', 
+          name: 'Udaan Krishi SHG', 
+          location: 'Bikramganj Agri Zone', 
+          leader: 'Manju Devi', 
+          createdDate: '2026-02-10' 
+        },
+        { 
+          id: 'SHG-103', 
+          name: 'Shakti Vikas Samuh', 
+          location: 'Danapur Sector 3', 
+          leader: 'Kavita Kumari', 
+          createdDate: '2026-03-01' 
+        }
       ],
       committees: [
-        { id: 'COM-1', shgId: 'SHG-101', name: 'Emergency Health & Savings Fund', purpose: 'Immediate medical assistance & contingency buffer' },
-        { id: 'COM-2', shgId: 'SHG-101', name: 'Micro-Enterprise & Craft Collective', purpose: 'Artisan loans for raw materials & handlooms' },
-        { id: 'COM-3', shgId: 'SHG-102', name: 'Agritech & Seed Capital Committee', purpose: 'High-yield seeds, solar pumps & collective fertilizer purchase' },
-        { id: 'COM-4', shgId: 'SHG-103', name: 'Education & Skill Development Fund', purpose: 'Children schooling loans & vocational sewing courses' }
+        { 
+          id: 'COM-1', 
+          shgId: 'SHG-101', 
+          name: 'Emergency Health & Savings Fund', 
+          purpose: 'Immediate medical assistance & contingency buffer' 
+        },
+        { 
+          id: 'COM-2', 
+          shgId: 'SHG-101', 
+          name: 'Micro-Enterprise & Craft Collective', 
+          purpose: 'Artisan loans for raw materials & handlooms' 
+        },
+        { 
+          id: 'COM-3', 
+          shgId: 'SHG-102', 
+          name: 'Agritech & Seed Capital Committee', 
+          purpose: 'High-yield seeds, solar pumps & collective fertilizer purchase' 
+        },
+        { 
+          id: 'COM-4', 
+          shgId: 'SHG-103', 
+          name: 'Education & Skill Development Fund', 
+          purpose: 'Children schooling loans & vocational sewing courses' 
+        }
       ],
       members: [
-        { id: 'MEM-8801', name: 'Radha Devi', citizenId: '•••• •••• 9821', phone: '+91 98350 11223', committeeIds: ['COM-1', 'COM-2'], joinedDate: '2026-01-20' },
-        { id: 'MEM-8802', name: 'Sushila Singh', citizenId: '•••• •••• 4410', phone: '+91 94702 44331', committeeIds: ['COM-2', 'COM-3'], joinedDate: '2026-02-12' },
-        { id: 'MEM-8803', name: 'Pooja Verma', citizenId: '•••• •••• 1092', phone: '+91 91223 88776', committeeIds: ['COM-1', 'COM-4'], joinedDate: '2026-02-25' },
-        { id: 'MEM-8804', name: 'Geeta Kumari', citizenId: '•••• •••• 6534', phone: '+91 99341 55667', committeeIds: ['COM-3', 'COM-4'], joinedDate: '2026-03-05' }
+        { 
+          id: 'MEM-8801', 
+          name: 'Radha Devi', 
+          citizenId: '•••• •••• 9821', 
+          phone: '+91 98350 11223', 
+          committeeIds: ['COM-1', 'COM-2'], 
+          joinedDate: '2026-01-20' 
+        },
+        { 
+          id: 'MEM-8802', 
+          name: 'Sushila Singh', 
+          citizenId: '•••• •••• 4410', 
+          phone: '+91 94702 44331', 
+          committeeIds: ['COM-2', 'COM-3'], 
+          joinedDate: '2026-02-12' 
+        },
+        { 
+          id: 'MEM-8803', 
+          name: 'Pooja Verma', 
+          citizenId: '•••• •••• 1092', 
+          phone: '+91 91223 88776', 
+          committeeIds: ['COM-1', 'COM-4'], 
+          joinedDate: '2026-02-25' 
+        },
+        { 
+          id: 'MEM-8804', 
+          name: 'Geeta Kumari', 
+          citizenId: '•••• •••• 6534', 
+          phone: '+91 99341 55667', 
+          committeeIds: ['COM-3', 'COM-4'], 
+          joinedDate: '2026-03-05' 
+        }
       ],
       loans: [
-        { id: 'LN-501', memberId: 'MEM-8801', committeeId: 'COM-2', principal: 25000, remaining: 15000, tenureMonths: 12, interestRate: 6.0, status: 'ACTIVE', disbursedAt: '2026-04-10' },
-        { id: 'LN-502', memberId: 'MEM-8802', committeeId: 'COM-3', principal: 40000, remaining: 32000, tenureMonths: 18, interestRate: 7.5, status: 'ACTIVE', disbursedAt: '2026-05-02' }
+        { 
+          id: 'LN-501', 
+          memberId: 'MEM-8801', 
+          committeeId: 'COM-2', 
+          principal: 25000, 
+          remaining: 15000, 
+          tenureMonths: 12, 
+          interestRate: 6.0, 
+          status: 'ACTIVE', 
+          disbursedAt: '2026-04-10' 
+        },
+        { 
+          id: 'LN-502', 
+          memberId: 'MEM-8802', 
+          committeeId: 'COM-3', 
+          principal: 40000, 
+          remaining: 32000, 
+          tenureMonths: 18, 
+          interestRate: 7.5, 
+          status: 'ACTIVE', 
+          disbursedAt: '2026-05-02' 
+        }
       ],
       transactions: [
-        { id: 'TX-901', memberId: 'MEM-8801', committeeId: 'COM-1', type: 'SAVINGS', loanId: null, amount: 2500, paymentMode: 'UPI', officerId: 'EMP-OFFICER-419', status: 'APPROVED', managerPinAuth: true, approverId: 'MGR-LEAD-01', timestamp: '2026-07-10 10:30 AM', blockHash: '0x8f2d91a...c71' },
-        { id: 'TX-902', memberId: 'MEM-8801', committeeId: 'COM-2', type: 'LOAN_DISBURSAL', loanId: 'LN-501', amount: 25000, paymentMode: 'BANK_TRANSFER', officerId: 'EMP-OFFICER-419', status: 'APPROVED', managerPinAuth: true, approverId: 'MGR-LEAD-01', timestamp: '2026-07-15 02:15 PM', blockHash: '0x3e1b74a...902' },
-        { id: 'TX-903', memberId: 'MEM-8801', committeeId: 'COM-2', type: 'LOAN_REPAYMENT', loanId: 'LN-501', amount: 5000, paymentMode: 'CASH', officerId: 'EMP-OFFICER-419', status: 'APPROVED', managerPinAuth: true, approverId: 'MGR-LEAD-01', timestamp: '2026-08-01 11:45 AM', blockHash: '0x5c90ab2...44f' },
-        { id: 'TX-904', memberId: 'MEM-8803', committeeId: 'COM-4', type: 'SAVINGS', loanId: null, amount: 3000, paymentMode: 'UPI', officerId: 'EMP-OFFICER-419', status: 'PENDING_APPROVAL', managerPinAuth: false, approverId: null, timestamp: '2026-08-22 04:20 PM', blockHash: 'UNCOMMITTED' },
-        { id: 'TX-905', memberId: 'MEM-8802', committeeId: 'COM-3', type: 'LOAN_REPAYMENT', loanId: 'LN-502', amount: 4000, paymentMode: 'DEBIT_CARD', officerId: 'EMP-OFFICER-419', status: 'PENDING_APPROVAL', managerPinAuth: false, approverId: null, timestamp: '2026-08-23 09:10 AM', blockHash: 'UNCOMMITTED' }
+        { 
+          id: 'TX-901', 
+          memberId: 'MEM-8801', 
+          committeeId: 'COM-1', 
+          type: 'SAVINGS', 
+          loanId: null, 
+          amount: 2500, 
+          paymentMode: 'UPI', 
+          officerId: 'EMP-OFFICER-419', 
+          status: 'APPROVED', 
+          managerPinAuth: true, 
+          approverId: 'MGR-LEAD-01', 
+          timestamp: '2026-07-10 10:30 AM', 
+          blockHash: '0x8f2d91a...c71' 
+        },
+        { 
+          id: 'TX-902', 
+          memberId: 'MEM-8801', 
+          committeeId: 'COM-2', 
+          type: 'LOAN_DISBURSAL', 
+          loanId: 'LN-501', 
+          amount: 25000, 
+          paymentMode: 'BANK_TRANSFER', 
+          officerId: 'EMP-OFFICER-419', 
+          status: 'APPROVED', 
+          managerPinAuth: true, 
+          approverId: 'MGR-LEAD-01', 
+          timestamp: '2026-07-15 02:15 PM', 
+          blockHash: '0x3e1b74a...902' 
+        },
+        { 
+          id: 'TX-903', 
+          memberId: 'MEM-8801', 
+          committeeId: 'COM-2', 
+          type: 'LOAN_REPAYMENT', 
+          loanId: 'LN-501', 
+          amount: 5000, 
+          paymentMode: 'CASH', 
+          officerId: 'EMP-OFFICER-419', 
+          status: 'APPROVED', 
+          managerPinAuth: true, 
+          approverId: 'MGR-LEAD-01', 
+          timestamp: '2026-08-01 11:45 AM', 
+          blockHash: '0x5c90ab2...44f' 
+        },
+        { 
+          id: 'TX-904', 
+          memberId: 'MEM-8803', 
+          committeeId: 'COM-4', 
+          type: 'SAVINGS', 
+          loanId: null, 
+          amount: 3000, 
+          paymentMode: 'UPI', 
+          officerId: 'EMP-OFFICER-419', 
+          status: 'PENDING_APPROVAL', 
+          managerPinAuth: false, 
+          approverId: null, 
+          timestamp: '2026-08-22 04:20 PM', 
+          blockHash: 'UNCOMMITTED' 
+        },
+        { 
+          id: 'TX-905', 
+          memberId: 'MEM-8802', 
+          committeeId: 'COM-3', 
+          type: 'LOAN_REPAYMENT', 
+          loanId: 'LN-502', 
+          amount: 4000, 
+          paymentMode: 'DEBIT_CARD', 
+          officerId: 'EMP-OFFICER-419', 
+          status: 'PENDING_APPROVAL', 
+          managerPinAuth: false, 
+          approverId: null, 
+          timestamp: '2026-08-23 09:10 AM', 
+          blockHash: 'UNCOMMITTED' 
+        }
       ]
     };
 
@@ -1313,6 +1475,9 @@
       renderAllTransactionsTable();
       renderApprovalsDesk();
       populateDropdowns();
+      
+      // FIX IMPLEMENTED HERE: Call initCharts to destroy and recreate charts with updated labels
+      initCharts();
     }
 
     function applyTranslations() {
