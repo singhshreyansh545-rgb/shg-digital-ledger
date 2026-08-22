@@ -57,6 +57,15 @@
       0%, 100% { opacity: 1; transform: scale(1); }
       50% { opacity: 0.4; transform: scale(1.15); }
     }
+    .mic-recording {
+      animation: pulse-red 1.5s infinite;
+      color: #ef4444 !important;
+    }
+    @keyframes pulse-red {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.2); opacity: 0.7; }
+      100% { transform: scale(1); opacity: 1; }
+    }
   </style>
 </head>
 <body class="h-full font-sans text-slate-800 antialiased flex flex-col">
@@ -72,10 +81,10 @@
         </div>
         <div>
           <div class="flex items-center space-x-2">
-            <span class="text-xl font-extrabold tracking-tight text-white">VISHWAS</span>
-            <span class="text-[10px] uppercase font-bold tracking-widest bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full border border-emerald-500/30">SHG Ledger v2.4</span>
+            <span class="text-xl font-extrabold tracking-tight text-white" data-i18n="app_title">VISHWAS</span>
+            <span class="text-[10px] uppercase font-bold tracking-widest bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full border border-emerald-500/30" data-i18n="app_version">SHG Ledger v2.4</span>
           </div>
-          <p class="text-xs text-slate-400 hidden sm:block">Empowering Self-Help Groups with Dual-Key Governance</p>
+          <p class="text-xs text-slate-400 hidden sm:block" data-i18n="app_subtitle">Empowering Self-Help Groups with Dual-Key Governance</p>
         </div>
       </div>
 
@@ -83,23 +92,29 @@
       <div class="flex items-center bg-slate-800/90 p-1 rounded-xl border border-slate-700/80">
         <button id="roleBtnEmployee" onclick="setRole('EMPLOYEE')" class="flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all bg-emerald-600 text-white shadow-sm">
           <i data-lucide="user-check" class="w-4 h-4"></i>
-          <span>Field Officer (Maker)</span>
+          <span data-i18n="nav_maker">Field Officer (Maker)</span>
         </button>
         <button id="roleBtnManager" onclick="setRole('MANAGER')" class="flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-300 hover:text-white">
           <i data-lucide="key-round" class="w-4 h-4"></i>
-          <span>SHG Manager (Checker 2FA)</span>
+          <span data-i18n="nav_checker">SHG Manager (Checker 2FA)</span>
           <span id="pendingBadgeNav" class="hidden px-1.5 py-0.2 text-[10px] font-bold bg-amber-500 text-slate-950 rounded-full">0</span>
         </button>
       </div>
 
       <!-- Right Action Toolbar -->
       <div class="flex items-center space-x-3">
-        <button onclick="toggleAudioVoicePrompt()" id="voiceToggleBtn" class="p-2 rounded-lg bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 transition" title="Toggle Voice Feedback (Hindi/English)">
+        <!-- Language Switcher -->
+        <button onclick="toggleLanguage()" id="langToggleBtn" class="flex items-center space-x-1 p-2 rounded-lg bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 transition" title="Switch Language / भाषा बदलें">
+          <i data-lucide="languages" class="w-5 h-5 text-indigo-400"></i>
+          <span id="currentLangDisp" class="text-xs font-bold uppercase">EN</span>
+        </button>
+
+        <button onclick="toggleAudioVoicePrompt()" id="voiceToggleBtn" class="p-2 rounded-lg bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 transition" title="Toggle Voice Feedback">
           <i data-lucide="volume-2" class="w-5 h-5 text-emerald-400"></i>
         </button>
         <button onclick="openNewTransactionModal()" class="hidden sm:flex items-center space-x-2 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold px-3.5 py-2 rounded-lg text-xs transition shadow-md shadow-emerald-500/20">
           <i data-lucide="plus-circle" class="w-4 h-4"></i>
-          <span>New Entry</span>
+          <span data-i18n="nav_new_entry">New Entry</span>
         </button>
         <button onclick="resetToSampleData()" class="p-2 text-slate-400 hover:text-rose-400 transition" title="Reset Demo Data">
           <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
@@ -113,23 +128,23 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex space-x-1 sm:space-x-4 overflow-x-auto py-2">
       <button onclick="switchTab('dashboard')" id="tabBtn-dashboard" class="tab-btn active-tab flex items-center space-x-2 px-4 py-2 rounded-lg text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200">
         <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
-        <span>Dashboard</span>
+        <span data-i18n="tab_dashboard">Dashboard</span>
       </button>
       <button onclick="switchTab('hierarchy')" id="tabBtn-hierarchy" class="tab-btn flex items-center space-x-2 px-4 py-2 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100">
         <i data-lucide="network" class="w-4 h-4"></i>
-        <span>SHGs & Committees</span>
+        <span data-i18n="tab_hierarchy">SHGs & Committees</span>
       </button>
       <button onclick="switchTab('members')" id="tabBtn-members" class="tab-btn flex items-center space-x-2 px-4 py-2 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100">
         <i data-lucide="users" class="w-4 h-4"></i>
-        <span>Member 360° Directory</span>
+        <span data-i18n="tab_members">Member 360° Directory</span>
       </button>
       <button onclick="switchTab('transactions')" id="tabBtn-transactions" class="tab-btn flex items-center space-x-2 px-4 py-2 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100">
         <i data-lucide="receipt" class="w-4 h-4"></i>
-        <span>Ledger & Transactions</span>
+        <span data-i18n="tab_ledger">Ledger & Transactions</span>
       </button>
       <button onclick="switchTab('approvals')" id="tabBtn-approvals" class="tab-btn relative flex items-center space-x-2 px-4 py-2 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100">
         <i data-lucide="shield-alert" class="w-4 h-4"></i>
-        <span>2FA Approval Desk</span>
+        <span data-i18n="tab_approvals">2FA Approval Desk</span>
         <span id="pendingBadgeTab" class="hidden px-2 py-0.5 text-[10px] font-bold bg-amber-500 text-slate-950 rounded-full">0 Pending</span>
       </button>
     </div>
@@ -146,19 +161,19 @@
         </div>
         <div>
           <h4 class="text-sm font-bold text-white flex items-center gap-2">
-            <span id="currentRoleText">Current Mode: Field Officer (Maker)</span>
-            <span class="text-[10px] font-mono px-2 py-0.5 bg-slate-700 text-emerald-300 rounded">2FA Manager Default PIN: 8899</span>
+            <span id="currentRoleText" data-i18n="mode_maker">Current Mode: Field Officer (Maker)</span>
+            <span class="text-[10px] font-mono px-2 py-0.5 bg-slate-700 text-emerald-300 rounded" data-i18n="default_pin_notice">2FA Manager Default PIN: 8899</span>
           </h4>
-          <p class="text-xs text-slate-300">Initiate savings, loan disbursals, or repayments. All entries require Manager 2FA PIN authorization before ledger settlement.</p>
+          <p class="text-xs text-slate-300" data-i18n="banner_desc">Initiate savings, loan disbursals, or repayments. All entries require Manager 2FA PIN authorization before ledger settlement.</p>
         </div>
       </div>
       <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
         <button onclick="openNewMemberModal()" class="px-3.5 py-1.5 bg-slate-700 hover:bg-slate-600 text-white text-xs font-semibold rounded-lg border border-slate-600 transition flex items-center space-x-1.5">
           <i data-lucide="user-plus" class="w-4 h-4 text-emerald-400"></i>
-          <span>Enroll Member</span>
+          <span data-i18n="btn_enroll_member">Enroll Member</span>
         </button>
         <button onclick="openNewTransactionModal()" class="px-3.5 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-slate-950 text-xs font-bold rounded-lg transition shadow">
-          <span>+ Initiate Transaction</span>
+          <span data-i18n="btn_initiate_tx">+ Initiate Transaction</span>
         </button>
       </div>
     </div>
@@ -173,7 +188,7 @@
         <!-- Metric 1 -->
         <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm relative overflow-hidden">
           <div class="flex items-center justify-between">
-            <p class="text-xs font-semibold tracking-wide uppercase text-slate-500">Total Savings Pool</p>
+            <p class="text-xs font-semibold tracking-wide uppercase text-slate-500" data-i18n="metric_savings">Total Savings Pool</p>
             <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
               <i data-lucide="piggy-bank" class="w-5 h-5"></i>
             </div>
@@ -181,14 +196,14 @@
           <h3 id="statTotalSavings" class="text-2xl font-extrabold text-slate-900 mt-3 font-mono">₹0</h3>
           <p class="text-xs text-emerald-600 font-medium mt-1 flex items-center gap-1">
             <i data-lucide="trending-up" class="w-3.5 h-3.5"></i>
-            <span>Verified across active committees</span>
+            <span data-i18n="metric_savings_sub">Verified across active committees</span>
           </p>
         </div>
 
         <!-- Metric 2 -->
         <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm relative overflow-hidden">
           <div class="flex items-center justify-between">
-            <p class="text-xs font-semibold tracking-wide uppercase text-slate-500">Active Loan Book</p>
+            <p class="text-xs font-semibold tracking-wide uppercase text-slate-500" data-i18n="metric_loans">Active Loan Book</p>
             <div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
               <i data-lucide="landmark" class="w-5 h-5"></i>
             </div>
@@ -203,7 +218,7 @@
         <!-- Metric 3 -->
         <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm relative overflow-hidden">
           <div class="flex items-center justify-between">
-            <p class="text-xs font-semibold tracking-wide uppercase text-slate-500">Enrolled Members</p>
+            <p class="text-xs font-semibold tracking-wide uppercase text-slate-500" data-i18n="metric_members">Enrolled Members</p>
             <div class="w-9 h-9 rounded-xl bg-violet-50 text-violet-600 flex items-center justify-center">
               <i data-lucide="users" class="w-5 h-5"></i>
             </div>
@@ -217,17 +232,17 @@
         <!-- Metric 4: 2FA Pending -->
         <div class="bg-white rounded-2xl p-5 border border-amber-200 bg-amber-50/40 shadow-sm relative overflow-hidden cursor-pointer" onclick="switchTab('approvals')">
           <div class="flex items-center justify-between">
-            <p class="text-xs font-semibold tracking-wide uppercase text-amber-800">2FA Approvals Pending</p>
+            <p class="text-xs font-semibold tracking-wide uppercase text-amber-800" data-i18n="metric_pending">2FA Approvals Pending</p>
             <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center">
               <i data-lucide="shield-alert" class="w-5 h-5"></i>
             </div>
           </div>
           <div class="flex items-baseline space-x-2 mt-3">
             <h3 id="statPendingApprovals" class="text-2xl font-extrabold text-amber-900 font-mono">0</h3>
-            <span class="text-xs font-bold text-amber-700">Awaiting Manager PIN</span>
+            <span class="text-xs font-bold text-amber-700" data-i18n="metric_pending_sub">Awaiting Manager PIN</span>
           </div>
           <p class="text-xs text-amber-700 mt-1 flex items-center gap-1 font-semibold">
-            <span>Click to review 2FA queue &rarr;</span>
+            <span data-i18n="metric_pending_click">Click to review 2FA queue &rarr;</span>
           </p>
         </div>
       </div>
@@ -238,10 +253,10 @@
         <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm lg:col-span-2">
           <div class="flex items-center justify-between mb-4">
             <div>
-              <h4 class="text-base font-bold text-slate-900">Capital Flow Analysis</h4>
-              <p class="text-xs text-slate-500">Savings mobilized vs. Loans disbursed & repaid (INR)</p>
+              <h4 class="text-base font-bold text-slate-900" data-i18n="chart_flow_title">Capital Flow Analysis</h4>
+              <p class="text-xs text-slate-500" data-i18n="chart_flow_desc">Savings mobilized vs. Loans disbursed & repaid (INR)</p>
             </div>
-            <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-slate-100 text-slate-700">Live Ledger</span>
+            <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-slate-100 text-slate-700" data-i18n="badge_live_ledger">Live Ledger</span>
           </div>
           <div class="h-64">
             <canvas id="financeFlowChart"></canvas>
@@ -251,15 +266,15 @@
         <!-- Quick Insights & Committee Weight -->
         <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between">
           <div>
-            <h4 class="text-base font-bold text-slate-900 mb-1">Committee Distribution</h4>
-            <p class="text-xs text-slate-500 mb-4">Member participation across functional committees</p>
+            <h4 class="text-base font-bold text-slate-900 mb-1" data-i18n="chart_dist_title">Committee Distribution</h4>
+            <p class="text-xs text-slate-500 mb-4" data-i18n="chart_dist_desc">Member participation across functional committees</p>
             <div class="h-44 flex items-center justify-center">
               <canvas id="committeePieChart"></canvas>
             </div>
           </div>
           <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-            <span>Cross-membership support</span>
-            <span class="font-bold text-emerald-600">Active</span>
+            <span data-i18n="chart_dist_footer">Cross-membership support</span>
+            <span class="font-bold text-emerald-600" data-i18n="status_active">Active</span>
           </div>
         </div>
       </div>
@@ -268,11 +283,11 @@
       <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
         <div class="p-5 border-b border-slate-200 flex items-center justify-between">
           <div>
-            <h4 class="text-base font-bold text-slate-900">Recent Immutable Transactions</h4>
-            <p class="text-xs text-slate-500">Approved transactions cryptographically hashed into the ledger</p>
+            <h4 class="text-base font-bold text-slate-900" data-i18n="table_recent_title">Recent Immutable Transactions</h4>
+            <p class="text-xs text-slate-500" data-i18n="table_recent_desc">Approved transactions cryptographically hashed into the ledger</p>
           </div>
           <button onclick="switchTab('transactions')" class="text-xs font-bold text-emerald-600 hover:text-emerald-700 flex items-center gap-1">
-            <span>View Full Ledger</span>
+            <span data-i18n="btn_view_full_ledger">View Full Ledger</span>
             <i data-lucide="arrow-right" class="w-4 h-4"></i>
           </button>
         </div>
@@ -280,13 +295,13 @@
           <table class="w-full text-left border-collapse text-xs">
             <thead>
               <tr class="bg-slate-50 text-slate-500 font-semibold uppercase tracking-wider border-b border-slate-200">
-                <th class="py-3 px-4">Tx ID & Hash</th>
-                <th class="py-3 px-4">Timestamp</th>
-                <th class="py-3 px-4">Member</th>
-                <th class="py-3 px-4">SHG / Committee</th>
-                <th class="py-3 px-4">Type & Mode</th>
-                <th class="py-3 px-4 text-right">Amount</th>
-                <th class="py-3 px-4 text-center">Status</th>
+                <th class="py-3 px-4" data-i18n="th_tx_hash">Tx ID & Hash</th>
+                <th class="py-3 px-4" data-i18n="th_timestamp">Timestamp</th>
+                <th class="py-3 px-4" data-i18n="th_member">Member</th>
+                <th class="py-3 px-4" data-i18n="th_shg_comm">SHG / Committee</th>
+                <th class="py-3 px-4" data-i18n="th_type_mode">Type & Mode</th>
+                <th class="py-3 px-4 text-right" data-i18n="th_amount">Amount</th>
+                <th class="py-3 px-4 text-center" data-i18n="th_status">Status</th>
               </tr>
             </thead>
             <tbody id="dashboardRecentTxTable" class="divide-y divide-slate-100 font-medium">
@@ -304,17 +319,17 @@
     <section id="view-hierarchy" class="space-y-6 hidden">
       <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h3 class="text-xl font-extrabold text-slate-900">Self-Help Groups & Committees Hierarchy</h3>
-          <p class="text-xs text-slate-500">Hierarchical grouping: Self Help Groups &rarr; Specialized Committees &rarr; Multi-Enrolled Members</p>
+          <h3 class="text-xl font-extrabold text-slate-900" data-i18n="page_shg_title">Self-Help Groups & Committees Hierarchy</h3>
+          <p class="text-xs text-slate-500" data-i18n="page_shg_desc">Hierarchical grouping: Self Help Groups &rarr; Specialized Committees &rarr; Multi-Enrolled Members</p>
         </div>
         <div class="flex items-center gap-2">
           <button onclick="openNewShgModal()" class="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-xl text-xs flex items-center space-x-1.5 shadow">
             <i data-lucide="folder-plus" class="w-4 h-4 text-emerald-400"></i>
-            <span>Create New SHG</span>
+            <span data-i18n="btn_create_shg">Create New SHG</span>
           </button>
           <button onclick="openNewCommitteeModal()" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl text-xs flex items-center space-x-1.5 shadow">
             <i data-lucide="layers" class="w-4 h-4"></i>
-            <span>Add Committee</span>
+            <span data-i18n="btn_add_comm">Add Committee</span>
           </button>
         </div>
       </div>
@@ -331,18 +346,24 @@
     <section id="view-members" class="space-y-6 hidden">
       <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
         <div>
-          <h3 class="text-xl font-extrabold text-slate-900">Member 360° Profile Hub</h3>
-          <p class="text-xs text-slate-500">Look up members by Name, Citizen ID, or Phone to view their joined SHGs, Committees, and Balances</p>
+          <h3 class="text-xl font-extrabold text-slate-900" data-i18n="page_member_title">Member 360° Profile Hub</h3>
+          <p class="text-xs text-slate-500" data-i18n="page_member_desc">Look up members by Name, Citizen ID, or Phone to view their joined SHGs, Committees, and Balances</p>
         </div>
         
         <div class="flex flex-col sm:flex-row items-center gap-3">
-          <div class="relative w-full sm:w-80">
-            <i data-lucide="search" class="w-4 h-4 absolute left-3 top-3 text-slate-400"></i>
-            <input type="text" id="memberSearchInput" oninput="filterMembersList()" placeholder="Search by name, ID (e.g. 8839), phone..." class="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
+          <div class="relative w-full sm:w-80 flex items-center gap-2">
+            <div class="relative flex-1">
+              <i data-lucide="search" class="w-4 h-4 absolute left-3 top-3 text-slate-400"></i>
+              <input type="text" id="memberSearchInput" oninput="filterMembersList()" data-i18n-placeholder="placeholder_search" placeholder="Search by name, ID (e.g. 8839)..." class="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
+            </div>
+            <!-- Voice Dictation Button for Search -->
+            <button type="button" onclick="startVoiceInput('memberSearchInput')" class="p-2 bg-slate-100 hover:bg-slate-200 rounded-xl text-slate-600 transition" title="Voice Search / ध्वनि खोज">
+              <i data-lucide="mic" id="mic-icon-search" class="w-4 h-4"></i>
+            </button>
           </div>
           <button onclick="openNewMemberModal()" class="w-full sm:w-auto px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl flex items-center justify-center space-x-2 shadow">
             <i data-lucide="user-plus" class="w-4 h-4"></i>
-            <span>Enroll New Member</span>
+            <span data-i18n="btn_enroll_member">Enroll New Member</span>
           </button>
         </div>
       </div>
@@ -359,23 +380,23 @@
     <section id="view-transactions" class="space-y-6 hidden">
       <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h3 class="text-xl font-extrabold text-slate-900">Universal Financial Ledger</h3>
-          <p class="text-xs text-slate-500">Complete audit trail with SHA-256 block hash references and 2FA signer metadata</p>
+          <h3 class="text-xl font-extrabold text-slate-900" data-i18n="page_ledger_title">Universal Financial Ledger</h3>
+          <p class="text-xs text-slate-500" data-i18n="page_ledger_desc">Complete audit trail with SHA-256 block hash references and 2FA signer metadata</p>
         </div>
         <div class="flex items-center gap-2">
           <select id="filterTxType" onchange="renderAllTransactionsTable()" class="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-700">
-            <option value="ALL">All Transaction Types</option>
-            <option value="SAVINGS">Savings Deposits</option>
-            <option value="LOAN_DISBURSAL">Loan Disbursals</option>
-            <option value="LOAN_REPAYMENT">Loan Repayments</option>
+            <option value="ALL" data-i18n="opt_all_tx">All Transaction Types</option>
+            <option value="SAVINGS" data-i18n="opt_savings">Savings Deposits</option>
+            <option value="LOAN_DISBURSAL" data-i18n="opt_loan_issue">Loan Disbursals</option>
+            <option value="LOAN_REPAYMENT" data-i18n="opt_loan_repay">Loan Repayments</option>
           </select>
           <button onclick="exportLedgerCSV()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-xs flex items-center space-x-1.5">
             <i data-lucide="download" class="w-4 h-4"></i>
-            <span>Export CSV</span>
+            <span data-i18n="btn_export">Export CSV</span>
           </button>
           <button onclick="openNewTransactionModal()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs flex items-center space-x-1.5 shadow">
             <i data-lucide="plus" class="w-4 h-4"></i>
-            <span>Record Transaction</span>
+            <span data-i18n="btn_record_tx">Record Transaction</span>
           </button>
         </div>
       </div>
@@ -386,15 +407,15 @@
           <table class="w-full text-left border-collapse text-xs">
             <thead>
               <tr class="bg-slate-50 text-slate-500 font-semibold uppercase tracking-wider border-b border-slate-200">
-                <th class="py-3.5 px-4">Tx ID & Block Hash</th>
-                <th class="py-3.5 px-4">Date & Time</th>
-                <th class="py-3.5 px-4">Member Name</th>
-                <th class="py-3.5 px-4">SHG / Committee</th>
-                <th class="py-3.5 px-4">Category</th>
-                <th class="py-3.5 px-4">Payment Method</th>
-                <th class="py-3.5 px-4 text-right">Amount (INR)</th>
-                <th class="py-3.5 px-4 text-center">2FA Auth</th>
-                <th class="py-3.5 px-4 text-center">Receipt</th>
+                <th class="py-3.5 px-4" data-i18n="th_tx_hash">Tx ID & Block Hash</th>
+                <th class="py-3.5 px-4" data-i18n="th_date_time">Date & Time</th>
+                <th class="py-3.5 px-4" data-i18n="th_member_name">Member Name</th>
+                <th class="py-3.5 px-4" data-i18n="th_shg_comm">SHG / Committee</th>
+                <th class="py-3.5 px-4" data-i18n="th_category">Category</th>
+                <th class="py-3.5 px-4" data-i18n="th_pay_method">Payment Method</th>
+                <th class="py-3.5 px-4 text-right" data-i18n="th_amount_inr">Amount (INR)</th>
+                <th class="py-3.5 px-4 text-center" data-i18n="th_2fa_auth">2FA Auth</th>
+                <th class="py-3.5 px-4 text-center" data-i18n="th_receipt">Receipt</th>
               </tr>
             </thead>
             <tbody id="fullLedgerTableBody" class="divide-y divide-slate-100 font-medium">
@@ -416,15 +437,15 @@
           </div>
           <div>
             <h3 class="text-lg font-extrabold text-slate-900 flex items-center gap-2">
-              <span>Dual-Key 2FA Manager Approval Desk</span>
-              <span class="px-2 py-0.5 text-[10px] bg-amber-200 text-amber-900 font-bold rounded-full">Secure Gateway</span>
+              <span data-i18n="page_2fa_title">Dual-Key 2FA Manager Approval Desk</span>
+              <span class="px-2 py-0.5 text-[10px] bg-amber-200 text-amber-900 font-bold rounded-full" data-i18n="badge_secure">Secure Gateway</span>
             </h3>
-            <p class="text-xs text-slate-600">Pending transactions submitted by Field Officers require Manager authentication (PIN: <strong class="font-mono">8899</strong>) to enforce anti-fraud governance.</p>
+            <p class="text-xs text-slate-600" data-i18n="page_2fa_desc">Pending transactions submitted by Field Officers require Manager authentication (PIN: <strong class="font-mono">8899</strong>) to enforce anti-fraud governance.</p>
           </div>
         </div>
         <div class="text-right">
-          <span class="text-xs text-slate-500">Dual-Authorization Standard</span>
-          <p class="text-sm font-bold text-slate-800">RBI Micro-Finance Compliance Mode</p>
+          <span class="text-xs text-slate-500" data-i18n="lbl_dual_auth">Dual-Authorization Standard</span>
+          <p class="text-sm font-bold text-slate-800" data-i18n="lbl_rbi_mode">RBI Micro-Finance Compliance Mode</p>
         </div>
       </div>
 
@@ -447,8 +468,8 @@
             <i data-lucide="receipt-text" class="w-5 h-5"></i>
           </div>
           <div>
-            <h3 class="text-base font-extrabold text-slate-900">Initiate Ledger Transaction</h3>
-            <p class="text-xs text-slate-500">Savings Deposit, Loan Issuance, or Loan Repayment</p>
+            <h3 class="text-base font-extrabold text-slate-900" data-i18n="modal_tx_title">Initiate Ledger Transaction</h3>
+            <p class="text-xs text-slate-500" data-i18n="modal_tx_desc">Savings Deposit, Loan Issuance, or Loan Repayment</p>
           </div>
         </div>
         <button onclick="closeModal('modalNewTransaction')" class="p-1.5 text-slate-400 hover:text-slate-700 rounded-lg">
@@ -460,10 +481,10 @@
         
         <!-- Step 1: Member Identification / Fetch -->
         <div>
-          <label class="block font-bold text-slate-700 mb-1">Select Member (Fetch by Citizen ID / Name)</label>
+          <label class="block font-bold text-slate-700 mb-1" data-i18n="lbl_select_member">Select Member (Fetch by Citizen ID / Name)</label>
           <div class="flex gap-2">
             <select id="txMemberSelect" onchange="onTxMemberSelected()" required class="flex-1 px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-              <option value="">-- Choose Member --</option>
+              <option value="" data-i18n="opt_choose_member">-- Choose Member --</option>
             </select>
           </div>
         </div>
@@ -479,79 +500,84 @@
 
         <!-- Step 2: Transaction Category -->
         <div>
-          <label class="block font-bold text-slate-700 mb-1">Transaction Category</label>
+          <label class="block font-bold text-slate-700 mb-1" data-i18n="lbl_tx_cat">Transaction Category</label>
           <div class="grid grid-cols-3 gap-2">
             <label class="cursor-pointer border border-slate-200 rounded-xl p-2.5 text-center flex flex-col items-center hover:bg-emerald-50 transition peer-checked:border-emerald-600 has-[:checked]:border-emerald-600 has-[:checked]:bg-emerald-50 has-[:checked]:text-emerald-900">
               <input type="radio" name="txType" value="SAVINGS" checked onchange="onTxTypeChanged()" class="sr-only" />
               <i data-lucide="piggy-bank" class="w-4 h-4 mb-1 text-emerald-600"></i>
-              <span class="font-bold">Savings Deposit</span>
+              <span class="font-bold" data-i18n="opt_savings">Savings Deposit</span>
             </label>
             <label class="cursor-pointer border border-slate-200 rounded-xl p-2.5 text-center flex flex-col items-center hover:bg-emerald-50 transition has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50 has-[:checked]:text-blue-900">
               <input type="radio" name="txType" value="LOAN_DISBURSAL" onchange="onTxTypeChanged()" class="sr-only" />
               <i data-lucide="hand-coins" class="w-4 h-4 mb-1 text-blue-600"></i>
-              <span class="font-bold">Issue Loan</span>
+              <span class="font-bold" data-i18n="opt_loan_issue">Issue Loan</span>
             </label>
             <label class="cursor-pointer border border-slate-200 rounded-xl p-2.5 text-center flex flex-col items-center hover:bg-emerald-50 transition has-[:checked]:border-violet-600 has-[:checked]:bg-violet-50 has-[:checked]:text-violet-900">
               <input type="radio" name="txType" value="LOAN_REPAYMENT" onchange="onTxTypeChanged()" class="sr-only" />
               <i data-lucide="rotate-ccw" class="w-4 h-4 mb-1 text-violet-600"></i>
-              <span class="font-bold">Repay Loan</span>
+              <span class="font-bold" data-i18n="opt_loan_repay">Repay Loan</span>
             </label>
           </div>
         </div>
 
-        <!-- Step 3: Committee Selection (Filtered to Member's joined committees) -->
+        <!-- Step 3: Committee Selection -->
         <div>
-          <label class="block font-bold text-slate-700 mb-1">Target SHG & Committee</label>
+          <label class="block font-bold text-slate-700 mb-1" data-i18n="lbl_target_shg">Target SHG & Committee</label>
           <select id="txCommitteeSelect" required onchange="onTxCommitteeSelected()" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-            <option value="">-- Choose Joined Committee --</option>
+            <option value="" data-i18n="opt_choose_comm">-- Choose Joined Committee --</option>
           </select>
         </div>
 
         <!-- Conditional Loan Selector for Repayments -->
         <div id="txLoanPickerGroup" class="hidden">
-          <label class="block font-bold text-slate-700 mb-1">Select Active Loan to Repay</label>
+          <label class="block font-bold text-slate-700 mb-1" data-i18n="lbl_select_loan">Select Active Loan to Repay</label>
           <select id="txActiveLoanSelect" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-            <option value="">-- Select Loan --</option>
+            <option value="" data-i18n="opt_select_loan">-- Select Loan --</option>
           </select>
         </div>
 
         <!-- Step 4: Payment Channel / Mode -->
         <div>
-          <label class="block font-bold text-slate-700 mb-1">Payment Method / Channel</label>
+          <label class="block font-bold text-slate-700 mb-1" data-i18n="lbl_pay_method">Payment Method / Channel</label>
           <select id="txPaymentMode" required class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-            <option value="UPI">UPI / QR Code Transfer</option>
-            <option value="CASH">Physical Cash Collection</option>
-            <option value="BANK_TRANSFER">Direct Bank Account Transfer (NEFT/IMPS)</option>
-            <option value="DEBIT_CARD">Debit Card / Micro-ATM</option>
+            <option value="UPI" data-i18n="opt_upi">UPI / QR Code Transfer</option>
+            <option value="CASH" data-i18n="opt_cash">Physical Cash Collection</option>
+            <option value="BANK_TRANSFER" data-i18n="opt_bank">Direct Bank Account Transfer (NEFT/IMPS)</option>
+            <option value="DEBIT_CARD" data-i18n="opt_card">Debit Card / Micro-ATM</option>
           </select>
         </div>
 
         <!-- Step 5: Amount & Notes -->
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block font-bold text-slate-700 mb-1">Amount (₹ INR)</label>
+            <label class="block font-bold text-slate-700 mb-1" data-i18n="lbl_amount">Amount (₹ INR)</label>
             <input type="number" id="txAmount" min="10" step="1" required placeholder="e.g. 2000" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold font-mono text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
           </div>
           <div>
-            <label class="block font-bold text-slate-700 mb-1">Collector / Officer ID</label>
+            <label class="block font-bold text-slate-700 mb-1" data-i18n="lbl_officer_id">Collector / Officer ID</label>
             <input type="text" id="txOfficerId" value="EMP-OFFICER-419" readonly class="w-full px-3 py-2.5 bg-slate-100 border border-slate-200 rounded-xl font-mono text-slate-500 font-semibold" />
           </div>
         </div>
 
         <div>
-          <label class="block font-bold text-slate-700 mb-1">Purpose / Remarks</label>
-          <input type="text" id="txRemarks" placeholder="e.g. Monthly committee savings pool contribution" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
+          <label class="block font-bold text-slate-700 mb-1" data-i18n="lbl_remarks">Purpose / Remarks</label>
+          <div class="flex gap-2">
+            <input type="text" id="txRemarks" data-i18n-placeholder="placeholder_remarks" placeholder="e.g. Monthly committee savings" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
+            <button type="button" onclick="startVoiceInput('txRemarks')" class="p-2 bg-slate-100 hover:bg-slate-200 rounded-xl text-slate-600 transition">
+              <i data-lucide="mic" id="mic-icon-txRemarks" class="w-4 h-4"></i>
+            </button>
+          </div>
         </div>
 
         <!-- Governance 2FA Notice -->
         <div class="p-3 bg-amber-50 rounded-xl border border-amber-200 flex items-start space-x-2 text-amber-900 text-[11px]">
           <i data-lucide="shield-alert" class="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5"></i>
-          <span>This entry will be created in <strong class="font-semibold">PENDING_APPROVAL</strong> state. The transaction balance will only credit/debit once approved via 2FA Manager PIN.</span>
+          <span><span data-i18n="notice_tx_pending1">This entry will be created in</span> <strong class="font-semibold">PENDING_APPROVAL</strong> <span data-i18n="notice_tx_pending2">state. The transaction balance will only credit/debit once approved via 2FA Manager PIN.</span></span>
         </div>
 
         <div class="flex items-center justify-end space-x-2 pt-3 border-t border-slate-100">
-          <button type="button" onclick="closeModal('modalNewTransaction')" class="px-4 py-2.5 text-slate-600 font-bold hover:bg-slate-100 rounded-xl">Cancel</button>
-          <button type="submit" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md shadow-emerald-600/20">Submit for 2FA Authorization</button>
+          <button type="button" onclick="closeModal('modalNewTransaction')" class="px-4 py-2.5 text-slate-600 font-bold hover:bg-slate-100 rounded-xl" data-i18n="btn_cancel">Cancel</button>
+          <button type="submit" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md shadow-emerald-600/20" data-i18n="btn_submit_2fa">Submit for 2FA Authorization</button>
         </div>
       </form>
     </div>
@@ -565,46 +591,46 @@
       <div class="w-14 h-14 rounded-2xl bg-amber-100 text-amber-600 mx-auto flex items-center justify-center mb-3 shadow-inner">
         <i data-lucide="shield-check" class="w-8 h-8"></i>
       </div>
-      <h3 class="text-lg font-extrabold text-slate-900">Manager 2FA Authorization</h3>
-      <p class="text-xs text-slate-500 mt-1">Authenticate transaction settlement to the immutable ledger</p>
+      <h3 class="text-lg font-extrabold text-slate-900" data-i18n="modal_2fa_title">Manager 2FA Authorization</h3>
+      <p class="text-xs text-slate-500 mt-1" data-i18n="modal_2fa_desc">Authenticate transaction settlement to the immutable ledger</p>
 
       <!-- Transaction Preview Card -->
       <div class="my-4 p-3.5 bg-slate-50 rounded-2xl border border-slate-200 text-left text-xs space-y-1.5">
         <div class="flex justify-between font-bold">
-          <span class="text-slate-600">Transaction ID:</span>
+          <span class="text-slate-600" data-i18n="lbl_tx_id">Transaction ID:</span>
           <span class="font-mono text-slate-900" id="auth2faTxId">TX-0000</span>
         </div>
         <div class="flex justify-between">
-          <span class="text-slate-500">Member:</span>
+          <span class="text-slate-500" data-i18n="lbl_member">Member:</span>
           <span class="font-bold text-slate-800" id="auth2faMember">Member Name</span>
         </div>
         <div class="flex justify-between">
-          <span class="text-slate-500">Committee / Type:</span>
+          <span class="text-slate-500" data-i18n="lbl_comm_type">Committee / Type:</span>
           <span class="font-semibold text-slate-700" id="auth2faCommittee">Committee (Type)</span>
         </div>
         <div class="flex justify-between text-sm pt-1 border-t border-slate-200">
-          <span class="font-bold text-slate-700">Total Settlement:</span>
+          <span class="font-bold text-slate-700" data-i18n="lbl_total_settle">Total Settlement:</span>
           <span class="font-extrabold font-mono text-emerald-600" id="auth2faAmount">₹0</span>
         </div>
       </div>
 
       <!-- PIN Input -->
       <div class="space-y-3">
-        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Enter 4-Digit Manager Security PIN</label>
+        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider" data-i18n="lbl_enter_pin">Enter 4-Digit Manager Security PIN</label>
         <div class="flex justify-center gap-3">
           <input type="password" maxlength="4" id="managerPinInput" placeholder="••••" class="w-36 text-center tracking-[0.6em] text-2xl font-bold py-2 bg-slate-100 border-2 border-slate-300 rounded-xl focus:border-amber-500 focus:outline-none focus:bg-white font-mono" />
         </div>
-        <p class="text-[11px] text-slate-400">Default demo PIN: <span class="font-mono font-bold text-slate-600">8899</span></p>
-        <div id="pinErrorMsg" class="text-xs text-rose-600 font-bold hidden">Invalid PIN. Please enter the correct 4-digit manager PIN.</div>
+        <p class="text-[11px] text-slate-400"><span data-i18n="lbl_default_demo_pin">Default demo PIN:</span> <span class="font-mono font-bold text-slate-600">8899</span></p>
+        <div id="pinErrorMsg" class="text-xs text-rose-600 font-bold hidden" data-i18n="msg_invalid_pin">Invalid PIN. Please enter the correct 4-digit manager PIN.</div>
       </div>
 
       <div class="grid grid-cols-2 gap-3 mt-6">
-        <button onclick="handleRejectPendingTx()" class="w-full py-2.5 bg-slate-100 hover:bg-rose-50 hover:text-rose-600 text-slate-700 font-bold text-xs rounded-xl transition">
+        <button onclick="handleRejectPendingTx()" class="w-full py-2.5 bg-slate-100 hover:bg-rose-50 hover:text-rose-600 text-slate-700 font-bold text-xs rounded-xl transition" data-i18n="btn_reject">
           Reject & Cancel
         </button>
         <button onclick="handleApprovePendingTx()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-lg shadow-emerald-600/20 transition flex items-center justify-center gap-1.5">
           <i data-lucide="check" class="w-4 h-4"></i>
-          <span>Authorize & Seal</span>
+          <span data-i18n="btn_auth_seal">Authorize & Seal</span>
         </button>
       </div>
     </div>
@@ -623,7 +649,7 @@
           <div>
             <div class="flex items-center space-x-2">
               <h3 class="text-lg font-extrabold text-slate-900" id="profileName">Member Name</h3>
-              <span class="px-2 py-0.5 text-[10px] font-bold bg-emerald-100 text-emerald-800 rounded-full">KYC Verified</span>
+              <span class="px-2 py-0.5 text-[10px] font-bold bg-emerald-100 text-emerald-800 rounded-full" data-i18n="badge_kyc">KYC Verified</span>
             </div>
             <p class="text-xs text-slate-500 flex items-center gap-2 mt-0.5">
               <span id="profileCitizenId" class="font-mono">Citizen ID: •••• •••• 9821</span>
@@ -640,15 +666,15 @@
       <!-- Financial Balance Snapshot -->
       <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 my-4">
         <div class="p-3 bg-emerald-50 rounded-2xl border border-emerald-100">
-          <span class="text-[10px] uppercase font-bold text-emerald-800">Total Savings Balance</span>
+          <span class="text-[10px] uppercase font-bold text-emerald-800" data-i18n="lbl_total_sav_bal">Total Savings Balance</span>
           <h4 class="text-base font-extrabold text-emerald-900 font-mono mt-1" id="profileSavingsBalance">₹0</h4>
         </div>
         <div class="p-3 bg-blue-50 rounded-2xl border border-blue-100">
-          <span class="text-[10px] uppercase font-bold text-blue-800">Outstanding Loans</span>
+          <span class="text-[10px] uppercase font-bold text-blue-800" data-i18n="lbl_out_loans">Outstanding Loans</span>
           <h4 class="text-base font-extrabold text-blue-900 font-mono mt-1" id="profileLoanBalance">₹0</h4>
         </div>
         <div class="p-3 bg-violet-50 rounded-2xl border border-violet-100 col-span-2 sm:col-span-1">
-          <span class="text-[10px] uppercase font-bold text-violet-800">Joined Committees</span>
+          <span class="text-[10px] uppercase font-bold text-violet-800" data-i18n="lbl_joined_comms">Joined Committees</span>
           <h4 class="text-base font-extrabold text-violet-900 font-mono mt-1" id="profileCommitteeCount">0</h4>
         </div>
       </div>
@@ -657,7 +683,7 @@
       <div class="space-y-3">
         <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
           <i data-lucide="network" class="w-4 h-4 text-emerald-600"></i>
-          <span>Enrolled SHGs & Committee Affiliations</span>
+          <span data-i18n="hdr_enrolled_shgs">Enrolled SHGs & Committee Affiliations</span>
         </h4>
         <div id="profileCommitteesList" class="space-y-2">
           <!-- Dynamically populated -->
@@ -668,7 +694,7 @@
       <div class="space-y-3 mt-5">
         <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
           <i data-lucide="landmark" class="w-4 h-4 text-blue-600"></i>
-          <span>Active Loan Accounts</span>
+          <span data-i18n="hdr_active_loan_accs">Active Loan Accounts</span>
         </h4>
         <div id="profileLoansList" class="space-y-2">
           <!-- Dynamically populated -->
@@ -679,16 +705,16 @@
       <div class="space-y-3 mt-5">
         <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
           <i data-lucide="history" class="w-4 h-4 text-slate-600"></i>
-          <span>Personal Ledger Transactions</span>
+          <span data-i18n="hdr_personal_ledger">Personal Ledger Transactions</span>
         </h4>
         <div class="border border-slate-200 rounded-xl overflow-hidden max-h-48 overflow-y-auto">
           <table class="w-full text-left text-xs">
             <thead class="bg-slate-50 text-slate-500 font-semibold uppercase">
               <tr>
-                <th class="p-2.5">Date</th>
-                <th class="p-2.5">Type / Committee</th>
-                <th class="p-2.5 text-right">Amount</th>
-                <th class="p-2.5 text-center">Status</th>
+                <th class="p-2.5" data-i18n="th_date">Date</th>
+                <th class="p-2.5" data-i18n="th_type_comm">Type / Committee</th>
+                <th class="p-2.5 text-right" data-i18n="th_amount">Amount</th>
+                <th class="p-2.5 text-center" data-i18n="th_status">Status</th>
               </tr>
             </thead>
             <tbody id="profileLedgerTable" class="divide-y divide-slate-100">
@@ -699,7 +725,7 @@
       </div>
 
       <div class="mt-6 pt-3 border-t border-slate-100 flex justify-end">
-        <button onclick="closeModal('modalMemberProfile')" class="px-5 py-2 bg-slate-900 text-white font-bold text-xs rounded-xl">Close Profile</button>
+        <button onclick="closeModal('modalMemberProfile')" class="px-5 py-2 bg-slate-900 text-white font-bold text-xs rounded-xl" data-i18n="btn_close_profile">Close Profile</button>
       </div>
     </div>
   </div>
@@ -715,8 +741,8 @@
             <i data-lucide="user-plus" class="w-5 h-5"></i>
           </div>
           <div>
-            <h3 class="text-base font-extrabold text-slate-900">Enroll New Member</h3>
-            <p class="text-xs text-slate-500">Add member and assign to multiple SHG committees</p>
+            <h3 class="text-base font-extrabold text-slate-900" data-i18n="modal_enroll_title">Enroll New Member</h3>
+            <p class="text-xs text-slate-500" data-i18n="modal_enroll_desc">Add member and assign to multiple SHG committees</p>
           </div>
         </div>
         <button onclick="closeModal('modalNewMember')" class="p-1.5 text-slate-400 hover:text-slate-700 rounded-lg">
@@ -726,32 +752,37 @@
 
       <form id="memberEnrollForm" onsubmit="handleEnrollMember(event)" class="mt-4 space-y-4 text-xs">
         <div>
-          <label class="block font-bold text-slate-700 mb-1">Full Legal Name</label>
-          <input type="text" id="newMemberName" required placeholder="e.g. Anita Devi" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
+          <label class="block font-bold text-slate-700 mb-1" data-i18n="lbl_full_name">Full Legal Name</label>
+          <div class="flex gap-2">
+            <input type="text" id="newMemberName" required data-i18n-placeholder="placeholder_name" placeholder="e.g. Anita Devi" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
+            <button type="button" onclick="startVoiceInput('newMemberName')" class="p-2 bg-slate-100 hover:bg-slate-200 rounded-xl text-slate-600 transition">
+              <i data-lucide="mic" id="mic-icon-newMemberName" class="w-4 h-4"></i>
+            </button>
+          </div>
         </div>
 
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block font-bold text-slate-700 mb-1">Citizen / National ID</label>
-            <input type="text" id="newMemberCitizenId" required placeholder="e.g. 8839 2019 4482" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-mono focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
+            <label class="block font-bold text-slate-700 mb-1" data-i18n="lbl_citizen_id">Citizen / National ID</label>
+            <input type="text" id="newMemberCitizenId" required data-i18n-placeholder="placeholder_id" placeholder="e.g. 8839 2019 4482" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-mono focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
           </div>
           <div>
-            <label class="block font-bold text-slate-700 mb-1">Mobile Phone Number</label>
+            <label class="block font-bold text-slate-700 mb-1" data-i18n="lbl_phone">Mobile Phone Number</label>
             <input type="tel" id="newMemberPhone" required placeholder="e.g. 9876543210" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
           </div>
         </div>
 
         <div>
-          <label class="block font-bold text-slate-700 mb-1">Assign Initial Committee Affiliations</label>
+          <label class="block font-bold text-slate-700 mb-1" data-i18n="lbl_assign_comms">Assign Initial Committee Affiliations</label>
           <div id="newMemberCommitteeCheckboxes" class="max-h-36 overflow-y-auto border border-slate-200 rounded-xl p-3 bg-slate-50 space-y-2">
             <!-- Dynamically injected -->
           </div>
-          <p class="text-[11px] text-slate-400 mt-1">Select one or more committees across any registered Self-Help Group.</p>
+          <p class="text-[11px] text-slate-400 mt-1" data-i18n="lbl_assign_help">Select one or more committees across any registered Self-Help Group.</p>
         </div>
 
         <div class="flex items-center justify-end space-x-2 pt-3 border-t border-slate-100">
-          <button type="button" onclick="closeModal('modalNewMember')" class="px-4 py-2.5 text-slate-600 font-bold hover:bg-slate-100 rounded-xl">Cancel</button>
-          <button type="submit" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow">Register & Create Profile</button>
+          <button type="button" onclick="closeModal('modalNewMember')" class="px-4 py-2.5 text-slate-600 font-bold hover:bg-slate-100 rounded-xl" data-i18n="btn_cancel">Cancel</button>
+          <button type="submit" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow" data-i18n="btn_register_profile">Register & Create Profile</button>
         </div>
       </form>
     </div>
@@ -763,27 +794,32 @@
   <div id="modalNewShg" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
       <div class="flex items-center justify-between pb-4 border-b border-slate-100">
-        <h3 class="text-base font-extrabold text-slate-900">Create Self-Help Group (SHG)</h3>
+        <h3 class="text-base font-extrabold text-slate-900" data-i18n="modal_shg_title">Create Self-Help Group (SHG)</h3>
         <button onclick="closeModal('modalNewShg')" class="p-1.5 text-slate-400 hover:text-slate-700">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
       <form id="shgCreateForm" onsubmit="handleCreateShg(event)" class="mt-4 space-y-4 text-xs">
         <div>
-          <label class="block font-bold text-slate-700 mb-1">SHG Name</label>
-          <input type="text" id="newShgName" required placeholder="e.g. Pragati Mahila Swayam Sahayata Samuh" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
+          <label class="block font-bold text-slate-700 mb-1" data-i18n="lbl_shg_name">SHG Name</label>
+          <div class="flex gap-2">
+            <input type="text" id="newShgName" required data-i18n-placeholder="placeholder_shg_name" placeholder="e.g. Pragati Mahila..." class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
+            <button type="button" onclick="startVoiceInput('newShgName')" class="p-2 bg-slate-100 hover:bg-slate-200 rounded-xl text-slate-600 transition">
+              <i data-lucide="mic" id="mic-icon-newShgName" class="w-4 h-4"></i>
+            </button>
+          </div>
         </div>
         <div>
-          <label class="block font-bold text-slate-700 mb-1">Village / Ward / Location</label>
-          <input type="text" id="newShgLocation" required placeholder="e.g. Rampur Village, Block-2" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
+          <label class="block font-bold text-slate-700 mb-1" data-i18n="lbl_location">Village / Ward / Location</label>
+          <input type="text" id="newShgLocation" required data-i18n-placeholder="placeholder_location" placeholder="e.g. Rampur Village, Block-2" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
         </div>
         <div>
-          <label class="block font-bold text-slate-700 mb-1">Designated Leader / President</label>
-          <input type="text" id="newShgLeader" required placeholder="e.g. Sunita Sharma" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
+          <label class="block font-bold text-slate-700 mb-1" data-i18n="lbl_leader">Designated Leader / President</label>
+          <input type="text" id="newShgLeader" required data-i18n-placeholder="placeholder_leader" placeholder="e.g. Sunita Sharma" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
         </div>
         <div class="flex items-center justify-end space-x-2 pt-3">
-          <button type="button" onclick="closeModal('modalNewShg')" class="px-4 py-2 text-slate-600 font-bold">Cancel</button>
-          <button type="submit" class="px-5 py-2.5 bg-slate-900 text-white font-bold rounded-xl">Create SHG</button>
+          <button type="button" onclick="closeModal('modalNewShg')" class="px-4 py-2 text-slate-600 font-bold" data-i18n="btn_cancel">Cancel</button>
+          <button type="submit" class="px-5 py-2.5 bg-slate-900 text-white font-bold rounded-xl" data-i18n="btn_create_shg">Create SHG</button>
         </div>
       </form>
     </div>
@@ -795,29 +831,34 @@
   <div id="modalNewCommittee" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
       <div class="flex items-center justify-between pb-4 border-b border-slate-100">
-        <h3 class="text-base font-extrabold text-slate-900">Add Functional Committee</h3>
+        <h3 class="text-base font-extrabold text-slate-900" data-i18n="modal_comm_title">Add Functional Committee</h3>
         <button onclick="closeModal('modalNewCommittee')" class="p-1.5 text-slate-400 hover:text-slate-700">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
       <form id="committeeCreateForm" onsubmit="handleCreateCommittee(event)" class="mt-4 space-y-4 text-xs">
         <div>
-          <label class="block font-bold text-slate-700 mb-1">Parent Self-Help Group</label>
+          <label class="block font-bold text-slate-700 mb-1" data-i18n="lbl_parent_shg">Parent Self-Help Group</label>
           <select id="newCommitteeParentShg" required class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-none">
             <!-- Dynamically populated -->
           </select>
         </div>
         <div>
-          <label class="block font-bold text-slate-700 mb-1">Committee Name</label>
-          <input type="text" id="newCommitteeName" required placeholder="e.g. Micro-Dairy Investment Pool" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
+          <label class="block font-bold text-slate-700 mb-1" data-i18n="lbl_comm_name">Committee Name</label>
+          <div class="flex gap-2">
+            <input type="text" id="newCommitteeName" required data-i18n-placeholder="placeholder_comm_name" placeholder="e.g. Micro-Dairy Investment Pool" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
+            <button type="button" onclick="startVoiceInput('newCommitteeName')" class="p-2 bg-slate-100 hover:bg-slate-200 rounded-xl text-slate-600 transition">
+              <i data-lucide="mic" id="mic-icon-newCommitteeName" class="w-4 h-4"></i>
+            </button>
+          </div>
         </div>
         <div>
-          <label class="block font-bold text-slate-700 mb-1">Committee Mandate / Purpose</label>
-          <input type="text" id="newCommitteePurpose" required placeholder="e.g. Collective equipment purchase & emergency loans" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
+          <label class="block font-bold text-slate-700 mb-1" data-i18n="lbl_comm_purpose">Committee Mandate / Purpose</label>
+          <input type="text" id="newCommitteePurpose" required data-i18n-placeholder="placeholder_comm_purpose" placeholder="e.g. Collective equipment purchase" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
         </div>
         <div class="flex items-center justify-end space-x-2 pt-3">
-          <button type="button" onclick="closeModal('modalNewCommittee')" class="px-4 py-2 text-slate-600 font-bold">Cancel</button>
-          <button type="submit" class="px-5 py-2.5 bg-emerald-600 text-white font-bold rounded-xl shadow">Create Committee</button>
+          <button type="button" onclick="closeModal('modalNewCommittee')" class="px-4 py-2 text-slate-600 font-bold" data-i18n="btn_cancel">Cancel</button>
+          <button type="submit" class="px-5 py-2.5 bg-emerald-600 text-white font-bold rounded-xl shadow" data-i18n="btn_create_comm">Create Committee</button>
         </div>
       </form>
     </div>
@@ -829,198 +870,399 @@
   <!-- JAVASCRIPT APPLICATION CORE -->
   <script>
     /* ========================================================
+       I18N LANGUAGE DICTIONARIES
+       ======================================================== */
+    const translations = {
+      en: {
+        app_title: "VISHWAS",
+        app_version: "SHG Ledger v2.4",
+        app_subtitle: "Empowering Self-Help Groups with Dual-Key Governance",
+        nav_maker: "Field Officer (Maker)",
+        nav_checker: "SHG Manager (Checker 2FA)",
+        nav_new_entry: "New Entry",
+        tab_dashboard: "Dashboard",
+        tab_hierarchy: "SHGs & Committees",
+        tab_members: "Member 360° Directory",
+        tab_ledger: "Ledger & Transactions",
+        tab_approvals: "2FA Approval Desk",
+        mode_maker: "Current Mode: Field Officer (Maker)",
+        mode_checker: "Current Mode: SHG Manager (Checker)",
+        default_pin_notice: "2FA Manager Default PIN: 8899",
+        banner_desc: "Initiate savings, loan disbursals, or repayments. All entries require Manager 2FA PIN authorization before ledger settlement.",
+        btn_enroll_member: "Enroll Member",
+        btn_initiate_tx: "+ Initiate Transaction",
+        metric_savings: "Total Savings Pool",
+        metric_savings_sub: "Verified across active committees",
+        metric_loans: "Active Loan Book",
+        metric_members: "Enrolled Members",
+        metric_pending: "2FA Approvals Pending",
+        metric_pending_sub: "Awaiting Manager PIN",
+        metric_pending_click: "Click to review 2FA queue &rarr;",
+        chart_flow_title: "Capital Flow Analysis",
+        chart_flow_desc: "Savings mobilized vs. Loans disbursed & repaid (INR)",
+        badge_live_ledger: "Live Ledger",
+        chart_dist_title: "Committee Distribution",
+        chart_dist_desc: "Member participation across functional committees",
+        chart_dist_footer: "Cross-membership support",
+        status_active: "Active",
+        table_recent_title: "Recent Immutable Transactions",
+        table_recent_desc: "Approved transactions cryptographically hashed into the ledger",
+        btn_view_full_ledger: "View Full Ledger",
+        th_tx_hash: "Tx ID & Hash",
+        th_timestamp: "Timestamp",
+        th_member: "Member",
+        th_shg_comm: "SHG / Committee",
+        th_type_mode: "Type & Mode",
+        th_amount: "Amount",
+        th_status: "Status",
+        th_date: "Date",
+        th_type_comm: "Type / Committee",
+        page_shg_title: "Self-Help Groups & Committees Hierarchy",
+        page_shg_desc: "Hierarchical grouping: Self Help Groups &rarr; Specialized Committees &rarr; Multi-Enrolled Members",
+        btn_create_shg: "Create New SHG",
+        btn_add_comm: "Add Committee",
+        page_member_title: "Member 360° Profile Hub",
+        page_member_desc: "Look up members by Name, Citizen ID, or Phone to view their joined SHGs, Committees, and Balances",
+        placeholder_search: "Search by name, ID (e.g. 8839)...",
+        page_ledger_title: "Universal Financial Ledger",
+        page_ledger_desc: "Complete audit trail with SHA-256 block hash references and 2FA signer metadata",
+        opt_all_tx: "All Transaction Types",
+        opt_savings: "Savings Deposits",
+        opt_loan_issue: "Loan Disbursals",
+        opt_loan_repay: "Loan Repayments",
+        btn_export: "Export CSV",
+        btn_record_tx: "Record Transaction",
+        th_date_time: "Date & Time",
+        th_member_name: "Member Name",
+        th_category: "Category",
+        th_pay_method: "Payment Method",
+        th_amount_inr: "Amount (INR)",
+        th_2fa_auth: "2FA Auth",
+        th_receipt: "Receipt",
+        page_2fa_title: "Dual-Key 2FA Manager Approval Desk",
+        badge_secure: "Secure Gateway",
+        page_2fa_desc: "Pending transactions submitted by Field Officers require Manager authentication (PIN: <strong class='font-mono'>8899</strong>) to enforce anti-fraud governance.",
+        lbl_dual_auth: "Dual-Authorization Standard",
+        lbl_rbi_mode: "RBI Micro-Finance Compliance Mode",
+        modal_tx_title: "Initiate Ledger Transaction",
+        modal_tx_desc: "Savings Deposit, Loan Issuance, or Loan Repayment",
+        lbl_select_member: "Select Member (Fetch by Citizen ID / Name)",
+        opt_choose_member: "-- Choose Member --",
+        lbl_tx_cat: "Transaction Category",
+        lbl_target_shg: "Target SHG & Committee",
+        opt_choose_comm: "-- Choose Joined Committee --",
+        lbl_select_loan: "Select Active Loan to Repay",
+        opt_select_loan: "-- Select Loan --",
+        lbl_pay_method: "Payment Method / Channel",
+        opt_upi: "UPI / QR Code Transfer",
+        opt_cash: "Physical Cash Collection",
+        opt_bank: "Direct Bank Account Transfer (NEFT/IMPS)",
+        opt_card: "Debit Card / Micro-ATM",
+        lbl_amount: "Amount (₹ INR)",
+        lbl_officer_id: "Collector / Officer ID",
+        lbl_remarks: "Purpose / Remarks",
+        placeholder_remarks: "e.g. Monthly committee savings",
+        notice_tx_pending1: "This entry will be created in",
+        notice_tx_pending2: "state. The transaction balance will only credit/debit once approved via 2FA Manager PIN.",
+        btn_cancel: "Cancel",
+        btn_submit_2fa: "Submit for 2FA Authorization",
+        modal_2fa_title: "Manager 2FA Authorization",
+        modal_2fa_desc: "Authenticate transaction settlement to the immutable ledger",
+        lbl_tx_id: "Transaction ID:",
+        lbl_comm_type: "Committee / Type:",
+        lbl_total_settle: "Total Settlement:",
+        lbl_enter_pin: "Enter 4-Digit Manager Security PIN",
+        lbl_default_demo_pin: "Default demo PIN:",
+        msg_invalid_pin: "Invalid PIN. Please enter the correct 4-digit manager PIN.",
+        btn_reject: "Reject & Cancel",
+        btn_auth_seal: "Authorize & Seal",
+        badge_kyc: "KYC Verified",
+        lbl_total_sav_bal: "Total Savings Balance",
+        lbl_out_loans: "Outstanding Loans",
+        lbl_joined_comms: "Joined Committees",
+        hdr_enrolled_shgs: "Enrolled SHGs & Committee Affiliations",
+        hdr_active_loan_accs: "Active Loan Accounts",
+        hdr_personal_ledger: "Personal Ledger Transactions",
+        btn_close_profile: "Close Profile",
+        modal_enroll_title: "Enroll New Member",
+        modal_enroll_desc: "Add member and assign to multiple SHG committees",
+        lbl_full_name: "Full Legal Name",
+        placeholder_name: "e.g. Anita Devi",
+        lbl_citizen_id: "Citizen / National ID",
+        placeholder_id: "e.g. 8839 2019 4482",
+        lbl_phone: "Mobile Phone Number",
+        lbl_assign_comms: "Assign Initial Committee Affiliations",
+        lbl_assign_help: "Select one or more committees across any registered Self-Help Group.",
+        btn_register_profile: "Register & Create Profile",
+        modal_shg_title: "Create Self-Help Group (SHG)",
+        lbl_shg_name: "SHG Name",
+        placeholder_shg_name: "e.g. Pragati Mahila...",
+        lbl_location: "Village / Ward / Location",
+        placeholder_location: "e.g. Rampur Village, Block-2",
+        lbl_leader: "Designated Leader / President",
+        placeholder_leader: "e.g. Sunita Sharma",
+        modal_comm_title: "Add Functional Committee",
+        lbl_parent_shg: "Parent Self-Help Group",
+        lbl_comm_name: "Committee Name",
+        placeholder_comm_name: "e.g. Micro-Dairy Investment Pool",
+        lbl_comm_purpose: "Committee Mandate / Purpose",
+        placeholder_comm_purpose: "e.g. Collective equipment purchase",
+        btn_create_comm: "Create Committee",
+
+        // JS Messages
+        js_reset_msg: "Application reset to initial seed state",
+        js_mgr_active: "Manager mode active. 2FA dual-authorization enabled.",
+        js_emp_active: "Field Officer mode active.",
+        js_no_shg: "No Self Help Groups created yet.",
+        js_assoc_members: "Associated Members",
+        js_func_comms: "Functional Committees",
+        js_members_enrolled: "Members Enrolled",
+        js_saved: "Saved",
+        js_no_members: "No members assigned yet",
+        js_no_comms: "No committees added under this SHG.",
+        js_search_no_match: "No members matching search query.",
+        js_no_loans: "No active loans outstanding.",
+        js_remaining: "Remaining",
+        js_no_tx: "No transactions recorded under this filter.",
+        js_approved: "Approved",
+        js_2fa_sign: "2FA Sign",
+        js_rejected: "Rejected",
+        js_all_clear: "All Clear! No Pending 2FA Authorizations",
+        js_all_clear_desc: "Every field transaction has been verified by the Manager PIN and settled into the immutable ledger.",
+        js_awaiting_pin: "Awaiting Manager PIN",
+        js_review_pin: "Review & Enter PIN",
+        js_tx_authorized: "Transaction authorized by Manager PIN!",
+        js_tx_rejected: "Transaction rejected.",
+        js_fill_fields: "Please fill all required transaction fields.",
+        js_tx_queued: "Transaction request queued for manager PIN verification.",
+        js_no_loan_found: "No Active Loans Found for Member",
+        js_assign_comm_err: "Please assign at least one committee to this member.",
+        js_member_enrolled: "enrolled successfully!",
+        js_shg_created: "created!",
+        js_comm_added: "added to SHG!",
+        js_voice_on: "Voice Audio Feedback Enabled",
+        js_voice_off: "Voice Audio Feedback Muted",
+        js_ledger_exported: "Ledger CSV exported successfully",
+        js_listening: "Listening for voice input...",
+        js_voice_error: "Voice recognition is not supported in this browser."
+      },
+      hi: {
+        app_title: "विश्वास (VISHWAS)",
+        app_version: "एसएचजी लेजर v2.4",
+        app_subtitle: "दोहरे-स्तर के शासन के साथ स्वयं सहायता समूहों का सशक्तिकरण",
+        nav_maker: "फील्ड ऑफिसर (मेकर)",
+        nav_checker: "एसएचजी मैनेजर (चेकर 2FA)",
+        nav_new_entry: "नई प्रविष्टि",
+        tab_dashboard: "डैशबोर्ड",
+        tab_hierarchy: "एसएचजी और समितियां",
+        tab_members: "सदस्य 360° निर्देशिका",
+        tab_ledger: "खाता और लेनदेन",
+        tab_approvals: "2FA अनुमोदन डेस्क",
+        mode_maker: "वर्तमान मोड: फील्ड ऑफिसर (मेकर)",
+        mode_checker: "वर्तमान मोड: एसएचजी मैनेजर (चेकर 2FA)",
+        default_pin_notice: "डिफ़ॉल्ट 2FA मैनेजर पिन: 8899",
+        banner_desc: "बचत, ऋण वितरण या पुनर्भुगतान शुरू करें। सभी प्रविष्टियों के लिए 2FA मैनेजर पिन प्राधिकरण की आवश्यकता है।",
+        btn_enroll_member: "सदस्य जोड़ें",
+        btn_initiate_tx: "+ लेनदेन शुरू करें",
+        metric_savings: "कुल बचत राशि",
+        metric_savings_sub: "सक्रिय समितियों में सत्यापित",
+        metric_loans: "सक्रिय ऋण बही",
+        metric_members: "नामांकित सदस्य",
+        metric_pending: "2FA अनुमोदन लंबित",
+        metric_pending_sub: "मैनेजर पिन की प्रतीक्षा में",
+        metric_pending_click: "2FA कतार देखने के लिए क्लिक करें &rarr;",
+        chart_flow_title: "पूंजी प्रवाह विश्लेषण",
+        chart_flow_desc: "बचत बनाम ऋण वितरण और पुनर्भुगतान (INR)",
+        badge_live_ledger: "लाइव लेजर",
+        chart_dist_title: "समिति वितरण",
+        chart_dist_desc: "कार्यात्मक समितियों में सदस्यों की भागीदारी",
+        chart_dist_footer: "पार-सदस्यता समर्थन",
+        status_active: "सक्रिय",
+        table_recent_title: "हाल के अपरिवर्तनीय लेनदेन",
+        table_recent_desc: "लेजर में क्रिप्टोग्राफ़िक रूप से हैश किए गए स्वीकृत लेनदेन",
+        btn_view_full_ledger: "पूरा खाता देखें",
+        th_tx_hash: "लेनदेन ID और हैश",
+        th_timestamp: "समय",
+        th_member: "सदस्य",
+        th_shg_comm: "एसएचजी / समिति",
+        th_type_mode: "प्रकार और माध्यम",
+        th_amount: "राशि",
+        th_status: "स्थिति",
+        th_date: "दिनांक",
+        th_type_comm: "प्रकार / समिति",
+        page_shg_title: "स्वयं सहायता समूह (SHG) और समितियां पदानुक्रम",
+        page_shg_desc: "पदानुक्रमित समूहन: स्वयं सहायता समूह &rarr; विशिष्ट समितियां &rarr; बहु-नामांकित सदस्य",
+        btn_create_shg: "नया एसएचजी बनाएं",
+        btn_add_comm: "समिति जोड़ें",
+        page_member_title: "सदस्य 360° प्रोफ़ाइल हब",
+        page_member_desc: "नाम, नागरिक ID, या फ़ोन द्वारा सदस्यों को खोजें और उनकी एसएचजी, समितियां और शेष राशि देखें",
+        placeholder_search: "नाम, ID (उदा. 8839) से खोजें...",
+        page_ledger_title: "यूनिवर्सल वित्तीय लेजर (खाता)",
+        page_ledger_desc: "SHA-256 ब्लॉक हैश संदर्भों और 2FA हस्ताक्षरकर्ता मेटाडेटा के साथ संपूर्ण ऑडिट ट्रेल",
+        opt_all_tx: "सभी लेनदेन प्रकार",
+        opt_savings: "बचत जमा",
+        opt_loan_issue: "ऋण वितरण",
+        opt_loan_repay: "ऋण पुनर्भुगतान",
+        btn_export: "CSV डाउनलोड करें",
+        btn_record_tx: "लेनदेन दर्ज करें",
+        th_date_time: "दिनांक और समय",
+        th_member_name: "सदस्य का नाम",
+        th_category: "श्रेणी",
+        th_pay_method: "भुगतान का तरीका",
+        th_amount_inr: "राशि (INR)",
+        th_2fa_auth: "2FA प्रमाणीकरण",
+        th_receipt: "रसीद",
+        page_2fa_title: "डुअल-की 2FA मैनेजर अप्रूवल डेस्क",
+        badge_secure: "सुरक्षित गेटवे",
+        page_2fa_desc: "फील्ड अधिकारियों द्वारा प्रस्तुत लंबित लेनदेन के लिए मैनेजर प्रमाणीकरण (पिन: <strong class='font-mono'>8899</strong>) की आवश्यकता है।",
+        lbl_dual_auth: "दोहरा प्रमाणीकरण मानक",
+        lbl_rbi_mode: "RBI माइक्रो-फाइनेंस अनुपालन मोड",
+        modal_tx_title: "खाता लेनदेन शुरू करें",
+        modal_tx_desc: "बचत जमा, ऋण जारी करना, या ऋण पुनर्भुगतान",
+        lbl_select_member: "सदस्य चुनें (नागरिक ID / नाम द्वारा)",
+        opt_choose_member: "-- सदस्य चुनें --",
+        lbl_tx_cat: "लेनदेन श्रेणी",
+        lbl_target_shg: "लक्ष्य एसएचजी और समिति",
+        opt_choose_comm: "-- शामिल समिति चुनें --",
+        lbl_select_loan: "चुकाने के लिए सक्रिय ऋण चुनें",
+        opt_select_loan: "-- ऋण चुनें --",
+        lbl_pay_method: "भुगतान का तरीका / चैनल",
+        opt_upi: "UPI / क्यूआर कोड ट्रांसफर",
+        opt_cash: "नकद संग्रह",
+        opt_bank: "डायरेक्ट बैंक ट्रांसफर (NEFT/IMPS)",
+        opt_card: "डेबिट कार्ड / माइक्रो-एटीएम",
+        lbl_amount: "राशि (₹ INR)",
+        lbl_officer_id: "कलेक्टर / अधिकारी ID",
+        lbl_remarks: "उद्देश्य / टिप्पणी",
+        placeholder_remarks: "उदा. मासिक समिति बचत",
+        notice_tx_pending1: "यह प्रविष्टि",
+        notice_tx_pending2: "स्थिति में बनाई जाएगी। 2FA मैनेजर पिन द्वारा स्वीकृत होने के बाद ही राशि जमा/निकाली जाएगी।",
+        btn_cancel: "रद्द करें",
+        btn_submit_2fa: "2FA प्राधिकरण के लिए सबमिट करें",
+        modal_2fa_title: "मैनेजर 2FA प्रमाणीकरण",
+        modal_2fa_desc: "अपरिवर्तनीय खाते में लेनदेन निपटान को प्रमाणित करें",
+        lbl_tx_id: "लेनदेन ID:",
+        lbl_comm_type: "समिति / प्रकार:",
+        lbl_total_settle: "कुल निपटान:",
+        lbl_enter_pin: "4-अंकीय मैनेजर सुरक्षा पिन दर्ज करें",
+        lbl_default_demo_pin: "डिफ़ॉल्ट डेमो पिन:",
+        msg_invalid_pin: "अमान्य पिन। कृपया सही 4-अंकीय मैनेजर पिन दर्ज करें।",
+        btn_reject: "अस्वीकार और रद्द करें",
+        btn_auth_seal: "अधिकृत और सील करें",
+        badge_kyc: "KYC सत्यापित",
+        lbl_total_sav_bal: "कुल बचत शेष",
+        lbl_out_loans: "बकाया ऋण",
+        lbl_joined_comms: "जुड़ी समितियां",
+        hdr_enrolled_shgs: "नामांकित एसएचजी और समितियां",
+        hdr_active_loan_accs: "सक्रिय ऋण खाते",
+        hdr_personal_ledger: "व्यक्तिगत खाता लेनदेन",
+        btn_close_profile: "प्रोफ़ाइल बंद करें",
+        modal_enroll_title: "नया सदस्य पंजीकृत करें",
+        modal_enroll_desc: "सदस्य जोड़ें और कई एसएचजी समितियों को असाइन करें",
+        lbl_full_name: "पूरा कानूनी नाम",
+        placeholder_name: "उदा. अनीता देवी",
+        lbl_citizen_id: "नागरिक / राष्ट्रीय ID",
+        placeholder_id: "उदा. 8839 2019 4482",
+        lbl_phone: "मोबाइल नंबर",
+        lbl_assign_comms: "प्रारंभिक समिति संबद्धताएं असाइन करें",
+        lbl_assign_help: "किसी भी पंजीकृत एसएचजी में एक या अधिक समितियां चुनें।",
+        btn_register_profile: "रजिस्टर और प्रोफ़ाइल बनाएं",
+        modal_shg_title: "स्वयं सहायता समूह (SHG) बनाएं",
+        lbl_shg_name: "एसएचजी का नाम",
+        placeholder_shg_name: "उदा. प्रगति महिला...",
+        lbl_location: "गांव / वार्ड / स्थान",
+        placeholder_location: "उदा. रामपुर गांव, ब्लॉक-2",
+        lbl_leader: "नामित नेता / अध्यक्ष",
+        placeholder_leader: "उदा. सुनीता शर्मा",
+        modal_comm_title: "कार्यात्मक समिति जोड़ें",
+        lbl_parent_shg: "मूल स्वयं सहायता समूह",
+        lbl_comm_name: "समिति का नाम",
+        placeholder_comm_name: "उदा. माइक्रो-डेयरी निवेश पूल",
+        lbl_comm_purpose: "समिति का उद्देश्य",
+        placeholder_comm_purpose: "उदा. सामूहिक उपकरण खरीद",
+        btn_create_comm: "समिति बनाएं",
+
+        // JS Messages
+        js_reset_msg: "एप्लिकेशन प्रारंभिक डेटा पर रीसेट हो गया है",
+        js_mgr_active: "मैनेजर मोड सक्रिय। 2FA दोहरा प्रमाणीकरण सक्षम है।",
+        js_emp_active: "फील्ड ऑफिसर मोड सक्रिय।",
+        js_no_shg: "अभी तक कोई स्वयं सहायता समूह नहीं बनाया गया है।",
+        js_assoc_members: "संबद्ध सदस्य",
+        js_func_comms: "कार्यात्मक समितियां",
+        js_members_enrolled: "सदस्य नामांकित",
+        js_saved: "बचाया",
+        js_no_members: "अभी तक कोई सदस्य असाइन नहीं किया गया है",
+        js_no_comms: "इस एसएचजी के तहत कोई समिति नहीं जोड़ी गई है।",
+        js_search_no_match: "खोज से मेल खाने वाले कोई सदस्य नहीं मिले।",
+        js_no_loans: "कोई सक्रिय ऋण बकाया नहीं है।",
+        js_remaining: "बकाया",
+        js_no_tx: "इस फ़िल्टर के तहत कोई लेनदेन दर्ज नहीं किया गया है।",
+        js_approved: "स्वीकृत",
+        js_2fa_sign: "2FA साइन",
+        js_rejected: "अस्वीकृत",
+        js_all_clear: "सब ठीक है! कोई लंबित 2FA प्राधिकरण नहीं है",
+        js_all_clear_desc: "मैनेजर पिन द्वारा प्रत्येक फील्ड लेनदेन को सत्यापित कर लेजर में दर्ज कर लिया गया है।",
+        js_awaiting_pin: "मैनेजर पिन की प्रतीक्षा में",
+        js_review_pin: "समीक्षा करें और पिन दर्ज करें",
+        js_tx_authorized: "मैनेजर पिन द्वारा लेनदेन अधिकृत!",
+        js_tx_rejected: "लेनदेन अस्वीकृत कर दिया गया।",
+        js_fill_fields: "कृपया सभी आवश्यक लेनदेन फ़ील्ड भरें।",
+        js_tx_queued: "लेनदेन अनुरोध मैनेजर पिन सत्यापन के लिए कतारबद्ध।",
+        js_no_loan_found: "सदस्य के लिए कोई सक्रिय ऋण नहीं मिला",
+        js_assign_comm_err: "कृपया इस सदस्य को कम से कम एक समिति सौंपें।",
+        js_member_enrolled: "सफलतापूर्वक नामांकित हो गए!",
+        js_shg_created: "बन गया!",
+        js_comm_added: "एसएचजी में जोड़ दी गई!",
+        js_voice_on: "वॉइस ऑडियो फीडबैक सक्षम किया गया",
+        js_voice_off: "वॉइस ऑडियो फीडबैक म्यूट किया गया",
+        js_ledger_exported: "लेजर CSV सफलतापूर्वक निर्यात किया गया",
+        js_listening: "वॉइस इनपुट के लिए सुन रहा है...",
+        js_voice_error: "इस ब्राउज़र में वॉइस रिकग्निशन समर्थित नहीं है।"
+      }
+    };
+
+    function t(key) {
+      return translations[appState.lang][key] || key;
+    }
+
+    /* ========================================================
        DATA STORE & PERSISTENCE ENGINE (localStorage)
        ======================================================== */
-    const STORAGE_KEY = 'VISHWAS_SHG_LEDGER_DATA_V2';
+    const STORAGE_KEY = 'VISHWAS_SHG_LEDGER_DATA_V3';
     const MANAGER_PIN = '8899'; // Default secure 2FA PIN
 
     // Sample initial state designed for rich hackathon evaluation
     const initialSeedData = {
       role: 'EMPLOYEE', // EMPLOYEE or MANAGER
+      lang: 'en', // 'en' or 'hi'
       voiceFeedback: true,
       shgs: [
-        {
-          id: 'SHG-101',
-          name: 'Pragati Mahila SHG',
-          location: 'Ward 4, Kalyanpur',
-          leader: 'Sunita Sharma',
-          createdDate: '2026-01-15'
-        },
-        {
-          id: 'SHG-102',
-          name: 'Udaan Krishi SHG',
-          location: 'Bikramganj Agri Zone',
-          leader: 'Manju Devi',
-          createdDate: '2026-02-10'
-        },
-        {
-          id: 'SHG-103',
-          name: 'Shakti Vikas Samuh',
-          location: 'Danapur Sector 3',
-          leader: 'Kavita Kumari',
-          createdDate: '2026-03-01'
-        }
+        { id: 'SHG-101', name: 'Pragati Mahila SHG', location: 'Ward 4, Kalyanpur', leader: 'Sunita Sharma', createdDate: '2026-01-15' },
+        { id: 'SHG-102', name: 'Udaan Krishi SHG', location: 'Bikramganj Agri Zone', leader: 'Manju Devi', createdDate: '2026-02-10' },
+        { id: 'SHG-103', name: 'Shakti Vikas Samuh', location: 'Danapur Sector 3', leader: 'Kavita Kumari', createdDate: '2026-03-01' }
       ],
       committees: [
-        {
-          id: 'COM-1',
-          shgId: 'SHG-101',
-          name: 'Emergency Health & Savings Fund',
-          purpose: 'Immediate medical assistance & contingency buffer'
-        },
-        {
-          id: 'COM-2',
-          shgId: 'SHG-101',
-          name: 'Micro-Enterprise & Craft Collective',
-          purpose: 'Artisan loans for raw materials & handlooms'
-        },
-        {
-          id: 'COM-3',
-          shgId: 'SHG-102',
-          name: 'Agritech & Seed Capital Committee',
-          purpose: 'High-yield seeds, solar pumps & collective fertilizer purchase'
-        },
-        {
-          id: 'COM-4',
-          shgId: 'SHG-103',
-          name: 'Education & Skill Development Fund',
-          purpose: 'Children schooling loans & vocational sewing courses'
-        }
+        { id: 'COM-1', shgId: 'SHG-101', name: 'Emergency Health & Savings Fund', purpose: 'Immediate medical assistance & contingency buffer' },
+        { id: 'COM-2', shgId: 'SHG-101', name: 'Micro-Enterprise & Craft Collective', purpose: 'Artisan loans for raw materials & handlooms' },
+        { id: 'COM-3', shgId: 'SHG-102', name: 'Agritech & Seed Capital Committee', purpose: 'High-yield seeds, solar pumps & collective fertilizer purchase' },
+        { id: 'COM-4', shgId: 'SHG-103', name: 'Education & Skill Development Fund', purpose: 'Children schooling loans & vocational sewing courses' }
       ],
       members: [
-        {
-          id: 'MEM-8801',
-          name: 'Radha Devi',
-          citizenId: '•••• •••• 9821',
-          phone: '+91 98350 11223',
-          committeeIds: ['COM-1', 'COM-2'],
-          joinedDate: '2026-01-20'
-        },
-        {
-          id: 'MEM-8802',
-          name: 'Sushila Singh',
-          citizenId: '•••• •••• 4410',
-          phone: '+91 94702 44331',
-          committeeIds: ['COM-2', 'COM-3'],
-          joinedDate: '2026-02-12'
-        },
-        {
-          id: 'MEM-8803',
-          name: 'Pooja Verma',
-          citizenId: '•••• •••• 1092',
-          phone: '+91 91223 88776',
-          committeeIds: ['COM-1', 'COM-4'],
-          joinedDate: '2026-02-25'
-        },
-        {
-          id: 'MEM-8804',
-          name: 'Geeta Kumari',
-          citizenId: '•••• •••• 6534',
-          phone: '+91 99341 55667',
-          committeeIds: ['COM-3', 'COM-4'],
-          joinedDate: '2026-03-05'
-        }
+        { id: 'MEM-8801', name: 'Radha Devi', citizenId: '•••• •••• 9821', phone: '+91 98350 11223', committeeIds: ['COM-1', 'COM-2'], joinedDate: '2026-01-20' },
+        { id: 'MEM-8802', name: 'Sushila Singh', citizenId: '•••• •••• 4410', phone: '+91 94702 44331', committeeIds: ['COM-2', 'COM-3'], joinedDate: '2026-02-12' },
+        { id: 'MEM-8803', name: 'Pooja Verma', citizenId: '•••• •••• 1092', phone: '+91 91223 88776', committeeIds: ['COM-1', 'COM-4'], joinedDate: '2026-02-25' },
+        { id: 'MEM-8804', name: 'Geeta Kumari', citizenId: '•••• •••• 6534', phone: '+91 99341 55667', committeeIds: ['COM-3', 'COM-4'], joinedDate: '2026-03-05' }
       ],
       loans: [
-        {
-          id: 'LN-501',
-          memberId: 'MEM-8801',
-          committeeId: 'COM-2',
-          principal: 25000,
-          remaining: 15000,
-          tenureMonths: 12,
-          interestRate: 6.0,
-          status: 'ACTIVE',
-          disbursedAt: '2026-04-10'
-        },
-        {
-          id: 'LN-502',
-          memberId: 'MEM-8802',
-          committeeId: 'COM-3',
-          principal: 40000,
-          remaining: 32000,
-          tenureMonths: 18,
-          interestRate: 7.5,
-          status: 'ACTIVE',
-          disbursedAt: '2026-05-02'
-        }
+        { id: 'LN-501', memberId: 'MEM-8801', committeeId: 'COM-2', principal: 25000, remaining: 15000, tenureMonths: 12, interestRate: 6.0, status: 'ACTIVE', disbursedAt: '2026-04-10' },
+        { id: 'LN-502', memberId: 'MEM-8802', committeeId: 'COM-3', principal: 40000, remaining: 32000, tenureMonths: 18, interestRate: 7.5, status: 'ACTIVE', disbursedAt: '2026-05-02' }
       ],
       transactions: [
-        {
-          id: 'TX-901',
-          memberId: 'MEM-8801',
-          committeeId: 'COM-1',
-          type: 'SAVINGS', // SAVINGS, LOAN_DISBURSAL, LOAN_REPAYMENT
-          loanId: null,
-          amount: 2500,
-          paymentMode: 'UPI',
-          officerId: 'EMP-OFFICER-419',
-          status: 'APPROVED', // PENDING_APPROVAL, APPROVED, REJECTED
-          managerPinAuth: true,
-          approverId: 'MGR-LEAD-01',
-          timestamp: '2026-07-10 10:30 AM',
-          blockHash: '0x8f2d91a...c71'
-        },
-        {
-          id: 'TX-902',
-          memberId: 'MEM-8801',
-          committeeId: 'COM-2',
-          type: 'LOAN_DISBURSAL',
-          loanId: 'LN-501',
-          amount: 25000,
-          paymentMode: 'BANK_TRANSFER',
-          officerId: 'EMP-OFFICER-419',
-          status: 'APPROVED',
-          managerPinAuth: true,
-          approverId: 'MGR-LEAD-01',
-          timestamp: '2026-07-15 02:15 PM',
-          blockHash: '0x3e1b74a...902'
-        },
-        {
-          id: 'TX-903',
-          memberId: 'MEM-8801',
-          committeeId: 'COM-2',
-          type: 'LOAN_REPAYMENT',
-          loanId: 'LN-501',
-          amount: 5000,
-          paymentMode: 'CASH',
-          officerId: 'EMP-OFFICER-419',
-          status: 'APPROVED',
-          managerPinAuth: true,
-          approverId: 'MGR-LEAD-01',
-          timestamp: '2026-08-01 11:45 AM',
-          blockHash: '0x5c90ab2...44f'
-        },
-        {
-          id: 'TX-904',
-          memberId: 'MEM-8803',
-          committeeId: 'COM-4',
-          type: 'SAVINGS',
-          loanId: null,
-          amount: 3000,
-          paymentMode: 'UPI',
-          officerId: 'EMP-OFFICER-419',
-          status: 'PENDING_APPROVAL',
-          managerPinAuth: false,
-          approverId: null,
-          timestamp: '2026-08-22 04:20 PM',
-          blockHash: 'UNCOMMITTED'
-        },
-        {
-          id: 'TX-905',
-          memberId: 'MEM-8802',
-          committeeId: 'COM-3',
-          type: 'LOAN_REPAYMENT',
-          loanId: 'LN-502',
-          amount: 4000,
-          paymentMode: 'DEBIT_CARD',
-          officerId: 'EMP-OFFICER-419',
-          status: 'PENDING_APPROVAL',
-          managerPinAuth: false,
-          approverId: null,
-          timestamp: '2026-08-23 09:10 AM',
-          blockHash: 'UNCOMMITTED'
-        }
+        { id: 'TX-901', memberId: 'MEM-8801', committeeId: 'COM-1', type: 'SAVINGS', loanId: null, amount: 2500, paymentMode: 'UPI', officerId: 'EMP-OFFICER-419', status: 'APPROVED', managerPinAuth: true, approverId: 'MGR-LEAD-01', timestamp: '2026-07-10 10:30 AM', blockHash: '0x8f2d91a...c71' },
+        { id: 'TX-902', memberId: 'MEM-8801', committeeId: 'COM-2', type: 'LOAN_DISBURSAL', loanId: 'LN-501', amount: 25000, paymentMode: 'BANK_TRANSFER', officerId: 'EMP-OFFICER-419', status: 'APPROVED', managerPinAuth: true, approverId: 'MGR-LEAD-01', timestamp: '2026-07-15 02:15 PM', blockHash: '0x3e1b74a...902' },
+        { id: 'TX-903', memberId: 'MEM-8801', committeeId: 'COM-2', type: 'LOAN_REPAYMENT', loanId: 'LN-501', amount: 5000, paymentMode: 'CASH', officerId: 'EMP-OFFICER-419', status: 'APPROVED', managerPinAuth: true, approverId: 'MGR-LEAD-01', timestamp: '2026-08-01 11:45 AM', blockHash: '0x5c90ab2...44f' },
+        { id: 'TX-904', memberId: 'MEM-8803', committeeId: 'COM-4', type: 'SAVINGS', loanId: null, amount: 3000, paymentMode: 'UPI', officerId: 'EMP-OFFICER-419', status: 'PENDING_APPROVAL', managerPinAuth: false, approverId: null, timestamp: '2026-08-22 04:20 PM', blockHash: 'UNCOMMITTED' },
+        { id: 'TX-905', memberId: 'MEM-8802', committeeId: 'COM-3', type: 'LOAN_REPAYMENT', loanId: 'LN-502', amount: 4000, paymentMode: 'DEBIT_CARD', officerId: 'EMP-OFFICER-419', status: 'PENDING_APPROVAL', managerPinAuth: false, approverId: null, timestamp: '2026-08-23 09:10 AM', blockHash: 'UNCOMMITTED' }
       ]
     };
 
@@ -1030,7 +1272,11 @@
     function loadState() {
       try {
         const stored = localStorage.getItem(STORAGE_KEY);
-        if (stored) return JSON.parse(stored);
+        if (stored) {
+          let state = JSON.parse(stored);
+          if(!state.lang) state.lang = 'en'; // backward compatibility
+          return state;
+        }
       } catch (e) {
         console.error('Storage error:', e);
       }
@@ -1050,9 +1296,125 @@
         appState = JSON.parse(JSON.stringify(initialSeedData));
         saveState();
         initApp();
-        showToast('Application reset to initial seed state', 'info');
+        showToast(t('js_reset_msg'), 'info');
       }
     }
+
+    /* ========================================================
+       LANGUAGE (I18N) ENGINE
+       ======================================================== */
+    function toggleLanguage() {
+      appState.lang = appState.lang === 'en' ? 'hi' : 'en';
+      saveState();
+      applyTranslations();
+      renderDashboardStats();
+      renderHierarchy();
+      renderMembersGrid();
+      renderAllTransactionsTable();
+      renderApprovalsDesk();
+      populateDropdowns();
+    }
+
+    function applyTranslations() {
+      document.getElementById('currentLangDisp').textContent = appState.lang === 'en' ? 'EN' : 'HI';
+      
+      const elements = document.querySelectorAll('[data-i18n]');
+      elements.forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[appState.lang][key]) {
+          el.innerHTML = translations[appState.lang][key];
+        }
+      });
+
+      const placeholders = document.querySelectorAll('[data-i18n-placeholder]');
+      placeholders.forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        if (translations[appState.lang][key]) {
+          el.setAttribute('placeholder', translations[appState.lang][key]);
+        }
+      });
+
+      syncRoleUI();
+    }
+
+    /* ========================================================
+       VOICE RECOGNITION (Input) & SYNTHESIS (Output)
+       ======================================================== */
+    let recognition;
+    if ('webkitSpeechRecognition' in window) {
+      recognition = new webkitSpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = false;
+    }
+
+    function startVoiceInput(inputId) {
+      if (!recognition) {
+        showToast(t('js_voice_error'), 'error');
+        return;
+      }
+      
+      const icon = document.getElementById(`mic-icon-${inputId}`);
+      if(icon) icon.classList.add('mic-recording');
+      
+      recognition.lang = appState.lang === 'hi' ? 'hi-IN' : 'en-US';
+      
+      recognition.onstart = function() {
+        showToast(t('js_listening'), 'info');
+      };
+      
+      recognition.onresult = function(event) {
+        const transcript = event.results[0][0].transcript;
+        const inputEl = document.getElementById(inputId);
+        if (inputEl) {
+          inputEl.value = transcript;
+          // Trigger change events if necessary
+          if(inputEl.oninput) inputEl.oninput(new Event('input'));
+        }
+        if(icon) icon.classList.remove('mic-recording');
+      };
+
+      recognition.onerror = function(event) {
+        if(icon) icon.classList.remove('mic-recording');
+      }
+
+      recognition.onend = function() {
+        if(icon) icon.classList.remove('mic-recording');
+      }
+
+      recognition.start();
+    }
+
+    function speakText(text) {
+      if (!appState.voiceFeedback) return;
+      if ('speechSynthesis' in window) {
+        try {
+          window.speechSynthesis.cancel();
+          const utterance = new SpeechSynthesisUtterance(text);
+          utterance.lang = appState.lang === 'hi' ? 'hi-IN' : 'en-US';
+          utterance.rate = 1.0;
+          utterance.pitch = 1.0;
+          window.speechSynthesis.speak(utterance);
+        } catch (e) {
+          console.log('Speech synthesis inactive:', e);
+        }
+      }
+    }
+
+    function toggleAudioVoicePrompt() {
+      appState.voiceFeedback = !appState.voiceFeedback;
+      saveState();
+      const btn = document.getElementById('voiceToggleBtn');
+      if (appState.voiceFeedback) {
+        btn.innerHTML = '<i data-lucide="volume-2" class="w-5 h-5 text-emerald-400"></i>';
+        showToast(t('js_voice_on'), 'info');
+        speakText(appState.lang === 'hi' ? 'वॉइस फीडबैक सक्षम किया गया' : 'Voice feedback enabled.');
+      } else {
+        btn.innerHTML = '<i data-lucide="volume-x" class="w-5 h-5 text-slate-400"></i>';
+        showToast(t('js_voice_off'), 'info');
+      }
+      lucide.createIcons();
+    }
+
 
     /* ========================================================
        APPLICATION INITIALIZATION & UI SYNC
@@ -1066,7 +1428,7 @@
     });
 
     function initApp() {
-      syncRoleUI();
+      applyTranslations();
       renderDashboardStats();
       renderHierarchy();
       renderMembersGrid();
@@ -1085,11 +1447,11 @@
       saveState();
       syncRoleUI();
       if (role === 'MANAGER') {
-        speakText('Manager mode active. 2FA dual-authorization enabled.');
-        showToast('Switched to Manager Mode (2FA Approver)', 'info');
+        speakText(t('js_mgr_active'));
+        showToast(t('js_mgr_active'), 'info');
       } else {
-        speakText('Field Officer mode active.');
-        showToast('Switched to Field Officer Mode (Maker)', 'info');
+        speakText(t('js_emp_active'));
+        showToast(t('js_emp_active'), 'info');
       }
       lucide.createIcons();
     }
@@ -1102,11 +1464,11 @@
       if (appState.role === 'MANAGER') {
         mgrBtn.className = 'flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all bg-amber-500 text-slate-950 shadow-sm';
         empBtn.className = 'flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-300 hover:text-white';
-        roleText.textContent = 'Current Mode: SHG Manager (Checker / 2FA Gatekeeper)';
+        roleText.textContent = t('mode_checker');
       } else {
         empBtn.className = 'flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all bg-emerald-600 text-white shadow-sm';
         mgrBtn.className = 'flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-300 hover:text-white';
-        roleText.textContent = 'Current Mode: Field Officer (Maker)';
+        roleText.textContent = t('mode_maker');
       }
 
       // Update pending count badges
@@ -1117,7 +1479,7 @@
       if (pendingCount > 0) {
         navBadge.textContent = pendingCount;
         navBadge.classList.remove('hidden');
-        tabBadge.textContent = `${pendingCount} Pending`;
+        tabBadge.textContent = `${pendingCount} ${appState.lang === 'hi' ? 'लंबित' : 'Pending'}`;
         tabBadge.classList.remove('hidden');
       } else {
         navBadge.classList.add('hidden');
@@ -1148,12 +1510,10 @@
        DASHBOARD METRICS & CHARTS
        ======================================================== */
     function renderDashboardStats() {
-      // Total approved savings
       const totalSavings = appState.transactions
         .filter(t => t.type === 'SAVINGS' && t.status === 'APPROVED')
         .reduce((sum, t) => sum + Number(t.amount), 0);
 
-      // Total active loans outstanding
       const totalActiveLoanOutstanding = appState.loans
         .filter(l => l.status === 'ACTIVE')
         .reduce((sum, l) => sum + Number(l.remaining), 0);
@@ -1163,12 +1523,11 @@
 
       document.getElementById('statTotalSavings').textContent = '₹' + totalSavings.toLocaleString('en-IN');
       document.getElementById('statTotalLoans').textContent = '₹' + totalActiveLoanOutstanding.toLocaleString('en-IN');
-      document.getElementById('statActiveLoanCount').textContent = `${activeLoanCount} Active Micro-Loans`;
+      document.getElementById('statActiveLoanCount').textContent = `${activeLoanCount} ${appState.lang === 'hi' ? 'सक्रिय ऋण' : 'Active Micro-Loans'}`;
       document.getElementById('statTotalMembers').textContent = appState.members.length;
-      document.getElementById('statShgCommitteesCount').textContent = `${appState.shgs.length} SHGs • ${appState.committees.length} Committees`;
+      document.getElementById('statShgCommitteesCount').textContent = `${appState.shgs.length} SHGs • ${appState.committees.length} ${appState.lang === 'hi' ? 'समितियां' : 'Committees'}`;
       document.getElementById('statPendingApprovals').textContent = pendingCount;
 
-      // Render recent transactions table
       const recentTxs = [...appState.transactions]
         .filter(t => t.status === 'APPROVED')
         .reverse()
@@ -1176,31 +1535,32 @@
 
       const tableBody = document.getElementById('dashboardRecentTxTable');
       if (recentTxs.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="7" class="py-6 text-center text-slate-400">No settled transactions yet.</td></tr>`;
+        tableBody.innerHTML = `<tr><td colspan="7" class="py-6 text-center text-slate-400">${t('js_no_tx')}</td></tr>`;
       } else {
-        tableBody.innerHTML = recentTxs.map(t => {
-          const member = appState.members.find(m => m.id === t.memberId) || { name: 'Unknown' };
-          const comm = appState.committees.find(c => c.id === t.committeeId) || { name: 'General' };
-          const badgeColor = t.type === 'SAVINGS' ? 'bg-emerald-100 text-emerald-800' : t.type === 'LOAN_DISBURSAL' ? 'bg-blue-100 text-blue-800' : 'bg-violet-100 text-violet-800';
-          
+        tableBody.innerHTML = recentTxs.map(txObj => {
+          const member = appState.members.find(m => m.id === txObj.memberId) || { name: 'Unknown' };
+          const comm = appState.committees.find(c => c.id === txObj.committeeId) || { name: 'General' };
+          const badgeColor = txObj.type === 'SAVINGS' ? 'bg-emerald-100 text-emerald-800' : txObj.type === 'LOAN_DISBURSAL' ? 'bg-blue-100 text-blue-800' : 'bg-violet-100 text-violet-800';
+          const typeName = t('opt_' + (txObj.type === 'SAVINGS' ? 'savings' : txObj.type === 'LOAN_DISBURSAL' ? 'loan_issue' : 'loan_repay'));
+
           return `
             <tr class="hover:bg-slate-50 transition">
               <td class="py-3 px-4 font-mono font-bold text-slate-900">
-                ${t.id}
-                <span class="block text-[10px] text-slate-400 font-mono">${t.blockHash || '0x...'}</span>
+                ${txObj.id}
+                <span class="block text-[10px] text-slate-400 font-mono">${txObj.blockHash || '0x...'}</span>
               </td>
-              <td class="py-3 px-4 text-slate-500">${t.timestamp}</td>
+              <td class="py-3 px-4 text-slate-500">${txObj.timestamp}</td>
               <td class="py-3 px-4 font-bold text-slate-800">${escapeHtml(member.name)}</td>
               <td class="py-3 px-4 text-slate-600">${escapeHtml(comm.name)}</td>
               <td class="py-3 px-4">
                 <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${badgeColor}">
-                  ${t.type.replace('_', ' ')} • ${t.paymentMode}
+                  ${typeName} • ${txObj.paymentMode}
                 </span>
               </td>
-              <td class="py-3 px-4 text-right font-mono font-bold text-slate-900">₹${Number(t.amount).toLocaleString('en-IN')}</td>
+              <td class="py-3 px-4 text-right font-mono font-bold text-slate-900">₹${Number(txObj.amount).toLocaleString('en-IN')}</td>
               <td class="py-3 px-4 text-center">
                 <span class="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
-                  <i data-lucide="shield-check" class="w-3 h-3"></i> 2FA Sealed
+                  <i data-lucide="shield-check" class="w-3 h-3"></i> ${appState.lang === 'hi' ? '2FA सील' : '2FA Sealed'}
                 </span>
               </td>
             </tr>
@@ -1227,10 +1587,14 @@
           .filter(t => t.type === 'LOAN_REPAYMENT' && t.status === 'APPROVED')
           .reduce((sum, t) => sum + Number(t.amount), 0);
 
+        const labels = appState.lang === 'hi' 
+            ? ['कुल बचत', 'ऋण वितरित', 'पुनर्भुगतान एकत्र']
+            : ['Total Savings Mobilized', 'Loans Disbursed', 'Repayments Collected'];
+
         financeChartInstance = new Chart(flowCtx, {
           type: 'bar',
           data: {
-            labels: ['Total Savings Mobilized', 'Loans Disbursed', 'Repayments Collected'],
+            labels: labels,
             datasets: [{
               label: 'Amount (INR)',
               data: [totalSavings, totalLoansDisbursed, totalRepayments],
@@ -1299,7 +1663,7 @@
       if (!container) return;
 
       if (appState.shgs.length === 0) {
-        container.innerHTML = `<div class="p-8 text-center bg-white rounded-2xl border border-slate-200 text-slate-400">No Self Help Groups created yet.</div>`;
+        container.innerHTML = `<div class="p-8 text-center bg-white rounded-2xl border border-slate-200 text-slate-400">${t('js_no_shg')}</div>`;
         return;
       }
 
@@ -1322,20 +1686,20 @@
                     <h4 class="text-base font-extrabold text-slate-900">${escapeHtml(shg.name)}</h4>
                     <span class="font-mono text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-semibold">${shg.id}</span>
                   </div>
-                  <p class="text-xs text-slate-500">Location: <span class="font-medium text-slate-700">${escapeHtml(shg.location)}</span> • Leader: <span class="font-medium text-slate-700">${escapeHtml(shg.leader)}</span></p>
+                  <p class="text-xs text-slate-500">${appState.lang === 'hi' ? 'स्थान' : 'Location'}: <span class="font-medium text-slate-700">${escapeHtml(shg.location)}</span> • ${appState.lang === 'hi' ? 'नेता' : 'Leader'}: <span class="font-medium text-slate-700">${escapeHtml(shg.leader)}</span></p>
                 </div>
               </div>
 
               <div class="flex items-center gap-2">
                 <span class="text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1 rounded-xl font-bold">
-                  ${shgMemberCount} Associated Members
+                  ${shgMemberCount} ${t('js_assoc_members')}
                 </span>
               </div>
             </div>
 
             <!-- Committees under this SHG -->
             <div class="space-y-3">
-              <h5 class="text-xs font-bold uppercase tracking-wider text-slate-400">Functional Committees (${shgCommittees.length})</h5>
+              <h5 class="text-xs font-bold uppercase tracking-wider text-slate-400">${t('js_func_comms')} (${shgCommittees.length})</h5>
               
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 ${shgCommittees.map(comm => {
@@ -1355,8 +1719,8 @@
                       </div>
 
                       <div class="pt-2 border-t border-slate-200/60 flex items-center justify-between text-xs">
-                        <span class="text-slate-500 font-medium">${commMembers.length} Members Enrolled</span>
-                        <span class="font-bold font-mono text-emerald-700">₹${commSavings.toLocaleString('en-IN')} Saved</span>
+                        <span class="text-slate-500 font-medium">${commMembers.length} ${t('js_members_enrolled')}</span>
+                        <span class="font-bold font-mono text-emerald-700">₹${commSavings.toLocaleString('en-IN')} ${t('js_saved')}</span>
                       </div>
 
                       <!-- Enrolled Members Avatars -->
@@ -1366,12 +1730,12 @@
                             ${getInitials(m.name)}
                           </div>
                         `).join('')}
-                        ${commMembers.length === 0 ? '<span class="text-[11px] text-slate-400">No members assigned yet</span>' : ''}
+                        ${commMembers.length === 0 ? `<span class="text-[11px] text-slate-400">${t('js_no_members')}</span>` : ''}
                       </div>
                     </div>
                   `;
                 }).join('')}
-                ${shgCommittees.length === 0 ? '<div class="col-span-2 text-xs text-slate-400 italic">No committees added under this SHG.</div>' : ''}
+                ${shgCommittees.length === 0 ? `<div class="col-span-2 text-xs text-slate-400 italic">${t('js_no_comms')}</div>` : ''}
               </div>
             </div>
           </div>
@@ -1395,21 +1759,18 @@
       });
 
       if (filtered.length === 0) {
-        container.innerHTML = `<div class="col-span-3 p-8 text-center bg-white rounded-2xl border border-slate-200 text-slate-400">No members matching search query.</div>`;
+        container.innerHTML = `<div class="col-span-3 p-8 text-center bg-white rounded-2xl border border-slate-200 text-slate-400">${t('js_search_no_match')}</div>`;
         return;
       }
 
       container.innerHTML = filtered.map(m => {
-        // Calculate member savings
         const memberSavings = appState.transactions
-          .filter(t => t.memberId === m.id && t.type === 'SAVINGS' && t.status === 'APPROVED')
-          .reduce((sum, t) => sum + Number(t.amount), 0);
+          .filter(tx => tx.memberId === m.id && tx.type === 'SAVINGS' && tx.status === 'APPROVED')
+          .reduce((sum, tx) => sum + Number(tx.amount), 0);
 
-        // Calculate member active loan outstanding
         const memberLoans = appState.loans.filter(l => l.memberId === m.id && l.status === 'ACTIVE');
         const totalLoanOutstanding = memberLoans.reduce((sum, l) => sum + Number(l.remaining), 0);
 
-        // Get committee names
         const joinedCommittees = appState.committees.filter(c => m.committeeIds.includes(c.id));
 
         return `
@@ -1431,18 +1792,18 @@
               <!-- Metrics -->
               <div class="grid grid-cols-2 gap-2 mt-4 p-3 bg-slate-50 rounded-2xl text-xs">
                 <div>
-                  <span class="text-[10px] text-slate-400 font-semibold block uppercase">Total Savings</span>
+                  <span class="text-[10px] text-slate-400 font-semibold block uppercase">${t('lbl_total_sav_bal')}</span>
                   <span class="font-bold font-mono text-emerald-700">₹${memberSavings.toLocaleString('en-IN')}</span>
                 </div>
                 <div>
-                  <span class="text-[10px] text-slate-400 font-semibold block uppercase">Active Loan</span>
+                  <span class="text-[10px] text-slate-400 font-semibold block uppercase">${t('lbl_out_loans')}</span>
                   <span class="font-bold font-mono text-blue-700">₹${totalLoanOutstanding.toLocaleString('en-IN')}</span>
                 </div>
               </div>
 
               <!-- Committees joined -->
               <div class="mt-3">
-                <span class="text-[10px] font-bold uppercase text-slate-400 block mb-1.5">Joined Committees (${joinedCommittees.length})</span>
+                <span class="text-[10px] font-bold uppercase text-slate-400 block mb-1.5">${t('lbl_joined_comms')} (${joinedCommittees.length})</span>
                 <div class="flex flex-wrap gap-1">
                   ${joinedCommittees.map(c => `
                     <span class="text-[10px] bg-emerald-50 text-emerald-800 border border-emerald-200 px-2 py-0.5 rounded-md font-medium">
@@ -1477,13 +1838,13 @@
 
       document.getElementById('profileAvatar').textContent = getInitials(member.name);
       document.getElementById('profileName').textContent = member.name;
-      document.getElementById('profileCitizenId').textContent = `Citizen ID: ${member.citizenId}`;
+      document.getElementById('profileCitizenId').textContent = `${appState.lang === 'hi' ? 'नागरिक ID' : 'Citizen ID'}: ${member.citizenId}`;
       document.getElementById('profilePhone').textContent = member.phone;
 
       // Balances
       const memberSavings = appState.transactions
-        .filter(t => t.memberId === member.id && t.type === 'SAVINGS' && t.status === 'APPROVED')
-        .reduce((sum, t) => sum + Number(t.amount), 0);
+        .filter(tx => tx.memberId === member.id && tx.type === 'SAVINGS' && tx.status === 'APPROVED')
+        .reduce((sum, tx) => sum + Number(tx.amount), 0);
 
       const memberLoans = appState.loans.filter(l => l.memberId === member.id && l.status === 'ACTIVE');
       const totalLoanOutstanding = memberLoans.reduce((sum, l) => sum + Number(l.remaining), 0);
@@ -1499,17 +1860,17 @@
       commList.innerHTML = joinedComms.map(c => {
         const parentShg = appState.shgs.find(s => s.id === c.shgId) || { name: 'SHG' };
         const commSavings = appState.transactions
-          .filter(t => t.memberId === member.id && t.committeeId === c.id && t.type === 'SAVINGS' && t.status === 'APPROVED')
-          .reduce((sum, t) => sum + Number(t.amount), 0);
+          .filter(tx => tx.memberId === member.id && tx.committeeId === c.id && tx.type === 'SAVINGS' && tx.status === 'APPROVED')
+          .reduce((sum, tx) => sum + Number(tx.amount), 0);
 
         return `
           <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between text-xs">
             <div>
               <span class="font-bold text-slate-800">${escapeHtml(c.name)}</span>
-              <span class="block text-[11px] text-slate-500">Under: ${escapeHtml(parentShg.name)}</span>
+              <span class="block text-[11px] text-slate-500">${appState.lang === 'hi' ? 'के अंतर्गत' : 'Under'}: ${escapeHtml(parentShg.name)}</span>
             </div>
             <div class="text-right">
-              <span class="text-[10px] text-slate-400 block font-semibold">Member Savings</span>
+              <span class="text-[10px] text-slate-400 block font-semibold">${t('lbl_total_sav_bal')}</span>
               <span class="font-bold font-mono text-emerald-700">₹${commSavings.toLocaleString('en-IN')}</span>
             </div>
           </div>
@@ -1519,7 +1880,7 @@
       // Loans List
       const loansContainer = document.getElementById('profileLoansList');
       if (memberLoans.length === 0) {
-        loansContainer.innerHTML = `<div class="p-3 text-slate-400 text-xs bg-slate-50 rounded-xl border border-slate-100">No active loans outstanding.</div>`;
+        loansContainer.innerHTML = `<div class="p-3 text-slate-400 text-xs bg-slate-50 rounded-xl border border-slate-100">${t('js_no_loans')}</div>`;
       } else {
         loansContainer.innerHTML = memberLoans.map(l => {
           const comm = appState.committees.find(c => c.id === l.committeeId) || { name: 'General' };
@@ -1536,7 +1897,7 @@
               </div>
               <div class="flex justify-between text-[11px] text-slate-600">
                 <span>Principal: ₹${l.principal.toLocaleString('en-IN')}</span>
-                <span class="font-bold text-blue-800">Remaining: ₹${l.remaining.toLocaleString('en-IN')}</span>
+                <span class="font-bold text-blue-800">${t('js_remaining')}: ₹${l.remaining.toLocaleString('en-IN')}</span>
               </div>
               <div class="w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">
                 <div class="bg-blue-600 h-1.5 rounded-full" style="width: ${progressPct}%"></div>
@@ -1547,17 +1908,19 @@
       }
 
       // Member personal ledger
-      const memberLedger = appState.transactions.filter(t => t.memberId === member.id).reverse();
+      const memberLedger = appState.transactions.filter(tx => tx.memberId === member.id).reverse();
       const ledgerTable = document.getElementById('profileLedgerTable');
-      ledgerTable.innerHTML = memberLedger.map(t => {
-        const comm = appState.committees.find(c => c.id === t.committeeId) || { name: 'General' };
-        const statusBadge = t.status === 'APPROVED' ? 'text-emerald-600' : t.status === 'PENDING_APPROVAL' ? 'text-amber-600' : 'text-rose-600';
+      ledgerTable.innerHTML = memberLedger.map(txObj => {
+        const comm = appState.committees.find(c => c.id === txObj.committeeId) || { name: 'General' };
+        const statusBadge = txObj.status === 'APPROVED' ? 'text-emerald-600' : txObj.status === 'PENDING_APPROVAL' ? 'text-amber-600' : 'text-rose-600';
+        const typeName = t('opt_' + (txObj.type === 'SAVINGS' ? 'savings' : txObj.type === 'LOAN_DISBURSAL' ? 'loan_issue' : 'loan_repay'));
+
         return `
           <tr class="hover:bg-slate-50">
-            <td class="p-2.5 font-mono text-slate-500">${t.timestamp.split(' ')[0]}</td>
-            <td class="p-2.5 font-semibold text-slate-800">${t.type.replace('_', ' ')} (${escapeHtml(comm.name)})</td>
-            <td class="p-2.5 text-right font-mono font-bold text-slate-900">₹${Number(t.amount).toLocaleString('en-IN')}</td>
-            <td class="p-2.5 text-center font-bold ${statusBadge}">${t.status}</td>
+            <td class="p-2.5 font-mono text-slate-500">${txObj.timestamp.split(' ')[0]}</td>
+            <td class="p-2.5 font-semibold text-slate-800">${typeName} (${escapeHtml(comm.name)})</td>
+            <td class="p-2.5 text-right font-mono font-bold text-slate-900">₹${Number(txObj.amount).toLocaleString('en-IN')}</td>
+            <td class="p-2.5 text-center font-bold ${statusBadge}">${t('js_' + txObj.status.toLowerCase().replace('_approval', 'ing_pin').replace('pending_pin', 'awaiting_pin')) || txObj.status}</td>
           </tr>
         `;
       }).join('');
@@ -1580,29 +1943,34 @@
       }
 
       if (txList.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="9" class="p-8 text-center text-slate-400">No transactions recorded under this filter.</td></tr>`;
+        tableBody.innerHTML = `<tr><td colspan="9" class="p-8 text-center text-slate-400">${t('js_no_tx')}</td></tr>`;
         return;
       }
 
-      tableBody.innerHTML = txList.map(t => {
-        const member = appState.members.find(m => m.id === t.memberId) || { name: 'Unknown' };
-        const comm = appState.committees.find(c => c.id === t.committeeId) || { name: 'General', shgId: '' };
+      tableBody.innerHTML = txList.map(txObj => {
+        const member = appState.members.find(m => m.id === txObj.memberId) || { name: 'Unknown' };
+        const comm = appState.committees.find(c => c.id === txObj.committeeId) || { name: 'General', shgId: '' };
         const shg = appState.shgs.find(s => s.id === comm.shgId) || { name: 'SHG' };
 
-        const typeColor = t.type === 'SAVINGS' ? 'bg-emerald-100 text-emerald-800' : t.type === 'LOAN_DISBURSAL' ? 'bg-blue-100 text-blue-800' : 'bg-violet-100 text-violet-800';
-        const statusBadge = t.status === 'APPROVED' 
-          ? `<span class="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full"><i data-lucide="check" class="w-3 h-3"></i> Approved</span>`
-          : t.status === 'PENDING_APPROVAL'
-          ? `<button onclick="prompt2FAAuth('${t.id}')" class="inline-flex items-center gap-1 text-[10px] font-bold text-amber-900 bg-amber-100 hover:bg-amber-200 border border-amber-300 px-2.5 py-1 rounded-full animate-pulse"><i data-lucide="key" class="w-3 h-3"></i> 2FA Sign</button>`
-          : `<span class="text-[10px] font-bold text-rose-700 bg-rose-50 border border-rose-200 px-2 py-0.5 rounded-full">Rejected</span>`;
+        const typeColor = txObj.type === 'SAVINGS' ? 'bg-emerald-100 text-emerald-800' : txObj.type === 'LOAN_DISBURSAL' ? 'bg-blue-100 text-blue-800' : 'bg-violet-100 text-violet-800';
+        const typeName = t('opt_' + (txObj.type === 'SAVINGS' ? 'savings' : txObj.type === 'LOAN_DISBURSAL' ? 'loan_issue' : 'loan_repay'));
+
+        let statusBadge = '';
+        if (txObj.status === 'APPROVED') {
+          statusBadge = `<span class="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full"><i data-lucide="check" class="w-3 h-3"></i> ${t('js_approved')}</span>`;
+        } else if (txObj.status === 'PENDING_APPROVAL') {
+          statusBadge = `<button onclick="prompt2FAAuth('${txObj.id}')" class="inline-flex items-center gap-1 text-[10px] font-bold text-amber-900 bg-amber-100 hover:bg-amber-200 border border-amber-300 px-2.5 py-1 rounded-full animate-pulse"><i data-lucide="key" class="w-3 h-3"></i> ${t('js_2fa_sign')}</button>`;
+        } else {
+          statusBadge = `<span class="text-[10px] font-bold text-rose-700 bg-rose-50 border border-rose-200 px-2 py-0.5 rounded-full">${t('js_rejected')}</span>`;
+        }
 
         return `
           <tr class="hover:bg-slate-50 transition">
             <td class="py-3 px-4 font-mono font-bold text-slate-900">
-              ${t.id}
-              <span class="block text-[10px] font-mono text-slate-400">${t.blockHash || 'UNCOMMITTED'}</span>
+              ${txObj.id}
+              <span class="block text-[10px] font-mono text-slate-400">${txObj.blockHash || 'UNCOMMITTED'}</span>
             </td>
-            <td class="py-3 px-4 text-slate-500">${t.timestamp}</td>
+            <td class="py-3 px-4 text-slate-500">${txObj.timestamp}</td>
             <td class="py-3 px-4 font-bold text-slate-800">${escapeHtml(member.name)}</td>
             <td class="py-3 px-4">
               <span class="font-medium text-slate-800 block">${escapeHtml(comm.name)}</span>
@@ -1610,14 +1978,14 @@
             </td>
             <td class="py-3 px-4">
               <span class="px-2 py-0.5 rounded-md text-[10px] font-bold ${typeColor}">
-                ${t.type.replace('_', ' ')}
+                ${typeName}
               </span>
             </td>
-            <td class="py-3 px-4 font-mono text-slate-600">${t.paymentMode}</td>
-            <td class="py-3 px-4 text-right font-mono font-bold text-slate-900 text-sm">₹${Number(t.amount).toLocaleString('en-IN')}</td>
+            <td class="py-3 px-4 font-mono text-slate-600">${t('opt_' + txObj.paymentMode.toLowerCase().replace('_', '')) || txObj.paymentMode}</td>
+            <td class="py-3 px-4 text-right font-mono font-bold text-slate-900 text-sm">₹${Number(txObj.amount).toLocaleString('en-IN')}</td>
             <td class="py-3 px-4 text-center">${statusBadge}</td>
             <td class="py-3 px-4 text-center">
-              <button onclick="printTransactionReceipt('${t.id}')" class="p-1 text-slate-400 hover:text-emerald-600 transition" title="Print / Share Receipt">
+              <button onclick="printTransactionReceipt('${txObj.id}')" class="p-1 text-slate-400 hover:text-emerald-600 transition" title="Print / Share Receipt">
                 <i data-lucide="printer" class="w-4 h-4"></i>
               </button>
             </td>
@@ -1642,17 +2010,18 @@
             <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-600 mx-auto flex items-center justify-center">
               <i data-lucide="check-check" class="w-6 h-6"></i>
             </div>
-            <h4 class="text-base font-bold text-slate-900">All Clear! No Pending 2FA Authorizations</h4>
-            <p class="text-xs text-slate-500 max-w-md mx-auto">Every field transaction has been verified by the Manager PIN and settled into the immutable ledger.</p>
+            <h4 class="text-base font-bold text-slate-900">${t('js_all_clear')}</h4>
+            <p class="text-xs text-slate-500 max-w-md mx-auto">${t('js_all_clear_desc')}</p>
           </div>
         `;
         return;
       }
 
-      container.innerHTML = pendingTxs.map(t => {
-        const member = appState.members.find(m => m.id === t.memberId) || { name: 'Unknown' };
-        const comm = appState.committees.find(c => c.id === t.committeeId) || { name: 'General', shgId: '' };
+      container.innerHTML = pendingTxs.map(txObj => {
+        const member = appState.members.find(m => m.id === txObj.memberId) || { name: 'Unknown' };
+        const comm = appState.committees.find(c => c.id === txObj.committeeId) || { name: 'General', shgId: '' };
         const shg = appState.shgs.find(s => s.id === comm.shgId) || { name: 'SHG' };
+        const typeName = t('opt_' + (txObj.type === 'SAVINGS' ? 'savings' : txObj.type === 'LOAN_DISBURSAL' ? 'loan_issue' : 'loan_repay'));
 
         return `
           <div class="bg-white rounded-3xl p-5 border-2 border-amber-200 shadow-md flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
@@ -1662,24 +2031,24 @@
               </div>
               <div class="space-y-1">
                 <div class="flex items-center space-x-2">
-                  <span class="font-mono font-bold text-slate-900">${t.id}</span>
-                  <span class="px-2 py-0.5 text-[10px] font-bold bg-amber-100 text-amber-900 rounded-full">Awaiting Manager PIN</span>
-                  <span class="text-xs text-slate-400">• ${t.timestamp}</span>
+                  <span class="font-mono font-bold text-slate-900">${txObj.id}</span>
+                  <span class="px-2 py-0.5 text-[10px] font-bold bg-amber-100 text-amber-900 rounded-full">${t('js_awaiting_pin')}</span>
+                  <span class="text-xs text-slate-400">• ${txObj.timestamp}</span>
                 </div>
                 <h4 class="text-sm font-extrabold text-slate-800">
-                  ${t.type.replace('_', ' ')}: <span class="font-mono text-emerald-700">₹${Number(t.amount).toLocaleString('en-IN')}</span>
+                  ${typeName}: <span class="font-mono text-emerald-700">₹${Number(txObj.amount).toLocaleString('en-IN')}</span>
                 </h4>
                 <p class="text-xs text-slate-500">
-                  Member: <strong class="text-slate-700">${escapeHtml(member.name)}</strong> (${member.id}) • Committee: <strong class="text-slate-700">${escapeHtml(comm.name)}</strong> [${escapeHtml(shg.name)}]
+                  ${t('th_member')}: <strong class="text-slate-700">${escapeHtml(member.name)}</strong> (${member.id}) • ${t('lbl_comm_name')}: <strong class="text-slate-700">${escapeHtml(comm.name)}</strong> [${escapeHtml(shg.name)}]
                 </p>
-                <p class="text-[11px] text-slate-400">Initiated by: <span class="font-mono">${t.officerId}</span> via ${t.paymentMode}</p>
+                <p class="text-[11px] text-slate-400">Initiated by: <span class="font-mono">${txObj.officerId}</span> via ${txObj.paymentMode}</p>
               </div>
             </div>
 
             <div class="flex items-center gap-2 w-full md:w-auto justify-end">
-              <button onclick="prompt2FAAuth('${t.id}')" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md shadow-emerald-600/20 flex items-center space-x-1.5 transition">
+              <button onclick="prompt2FAAuth('${txObj.id}')" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md shadow-emerald-600/20 flex items-center space-x-1.5 transition">
                 <i data-lucide="key" class="w-4 h-4"></i>
-                <span>Review & Enter PIN</span>
+                <span>${t('js_review_pin')}</span>
               </button>
             </div>
           </div>
@@ -1693,16 +2062,17 @@
        ======================================================== */
     function prompt2FAAuth(txId) {
       selectedPendingTxId = txId;
-      const tx = appState.transactions.find(t => t.id === txId);
-      if (!tx) return;
+      const txObj = appState.transactions.find(t => t.id === txId);
+      if (!txObj) return;
 
-      const member = appState.members.find(m => m.id === tx.memberId) || { name: 'Unknown' };
-      const comm = appState.committees.find(c => c.id === tx.committeeId) || { name: 'General' };
+      const member = appState.members.find(m => m.id === txObj.memberId) || { name: 'Unknown' };
+      const comm = appState.committees.find(c => c.id === txObj.committeeId) || { name: 'General' };
+      const typeName = t('opt_' + (txObj.type === 'SAVINGS' ? 'savings' : txObj.type === 'LOAN_DISBURSAL' ? 'loan_issue' : 'loan_repay'));
 
-      document.getElementById('auth2faTxId').textContent = tx.id;
+      document.getElementById('auth2faTxId').textContent = txObj.id;
       document.getElementById('auth2faMember').textContent = member.name;
-      document.getElementById('auth2faCommittee').textContent = `${comm.name} (${tx.type.replace('_', ' ')})`;
-      document.getElementById('auth2faAmount').textContent = '₹' + Number(tx.amount).toLocaleString('en-IN');
+      document.getElementById('auth2faCommittee').textContent = `${comm.name} (${typeName})`;
+      document.getElementById('auth2faAmount').textContent = '₹' + Number(txObj.amount).toLocaleString('en-IN');
       document.getElementById('managerPinInput').value = '';
       document.getElementById('pinErrorMsg').classList.add('hidden');
 
@@ -1714,64 +2084,64 @@
       const pin = document.getElementById('managerPinInput').value.trim();
       if (pin !== MANAGER_PIN) {
         document.getElementById('pinErrorMsg').classList.remove('hidden');
-        speakText('Galat PIN. Kripya sahi PIN darj karein.');
+        speakText(appState.lang === 'hi' ? 'गलत पिन। कृपया सही पिन दर्ज करें।' : 'Invalid PIN. Please enter the correct PIN.');
         return;
       }
 
-      const tx = appState.transactions.find(t => t.id === selectedPendingTxId);
-      if (!tx) return;
+      const txObj = appState.transactions.find(t => t.id === selectedPendingTxId);
+      if (!txObj) return;
 
       // Cryptographic hash simulation (SHA-256 block reference)
       const mockBlockHash = '0x' + Array.from({length: 12}, () => Math.floor(Math.random()*16).toString(16)).join('') + '...seal';
 
-      tx.status = 'APPROVED';
-      tx.managerPinAuth = true;
-      tx.approverId = 'MGR-LEAD-01';
-      tx.blockHash = mockBlockHash;
+      txObj.status = 'APPROVED';
+      txObj.managerPinAuth = true;
+      txObj.approverId = 'MGR-LEAD-01';
+      txObj.blockHash = mockBlockHash;
 
       // Handle loan balance deduction if loan repayment
-      if (tx.type === 'LOAN_REPAYMENT' && tx.loanId) {
-        const loan = appState.loans.find(l => l.id === tx.loanId);
+      if (txObj.type === 'LOAN_REPAYMENT' && txObj.loanId) {
+        const loan = appState.loans.find(l => l.id === txObj.loanId);
         if (loan) {
-          loan.remaining = Math.max(0, loan.remaining - Number(tx.amount));
+          loan.remaining = Math.max(0, loan.remaining - Number(txObj.amount));
           if (loan.remaining === 0) loan.status = 'CLOSED';
         }
       }
 
       // Handle new loan activation if loan disbursal
-      if (tx.type === 'LOAN_DISBURSAL' && !tx.loanId) {
+      if (txObj.type === 'LOAN_DISBURSAL' && !txObj.loanId) {
         const newLoanId = 'LN-' + (500 + appState.loans.length + 1);
         appState.loans.push({
           id: newLoanId,
-          memberId: tx.memberId,
-          committeeId: tx.committeeId,
-          principal: Number(tx.amount),
-          remaining: Number(tx.amount),
+          memberId: txObj.memberId,
+          committeeId: txObj.committeeId,
+          principal: Number(txObj.amount),
+          remaining: Number(txObj.amount),
           tenureMonths: 12,
           interestRate: 6.5,
           status: 'ACTIVE',
           disbursedAt: new Date().toISOString().split('T')[0]
         });
-        tx.loanId = newLoanId;
+        txObj.loanId = newLoanId;
       }
 
       saveState();
       closeModal('modal2FAAuth');
       initApp();
 
-      speakText(`Len-den safal hua. Rupees ${tx.amount} ledger mein darj ho gaya.`);
-      showToast(`Transaction ${tx.id} authorized by Manager PIN!`, 'success');
+      speakText(appState.lang === 'hi' ? `लेन-देन सफल हुआ। रुपये ${txObj.amount} लेजर में दर्ज हो गया।` : `Transaction successful. Rupees ${txObj.amount} settled to ledger.`);
+      showToast(t('js_tx_authorized'), 'success');
     }
 
     function handleRejectPendingTx() {
-      if (!confirm('Reject and cancel this pending transaction entry?')) return;
-      const tx = appState.transactions.find(t => t.id === selectedPendingTxId);
-      if (tx) {
-        tx.status = 'REJECTED';
+      if (!confirm(appState.lang === 'hi' ? 'क्या आप इस लंबित लेनदेन को रद्द करना चाहते हैं?' : 'Reject and cancel this pending transaction entry?')) return;
+      const txObj = appState.transactions.find(t => t.id === selectedPendingTxId);
+      if (txObj) {
+        txObj.status = 'REJECTED';
         saveState();
         closeModal('modal2FAAuth');
         initApp();
-        showToast(`Transaction ${tx.id} rejected.`, 'error');
+        showToast(t('js_tx_rejected'), 'error');
       }
     }
 
@@ -1789,7 +2159,7 @@
       const loanId = (type === 'LOAN_REPAYMENT') ? document.getElementById('txActiveLoanSelect').value : null;
 
       if (!memberId || !committeeId || !amount) {
-        showToast('Please fill all required transaction fields.', 'error');
+        showToast(t('js_fill_fields'), 'error');
         return;
       }
 
@@ -1819,8 +2189,8 @@
       document.getElementById('txForm').reset();
       initApp();
 
-      showToast(`Transaction ${newTxId} submitted. Manager 2FA PIN approval needed.`, 'info');
-      speakText('Transaction request queued for manager PIN verification.');
+      showToast(t('js_tx_queued'), 'info');
+      speakText(appState.lang === 'hi' ? 'लेनदेन अनुरोध मैनेजर पिन सत्यापन के लिए भेजा गया।' : 'Transaction request queued for manager PIN verification.');
 
       // Automatically switch to approvals if in manager mode
       if (appState.role === 'MANAGER') {
@@ -1835,7 +2205,7 @@
       // 1. Transaction member select
       const memberSelect = document.getElementById('txMemberSelect');
       if (memberSelect) {
-        memberSelect.innerHTML = '<option value="">-- Choose Member --</option>' +
+        memberSelect.innerHTML = `<option value="">${t('opt_choose_member')}</option>` +
           appState.members.map(m => `<option value="${m.id}">${m.name} (${m.citizenId})</option>`).join('');
       }
 
@@ -1867,7 +2237,7 @@
 
       if (!memberId) {
         detailsBox.classList.add('hidden');
-        commSelect.innerHTML = '<option value="">-- Choose Joined Committee --</option>';
+        commSelect.innerHTML = `<option value="">${t('opt_choose_comm')}</option>`;
         return;
       }
 
@@ -1879,9 +2249,9 @@
       document.getElementById('txMemberIdDisp').textContent = `ID: ${member.id}`;
 
       const joinedComms = appState.committees.filter(c => member.committeeIds.includes(c.id));
-      document.getElementById('txMemberSummaryDisp').textContent = `Active Committees: ${joinedComms.map(c => c.name).join(', ') || 'None'}`;
+      document.getElementById('txMemberSummaryDisp').textContent = `${appState.lang === 'hi' ? 'सक्रिय समितियां' : 'Active Committees'}: ${joinedComms.map(c => c.name).join(', ') || 'None'}`;
 
-      commSelect.innerHTML = '<option value="">-- Choose Joined Committee --</option>' +
+      commSelect.innerHTML = `<option value="">${t('opt_choose_comm')}</option>` +
         joinedComms.map(c => {
           const shg = appState.shgs.find(s => s.id === c.shgId) || { name: 'SHG' };
           return `<option value="${c.id}">${c.name} [${shg.name}]</option>`;
@@ -1900,10 +2270,10 @@
         const activeLoans = appState.loans.filter(l => l.memberId === memberId && l.status === 'ACTIVE');
         const select = document.getElementById('txActiveLoanSelect');
         select.innerHTML = activeLoans.map(l => {
-          return `<option value="${l.id}">${l.id} - Remaining ₹${l.remaining.toLocaleString('en-IN')}</option>`;
+          return `<option value="${l.id}">${l.id} - ${t('js_remaining')} ₹${l.remaining.toLocaleString('en-IN')}</option>`;
         }).join('');
         if (activeLoans.length === 0) {
-          select.innerHTML = '<option value="">No Active Loans Found for Member</option>';
+          select.innerHTML = `<option value="">${t('js_no_loan_found')}</option>`;
         }
       } else {
         loanPicker.classList.add('hidden');
@@ -1911,7 +2281,6 @@
     }
 
     function onTxCommitteeSelected() {
-      // Refresh loan selector if needed
       onTxTypeChanged();
     }
 
@@ -1927,11 +2296,10 @@
       const selectedCommCheckboxes = Array.from(document.querySelectorAll('input[name="memberCommitteeGroup"]:checked')).map(cb => cb.value);
 
       if (selectedCommCheckboxes.length === 0) {
-        showToast('Please assign at least one committee to this member.', 'error');
+        showToast(t('js_assign_comm_err'), 'error');
         return;
       }
 
-      // Citizen ID masking for privacy
       const maskedId = citizenRaw.length >= 4 
         ? '•••• •••• ' + citizenRaw.slice(-4) 
         : '•••• •••• 9999';
@@ -1951,8 +2319,8 @@
       document.getElementById('memberEnrollForm').reset();
       initApp();
 
-      showToast(`Member ${name} enrolled successfully!`, 'success');
-      speakText(`${name} ka safal panjikaran ho gaya.`);
+      showToast(`${name} ${t('js_member_enrolled')}`, 'success');
+      speakText(appState.lang === 'hi' ? `${name} का सफल पंजीकरण हो गया।` : `${name} enrolled successfully.`);
     }
 
     function handleCreateShg(e) {
@@ -1975,7 +2343,7 @@
       document.getElementById('shgCreateForm').reset();
       initApp();
 
-      showToast(`SHG "${name}" created!`, 'success');
+      showToast(`SHG "${name}" ${t('js_shg_created')}`, 'success');
     }
 
     function handleCreateCommittee(e) {
@@ -1997,7 +2365,7 @@
       document.getElementById('committeeCreateForm').reset();
       initApp();
 
-      showToast(`Committee "${name}" added to SHG!`, 'success');
+      showToast(`Committee "${name}" ${t('js_comm_added')}`, 'success');
     }
 
     /* ========================================================
@@ -2064,47 +2432,19 @@
       }, 3500);
     }
 
-    function speakText(text) {
-      if (!appState.voiceFeedback) return;
-      if ('speechSynthesis' in window) {
-        try {
-          window.speechSynthesis.cancel();
-          const utterance = new SpeechSynthesisUtterance(text);
-          utterance.rate = 1.0;
-          utterance.pitch = 1.0;
-          window.speechSynthesis.speak(utterance);
-        } catch (e) {
-          console.log('Speech synthesis inactive:', e);
-        }
-      }
-    }
-
-    function toggleAudioVoicePrompt() {
-      appState.voiceFeedback = !appState.voiceFeedback;
-      saveState();
-      const btn = document.getElementById('voiceToggleBtn');
-      if (appState.voiceFeedback) {
-        btn.innerHTML = '<i data-lucide="volume-2" class="w-5 h-5 text-emerald-400"></i>';
-        showToast('Voice Audio Feedback Enabled', 'info');
-        speakText('Voice feedback enabled.');
-      } else {
-        btn.innerHTML = '<i data-lucide="volume-x" class="w-5 h-5 text-slate-400"></i>';
-        showToast('Voice Audio Feedback Muted', 'info');
-      }
-      lucide.createIcons();
-    }
-
     function printTransactionReceipt(txId) {
-      const tx = appState.transactions.find(t => t.id === txId);
-      if (!tx) return;
-      const member = appState.members.find(m => m.id === tx.memberId) || { name: 'Member' };
-      const comm = appState.committees.find(c => c.id === tx.committeeId) || { name: 'Committee' };
+      const txObj = appState.transactions.find(t => t.id === txId);
+      if (!txObj) return;
+      const member = appState.members.find(m => m.id === txObj.memberId) || { name: 'Member' };
+      const comm = appState.committees.find(c => c.id === txObj.committeeId) || { name: 'Committee' };
+
+      const typeName = t('opt_' + (txObj.type === 'SAVINGS' ? 'savings' : txObj.type === 'LOAN_DISBURSAL' ? 'loan_issue' : 'loan_repay'));
 
       const receiptWindow = window.open('', '_blank', 'width=600,height=600');
       receiptWindow.document.write(`
         <html>
         <head>
-          <title>VISHWAS Receipt - ${tx.id}</title>
+          <title>VISHWAS Receipt - ${txObj.id}</title>
           <style>
             body { font-family: sans-serif; padding: 30px; color: #1e293b; }
             .header { text-align: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 15px; }
@@ -2116,18 +2456,18 @@
         </head>
         <body>
           <div class="header">
-            <h2 class="title">VISHWAS SHG LEDGER RECEIPT</h2>
+            <h2 class="title">${appState.lang === 'hi' ? 'विश्वास SHG लेजर रसीद' : 'VISHWAS SHG LEDGER RECEIPT'}</h2>
             <p style="font-size: 12px; color: #64748b;">Government & SHG Dual-Key Certified Transaction</p>
           </div>
           <div style="margin-top: 20px;">
-            <div class="row"><span>Receipt / Tx ID:</span><strong>${tx.id}</strong></div>
-            <div class="row"><span>Date & Time:</span><span>${tx.timestamp}</span></div>
-            <div class="row"><span>Member Name:</span><strong>${member.name}</strong></div>
-            <div class="row"><span>Committee:</span><span>${comm.name}</span></div>
-            <div class="row"><span>Transaction Type:</span><span>${tx.type.replace('_', ' ')}</span></div>
-            <div class="row"><span>Payment Channel:</span><span>${tx.paymentMode}</span></div>
-            <div class="row"><span>Ledger Block Hash:</span><span style="font-family: monospace;">${tx.blockHash}</span></div>
-            <div class="row total"><span>Amount Settled:</span><span>₹${Number(tx.amount).toLocaleString('en-IN')}</span></div>
+            <div class="row"><span>${t('th_receipt')} / ${t('lbl_tx_id')}</span><strong>${txObj.id}</strong></div>
+            <div class="row"><span>${t('th_date_time')}:</span><span>${txObj.timestamp}</span></div>
+            <div class="row"><span>${t('th_member_name')}:</span><strong>${member.name}</strong></div>
+            <div class="row"><span>${t('lbl_comm_name')}:</span><span>${comm.name}</span></div>
+            <div class="row"><span>${t('th_category')}:</span><span>${typeName}</span></div>
+            <div class="row"><span>${t('th_pay_method')}:</span><span>${txObj.paymentMode}</span></div>
+            <div class="row"><span>Ledger Block Hash:</span><span style="font-family: monospace;">${txObj.blockHash}</span></div>
+            <div class="row total"><span>${t('lbl_total_settle')}</span><span>₹${Number(txObj.amount).toLocaleString('en-IN')}</span></div>
           </div>
           <div class="seal">
             ✓ 2FA MANAGER PIN AUTHENTICATED & SEALED
@@ -2141,9 +2481,9 @@
 
     function exportLedgerCSV() {
       let csv = 'Transaction_ID,Timestamp,Member_Name,Committee_ID,Type,Payment_Mode,Amount_INR,Status,Block_Hash\n';
-      appState.transactions.forEach(t => {
-        const m = appState.members.find(x => x.id === t.memberId) || { name: 'Unknown' };
-        csv += `"${t.id}","${t.timestamp}","${m.name}","${t.committeeId}","${t.type}","${t.paymentMode}",${t.amount},"${t.status}","${t.blockHash}"\n`;
+      appState.transactions.forEach(txObj => {
+        const m = appState.members.find(x => x.id === txObj.memberId) || { name: 'Unknown' };
+        csv += `"${txObj.id}","${txObj.timestamp}","${m.name}","${txObj.committeeId}","${txObj.type}","${txObj.paymentMode}",${txObj.amount},"${txObj.status}","${txObj.blockHash}"\n`;
       });
 
       const blob = new Blob([csv], { type: 'text/csv' });
@@ -2152,7 +2492,7 @@
       a.setAttribute('href', url);
       a.setAttribute('download', `VISHWAS_SHG_Ledger_${new Date().toISOString().slice(0,10)}.csv`);
       a.click();
-      showToast('Ledger CSV exported successfully', 'success');
+      showToast(t('js_ledger_exported'), 'success');
     }
   </script>
 </body>
