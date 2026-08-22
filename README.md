@@ -22,4 +22,4 @@ VISHWAS is a zero-dependency, enterprise-grade financial ledger and governance w
 VISHWAS uses a highly streamlined, single-file architecture (`index.html`). To deploy, simply commit the file to your repository and enable **GitHub Pages**. The application runs entirely in the client's browser without requiring a dedicated backend server or database setup.
 
 ---
-*Developed by Shreyansh Singh.*
+*Developed by Bug Slayers.*
