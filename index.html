@@ -1,614 +1,2159 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full bg-slate-50">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Maa Shakti SHG - Digital Ledger</title>
+  <title>VISHWAS | SHG Multi-Tier Financial & Governance Ledger</title>
+  
+  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+              800: '#065f46',
+              900: '#064e3b',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
+    /* Custom scrollbars */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+    }
+    .badge-pulse {
+      animation: pulse-dot 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(1.15); }
+    }
   </style>
 </head>
-<body class="bg-slate-200 min-h-screen flex justify-center text-slate-800">
+<body class="h-full font-sans text-slate-800 antialiased flex flex-col">
 
-  <!-- Mobile Frame Wrapper -->
-  <div class="w-full max-w-md bg-slate-50 min-h-screen shadow-2xl flex flex-col relative pb-20">
-
-    <!-- Top App Header -->
-    <header class="bg-emerald-950 text-white px-5 py-4 flex justify-between items-center sticky top-0 z-30 shadow-md">
-      <div class="flex items-center gap-2.5">
-        <div class="bg-emerald-700/80 p-2 rounded-lg text-emerald-100">
-          <i class="fa-solid fa-users text-sm"></i>
+  <!-- TOP GLOBAL NAV -->
+  <header class="bg-slate-900 text-white sticky top-0 z-40 border-b border-slate-800 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center shadow-lg shadow-emerald-500/30">
+          <i data-lucide="shield-check" class="w-6 h-6 text-slate-950 font-bold"></i>
         </div>
         <div>
-          <h1 class="font-bold text-sm tracking-wide leading-tight">Maa Shakti SHG</h1>
-          <p class="text-[10px] text-emerald-300 font-medium">Digital Ledger</p>
-        </div>
-      </div>
-      <button class="text-slate-300"><i class="fa-solid fa-bars text-base"></i></button>
-    </header>
-
-    <!-- VIEW 1: DASHBOARD -->
-    <section id="view-dashboard" class="tab-content active p-4 space-y-4">
-      <h2 class="text-base font-bold text-slate-800">Dashboard</h2>
-
-      <div class="grid grid-cols-2 gap-3">
-        <div class="bg-white p-3.5 rounded-2xl border border-slate-100 shadow-sm flex items-start justify-between">
-          <div>
-            <p class="text-[11px] font-semibold text-slate-500">Total Savings</p>
-            <p class="text-lg font-extrabold text-emerald-700 mt-1" id="dash-savings">₹1,24,500</p>
-            <p class="text-[9px] text-emerald-600 font-medium mt-0.5">+ ₹7,500 this month</p>
+          <div class="flex items-center space-x-2">
+            <span class="text-xl font-extrabold tracking-tight text-white">VISHWAS</span>
+            <span class="text-[10px] uppercase font-bold tracking-widest bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full border border-emerald-500/30">SHG Ledger v2.4</span>
           </div>
-          <div class="bg-emerald-100 p-2 rounded-xl text-emerald-800"><i class="fa-solid fa-indian-rupee-sign text-xs"></i></div>
-        </div>
-
-        <div class="bg-white p-3.5 rounded-2xl border border-slate-100 shadow-sm flex items-start justify-between">
-          <div>
-            <p class="text-[11px] font-semibold text-slate-500">Total Loans Given</p>
-            <p class="text-lg font-extrabold text-blue-700 mt-1">₹87,000</p>
-            <p class="text-[9px] text-slate-400 font-medium mt-0.5">7 active loans</p>
-          </div>
-          <div class="bg-blue-100 p-2 rounded-xl text-blue-800"><i class="fa-solid fa-hand-holding-dollar text-xs"></i></div>
-        </div>
-
-        <div class="bg-white p-3.5 rounded-2xl border border-slate-100 shadow-sm flex items-start justify-between">
-          <div>
-            <p class="text-[11px] font-semibold text-slate-500">Outstanding Loans</p>
-            <p class="text-lg font-extrabold text-amber-600 mt-1">₹37,000</p>
-            <p class="text-[9px] text-slate-400 font-medium mt-0.5">7 members</p>
-          </div>
-          <div class="bg-amber-100 p-2 rounded-xl text-amber-800"><i class="fa-solid fa-clock-rotate-left text-xs"></i></div>
-        </div>
-
-        <div class="bg-white p-3.5 rounded-2xl border border-slate-100 shadow-sm flex items-start justify-between">
-          <div>
-            <p class="text-[11px] font-semibold text-slate-500">Total Members</p>
-            <p class="text-lg font-extrabold text-slate-800 mt-1">18</p>
-            <p class="text-[9px] text-emerald-600 font-medium mt-0.5">Active members</p>
-          </div>
-          <div class="bg-emerald-100 p-2 rounded-xl text-emerald-800"><i class="fa-solid fa-user-group text-xs"></i></div>
+          <p class="text-xs text-slate-400 hidden sm:block">Empowering Self-Help Groups with Dual-Key Governance</p>
         </div>
       </div>
 
-      <!-- Ledger Integrity Card -->
-      <div onclick="switchTab('audit')" class="bg-emerald-50 border border-emerald-200/80 p-3.5 rounded-2xl flex items-center justify-between cursor-pointer hover:bg-emerald-100/60 transition">
-        <div class="flex items-center gap-3">
-          <div class="bg-emerald-600 text-white p-2 rounded-full"><i class="fa-solid fa-shield-halved text-sm"></i></div>
-          <div>
-            <p class="text-[10px] uppercase font-bold tracking-wider text-emerald-800">Ledger Integrity</p>
-            <p class="text-sm font-extrabold text-emerald-950">VERIFIED</p>
-            <p class="text-[10px] text-emerald-700 mt-0.5">All transactions are secure and tamper-evident.</p>
-          </div>
-        </div>
-        <i class="fa-solid fa-chevron-right text-emerald-700 text-xs"></i>
-      </div>
-
-      <button onclick="switchTab('add')" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white py-3 rounded-xl font-bold text-xs shadow-sm">
-        + Record New Transaction
-      </button>
-
-      <!-- Recent Transactions -->
-      <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
-        <div class="flex justify-between items-center mb-3">
-          <h3 class="text-xs font-bold text-slate-800">Recent Transactions</h3>
-          <button onclick="switchTab('transactions')" class="text-[11px] font-semibold text-emerald-700">View All</button>
-        </div>
-        <div class="space-y-3" id="dash-recent-list">
-          <!-- Populated by JS -->
-        </div>
-      </div>
-    </section>
-
-    <!-- VIEW 2: ADD TRANSACTION -->
-    <section id="view-add" class="tab-content p-4 space-y-4">
-      <div class="flex items-center gap-2">
-        <button onclick="switchTab('dashboard')" class="p-1 text-slate-600"><i class="fa-solid fa-arrow-left"></i></button>
-        <h2 class="text-sm font-bold text-slate-800">Add Transaction</h2>
-      </div>
-
-      <div>
-        <p class="text-[11px] font-semibold text-slate-600 mb-2">Choose Transaction Type</p>
-        <div class="grid grid-cols-3 gap-2">
-          <button id="type-Contribution" onclick="setType('Contribution')" class="type-btn p-3 rounded-xl flex flex-col items-center gap-1.5 bg-emerald-600 text-white shadow-md">
-            <i class="fa-solid fa-arrow-down text-sm"></i>
-            <span class="text-[11px] font-bold">Contribution</span>
-          </button>
-          <button id="type-Loan" onclick="setType('Loan')" class="type-btn p-3 rounded-xl flex flex-col items-center gap-1.5 bg-white border text-slate-700">
-            <i class="fa-solid fa-indian-rupee-sign text-sm"></i>
-            <span class="text-[11px] font-bold">Loan</span>
-          </button>
-          <button id="type-Repayment" onclick="setType('Repayment')" class="type-btn p-3 rounded-xl flex flex-col items-center gap-1.5 bg-white border text-slate-700">
-            <i class="fa-solid fa-rotate-left text-sm"></i>
-            <span class="text-[11px] font-bold">Repayment</span>
-          </button>
-        </div>
-      </div>
-
-      <div>
-        <label class="text-[11px] font-semibold text-slate-600 block mb-1">Select Member</label>
-        <select id="input-member" class="w-full bg-white border border-slate-200 p-2.5 rounded-xl text-xs font-semibold text-slate-800">
-          <option value="Rani">Rani (MEM-001)</option>
-          <option value="Sita">Sita (MEM-002)</option>
-          <option value="Priya">Priya (MEM-003)</option>
-          <option value="Meena">Meena (MEM-004)</option>
-        </select>
-      </div>
-
-      <div>
-        <label class="text-[11px] font-semibold text-slate-600 block mb-1">Amount (₹)</label>
-        <input id="input-amount" type="number" value="500" class="w-full bg-white border border-slate-200 p-2.5 rounded-xl text-sm font-bold text-slate-900" />
-      </div>
-
-      <div>
-        <label class="text-[11px] font-semibold text-slate-600 block mb-1">Note (Optional)</label>
-        <input id="input-note" type="text" placeholder="e.g. Monthly savings" class="w-full bg-white border border-slate-200 p-2.5 rounded-xl text-xs text-slate-700" />
-      </div>
-
-      <div class="grid grid-cols-2 gap-2 pt-1">
-        <button type="button" class="flex items-center justify-center gap-2 border bg-white py-2 rounded-xl text-[11px] font-semibold text-slate-700">
-          <i class="fa-solid fa-keyboard text-slate-500"></i> Type / Icon Input
+      <!-- Center System Switcher / Role Switcher -->
+      <div class="flex items-center bg-slate-800/90 p-1 rounded-xl border border-slate-700/80">
+        <button id="roleBtnEmployee" onclick="setRole('EMPLOYEE')" class="flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all bg-emerald-600 text-white shadow-sm">
+          <i data-lucide="user-check" class="w-4 h-4"></i>
+          <span>Field Officer (Maker)</span>
         </button>
-        <button type="button" onclick="startVoiceInput()" class="flex items-center justify-center gap-2 border bg-emerald-50 border-emerald-200 py-2 rounded-xl text-[11px] font-bold text-emerald-800">
-          <i class="fa-solid fa-microphone text-emerald-700"></i> Voice Input
+        <button id="roleBtnManager" onclick="setRole('MANAGER')" class="flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-300 hover:text-white">
+          <i data-lucide="key-round" class="w-4 h-4"></i>
+          <span>SHG Manager (Checker 2FA)</span>
+          <span id="pendingBadgeNav" class="hidden px-1.5 py-0.2 text-[10px] font-bold bg-amber-500 text-slate-950 rounded-full">0</span>
         </button>
       </div>
 
-      <button onclick="promptDualSign()" class="w-full bg-emerald-800 hover:bg-emerald-900 text-white font-extrabold py-3.5 rounded-xl text-xs tracking-wider uppercase mt-4 shadow">
-        Save Transaction
+      <!-- Right Action Toolbar -->
+      <div class="flex items-center space-x-3">
+        <button onclick="toggleAudioVoicePrompt()" id="voiceToggleBtn" class="p-2 rounded-lg bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 transition" title="Toggle Voice Feedback (Hindi/English)">
+          <i data-lucide="volume-2" class="w-5 h-5 text-emerald-400"></i>
+        </button>
+        <button onclick="openNewTransactionModal()" class="hidden sm:flex items-center space-x-2 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold px-3.5 py-2 rounded-lg text-xs transition shadow-md shadow-emerald-500/20">
+          <i data-lucide="plus-circle" class="w-4 h-4"></i>
+          <span>New Entry</span>
+        </button>
+        <button onclick="resetToSampleData()" class="p-2 text-slate-400 hover:text-rose-400 transition" title="Reset Demo Data">
+          <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- SECONDARY NAV TABS -->
+  <nav class="bg-white border-b border-slate-200 sticky top-16 z-30 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex space-x-1 sm:space-x-4 overflow-x-auto py-2">
+      <button onclick="switchTab('dashboard')" id="tabBtn-dashboard" class="tab-btn active-tab flex items-center space-x-2 px-4 py-2 rounded-lg text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200">
+        <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+        <span>Dashboard</span>
       </button>
-    </section>
+      <button onclick="switchTab('hierarchy')" id="tabBtn-hierarchy" class="tab-btn flex items-center space-x-2 px-4 py-2 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100">
+        <i data-lucide="network" class="w-4 h-4"></i>
+        <span>SHGs & Committees</span>
+      </button>
+      <button onclick="switchTab('members')" id="tabBtn-members" class="tab-btn flex items-center space-x-2 px-4 py-2 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100">
+        <i data-lucide="users" class="w-4 h-4"></i>
+        <span>Member 360° Directory</span>
+      </button>
+      <button onclick="switchTab('transactions')" id="tabBtn-transactions" class="tab-btn flex items-center space-x-2 px-4 py-2 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100">
+        <i data-lucide="receipt" class="w-4 h-4"></i>
+        <span>Ledger & Transactions</span>
+      </button>
+      <button onclick="switchTab('approvals')" id="tabBtn-approvals" class="tab-btn relative flex items-center space-x-2 px-4 py-2 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100">
+        <i data-lucide="shield-alert" class="w-4 h-4"></i>
+        <span>2FA Approval Desk</span>
+        <span id="pendingBadgeTab" class="hidden px-2 py-0.5 text-[10px] font-bold bg-amber-500 text-slate-950 rounded-full">0 Pending</span>
+      </button>
+    </div>
+  </nav>
 
-    <!-- VIEW 3: TRANSACTIONS LIST -->
-    <section id="view-transactions" class="tab-content p-4 space-y-3">
-      <h2 class="text-sm font-bold text-slate-800">Transaction Ledger</h2>
-      <div class="flex gap-2">
-        <input type="text" placeholder="Search transactions..." class="w-full bg-white px-3 py-2 text-xs rounded-xl border border-slate-200" />
-        <button class="bg-white border p-2 rounded-xl text-slate-600"><i class="fa-solid fa-filter text-xs"></i></button>
-      </div>
-
-      <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
-        <div class="grid grid-cols-5 bg-slate-50 p-2.5 text-[10px] font-bold text-slate-500 uppercase">
-          <span class="col-span-2">Date & Time</span>
-          <span>Member</span>
-          <span>Type</span>
-          <span class="text-right">Amount (₹)</span>
+  <!-- MAIN BODY CONTENT CONTAINER -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+    
+    <!-- NOTICE BANNER FOR DEMO / ROLES -->
+    <div id="roleNoticeBanner" class="bg-gradient-to-r from-slate-900 to-slate-800 text-white rounded-2xl p-4 shadow-sm border border-slate-700 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+      <div class="flex items-center space-x-3">
+        <div class="p-2.5 bg-emerald-500/20 text-emerald-400 rounded-xl border border-emerald-500/30">
+          <i data-lucide="info" class="w-5 h-5"></i>
         </div>
-        <div id="tx-table-body" class="divide-y divide-slate-100">
-          <!-- Populated by JS -->
-        </div>
-      </div>
-
-      <div class="bg-slate-100/80 p-3 rounded-2xl border border-slate-200 flex items-center justify-between">
         <div>
-          <p class="text-[11px] font-bold text-slate-800">How it works?</p>
-          <p class="text-[9px] text-slate-500 max-w-[220px]">
-            Every transaction is linked with a unique cryptographic hash and timestamp. Any unauthorized change will be detected.
+          <h4 class="text-sm font-bold text-white flex items-center gap-2">
+            <span id="currentRoleText">Current Mode: Field Officer (Maker)</span>
+            <span class="text-[10px] font-mono px-2 py-0.5 bg-slate-700 text-emerald-300 rounded">2FA Manager Default PIN: 8899</span>
+          </h4>
+          <p class="text-xs text-slate-300">Initiate savings, loan disbursals, or repayments. All entries require Manager 2FA PIN authorization before ledger settlement.</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+        <button onclick="openNewMemberModal()" class="px-3.5 py-1.5 bg-slate-700 hover:bg-slate-600 text-white text-xs font-semibold rounded-lg border border-slate-600 transition flex items-center space-x-1.5">
+          <i data-lucide="user-plus" class="w-4 h-4 text-emerald-400"></i>
+          <span>Enroll Member</span>
+        </button>
+        <button onclick="openNewTransactionModal()" class="px-3.5 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-slate-950 text-xs font-bold rounded-lg transition shadow">
+          <span>+ Initiate Transaction</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- TAB 1: DASHBOARD OVERVIEW -->
+    <!-- ======================================================== -->
+    <section id="view-dashboard" class="space-y-6">
+      
+      <!-- Metrics Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Metric 1 -->
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm relative overflow-hidden">
+          <div class="flex items-center justify-between">
+            <p class="text-xs font-semibold tracking-wide uppercase text-slate-500">Total Savings Pool</p>
+            <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+              <i data-lucide="piggy-bank" class="w-5 h-5"></i>
+            </div>
+          </div>
+          <h3 id="statTotalSavings" class="text-2xl font-extrabold text-slate-900 mt-3 font-mono">₹0</h3>
+          <p class="text-xs text-emerald-600 font-medium mt-1 flex items-center gap-1">
+            <i data-lucide="trending-up" class="w-3.5 h-3.5"></i>
+            <span>Verified across active committees</span>
           </p>
         </div>
-        <div class="bg-emerald-600 text-white p-2 rounded-full"><i class="fa-solid fa-shield-halved text-sm"></i></div>
-      </div>
-    </section>
 
-    <!-- VIEW 4: TRANSACTION DETAIL -->
-    <section id="view-detail" class="tab-content p-4 space-y-4">
-      <div class="flex items-center gap-2">
-        <button onclick="switchTab('transactions')" class="p-1 text-slate-600"><i class="fa-solid fa-arrow-left"></i></button>
-        <h2 class="text-sm font-bold text-slate-800">Transaction Details</h2>
-      </div>
-
-      <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-2xl flex justify-between items-center">
-        <div>
-          <p class="text-xs font-bold text-emerald-950" id="detail-type">Contribution</p>
-          <p class="text-xs text-slate-600 mt-0.5" id="detail-member">Rani</p>
-          <p class="text-[10px] text-slate-400" id="detail-time">22 Aug 2026, 11:31 PM</p>
-        </div>
-        <p class="text-2xl font-black text-slate-900" id="detail-amount">₹500</p>
-      </div>
-
-      <div class="bg-white p-4 rounded-2xl border border-slate-200 space-y-2 text-xs">
-        <h3 class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Transaction Information</h3>
-        <div class="flex justify-between"><span class="text-slate-500">Transaction ID</span><span class="font-mono font-semibold" id="detail-id">TXN-20260822-001</span></div>
-        <div class="flex justify-between"><span class="text-slate-500">Member</span><span id="detail-info-member">Rani</span></div>
-        <div class="flex justify-between"><span class="text-slate-500">Note</span><span id="detail-note">Monthly savings</span></div>
-      </div>
-
-      <div class="bg-white p-4 rounded-2xl border border-slate-200 space-y-2 text-xs">
-        <h3 class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Security Information</h3>
-        <div>
-          <span class="text-slate-500 block text-[10px]">Previous Hash</span>
-          <span class="font-mono text-[10px] text-slate-600 truncate block" id="detail-prevhash">00000000...</span>
-        </div>
-        <div>
-          <span class="text-slate-500 block text-[10px]">Current Hash</span>
-          <span class="font-mono text-[10px] text-slate-600 truncate block" id="detail-curhash">b1c4e8f9...</span>
-        </div>
-      </div>
-
-      <button onclick="switchTab('audit')" class="w-full bg-white border border-slate-300 py-2.5 rounded-xl font-bold text-xs text-slate-700 flex items-center justify-center gap-1.5">
-        <i class="fa-solid fa-shield-halved text-emerald-600"></i> Verify Entire Ledger
-      </button>
-    </section>
-
-    <!-- VIEW 5: LOAN TRACKER -->
-    <section id="view-loans" class="tab-content p-4 space-y-4">
-      <h2 class="text-sm font-bold text-slate-800">Loan Tracker</h2>
-      <div class="flex gap-4 border-b text-xs font-bold pb-2 text-slate-400">
-        <span class="text-emerald-700 border-b-2 border-emerald-700 pb-2">Active Loans</span>
-        <span>Loan History</span>
-      </div>
-
-      <div class="space-y-3" id="loan-card-list">
-        <!-- Populated by JS -->
-      </div>
-    </section>
-
-    <!-- VIEW 6: MEMBERS -->
-    <section id="view-members" class="tab-content p-4 space-y-4">
-      <h2 class="text-sm font-bold text-slate-800">SHG Members</h2>
-      <div class="space-y-3" id="member-card-list">
-        <!-- Populated by JS -->
-      </div>
-    </section>
-
-    <!-- VIEW 7: AUDIT DASHBOARD -->
-    <section id="view-audit" class="tab-content p-4 space-y-4">
-      <h2 class="text-sm font-bold text-slate-800">Audit Dashboard</h2>
-
-      <div class="grid grid-cols-3 gap-2 text-center">
-        <div class="bg-white p-3 rounded-xl border border-slate-200">
-          <p class="text-[9px] text-slate-400 font-semibold">Total Transactions</p>
-          <p class="text-sm font-black text-slate-800 mt-0.5" id="audit-total-tx">126</p>
-        </div>
-        <div class="bg-white p-3 rounded-xl border border-slate-200">
-          <p class="text-[9px] text-slate-400 font-semibold">Total Members</p>
-          <p class="text-sm font-black text-slate-800 mt-0.5">18</p>
-        </div>
-        <div class="bg-white p-3 rounded-xl border border-slate-200">
-          <p class="text-[9px] text-slate-400 font-semibold">Total Savings</p>
-          <p class="text-xs font-black text-emerald-700 mt-0.5">₹1,24,500</p>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-3 gap-2 text-center">
-        <div class="bg-white p-3 rounded-xl border border-slate-200">
-          <p class="text-[9px] text-slate-400 font-semibold">Total Loans Given</p>
-          <p class="text-xs font-black text-blue-700 mt-0.5">₹87,000</p>
-        </div>
-        <div class="bg-white p-3 rounded-xl border border-slate-200">
-          <p class="text-[9px] text-slate-400 font-semibold">Outstanding Loans</p>
-          <p class="text-xs font-black text-amber-700 mt-0.5">₹37,000</p>
-        </div>
-        <div class="bg-white p-3 rounded-xl border border-slate-200">
-          <p class="text-[9px] text-slate-400 font-semibold">Tampering Alerts</p>
-          <p class="text-sm font-black text-emerald-700 mt-0.5" id="audit-tamper-count">0</p>
-        </div>
-      </div>
-
-      <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-2xl flex items-center gap-3">
-        <div class="bg-emerald-600 text-white p-2 rounded-full"><i class="fa-solid fa-shield-halved text-sm"></i></div>
-        <div>
-          <p class="text-[9px] font-bold text-emerald-800 uppercase">Ledger Integrity Status</p>
-          <p class="text-sm font-black text-emerald-950">VERIFIED</p>
-          <p class="text-[10px] text-emerald-700">All transactions are secure. No tampering detected.</p>
-        </div>
-      </div>
-
-      <button onclick="simulateTamperCheck()" class="w-full bg-emerald-800 text-white font-extrabold py-3 rounded-xl text-xs flex items-center justify-center gap-2 shadow">
-        <i class="fa-solid fa-shield-halved"></i> VERIFY ENTIRE LEDGER
-      </button>
-
-      <button onclick="alert('NRLM Form 3 Audit Report Downloaded (CSV/PDF)')" class="w-full bg-white border border-slate-300 text-slate-700 font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-2">
-        <i class="fa-solid fa-download"></i> GENERATE AUDIT REPORT
-      </button>
-    </section>
-
-    <!-- VIEW 8: TAMPER ALERT (PITCH DEMO) -->
-    <section id="view-tamper" class="tab-content p-4 space-y-4">
-      <div class="flex items-center gap-2">
-        <button onclick="switchTab('audit')" class="p-1 text-slate-600"><i class="fa-solid fa-arrow-left"></i></button>
-        <h2 class="text-sm font-bold text-slate-800">Ledger Verification</h2>
-      </div>
-
-      <div class="bg-rose-50 border border-rose-200 p-4 rounded-2xl flex items-center gap-3">
-        <div class="bg-rose-600 text-white p-2.5 rounded-full"><i class="fa-solid fa-triangle-exclamation text-base"></i></div>
-        <div>
-          <p class="text-xs font-black text-rose-950 uppercase tracking-wide">TAMPERING DETECTED</p>
-          <p class="text-[10px] text-rose-700">The following inconsistency was found in the ledger.</p>
-        </div>
-      </div>
-
-      <div class="bg-white p-4 rounded-2xl border border-slate-200 space-y-3">
-        <h3 class="text-xs font-bold text-slate-800">Transaction #37</h3>
-        <div class="grid grid-cols-2 gap-4 bg-slate-50 p-3 rounded-xl">
-          <div>
-            <p class="text-[9px] text-slate-400 font-semibold">Original Amount:</p>
-            <p class="text-base font-black text-slate-800">₹500</p>
+        <!-- Metric 2 -->
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm relative overflow-hidden">
+          <div class="flex items-center justify-between">
+            <p class="text-xs font-semibold tracking-wide uppercase text-slate-500">Active Loan Book</p>
+            <div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+              <i data-lucide="landmark" class="w-5 h-5"></i>
+            </div>
           </div>
-          <div>
-            <p class="text-[9px] text-rose-500 font-semibold">Current Amount:</p>
-            <p class="text-base font-black text-rose-600">₹5,000</p>
+          <h3 id="statTotalLoans" class="text-2xl font-extrabold text-slate-900 mt-3 font-mono">₹0</h3>
+          <p class="text-xs text-blue-600 font-medium mt-1 flex items-center gap-1">
+            <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i>
+            <span id="statActiveLoanCount">0 Disbursed Loans</span>
+          </p>
+        </div>
+
+        <!-- Metric 3 -->
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm relative overflow-hidden">
+          <div class="flex items-center justify-between">
+            <p class="text-xs font-semibold tracking-wide uppercase text-slate-500">Enrolled Members</p>
+            <div class="w-9 h-9 rounded-xl bg-violet-50 text-violet-600 flex items-center justify-center">
+              <i data-lucide="users" class="w-5 h-5"></i>
+            </div>
+          </div>
+          <h3 id="statTotalMembers" class="text-2xl font-extrabold text-slate-900 mt-3 font-mono">0</h3>
+          <p class="text-xs text-violet-600 font-medium mt-1 flex items-center gap-1">
+            <span id="statShgCommitteesCount">0 SHGs • 0 Committees</span>
+          </p>
+        </div>
+
+        <!-- Metric 4: 2FA Pending -->
+        <div class="bg-white rounded-2xl p-5 border border-amber-200 bg-amber-50/40 shadow-sm relative overflow-hidden cursor-pointer" onclick="switchTab('approvals')">
+          <div class="flex items-center justify-between">
+            <p class="text-xs font-semibold tracking-wide uppercase text-amber-800">2FA Approvals Pending</p>
+            <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center">
+              <i data-lucide="shield-alert" class="w-5 h-5"></i>
+            </div>
+          </div>
+          <div class="flex items-baseline space-x-2 mt-3">
+            <h3 id="statPendingApprovals" class="text-2xl font-extrabold text-amber-900 font-mono">0</h3>
+            <span class="text-xs font-bold text-amber-700">Awaiting Manager PIN</span>
+          </div>
+          <p class="text-xs text-amber-700 mt-1 flex items-center gap-1 font-semibold">
+            <span>Click to review 2FA queue &rarr;</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- Charts & Activity Row -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Main Chart -->
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm lg:col-span-2">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h4 class="text-base font-bold text-slate-900">Capital Flow Analysis</h4>
+              <p class="text-xs text-slate-500">Savings mobilized vs. Loans disbursed & repaid (INR)</p>
+            </div>
+            <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-slate-100 text-slate-700">Live Ledger</span>
+          </div>
+          <div class="h-64">
+            <canvas id="financeFlowChart"></canvas>
           </div>
         </div>
 
-        <div>
-          <p class="text-[10px] font-bold text-slate-500 uppercase">Reason</p>
-          <p class="text-xs text-slate-700 mt-0.5">Hash mismatch detected. This transaction has been modified after it was recorded.</p>
-        </div>
-
-        <div>
-          <p class="text-[10px] font-bold text-slate-500 uppercase">Action Required</p>
-          <p class="text-xs text-slate-700 mt-0.5">Please review this transaction and take appropriate action.</p>
+        <!-- Quick Insights & Committee Weight -->
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between">
+          <div>
+            <h4 class="text-base font-bold text-slate-900 mb-1">Committee Distribution</h4>
+            <p class="text-xs text-slate-500 mb-4">Member participation across functional committees</p>
+            <div class="h-44 flex items-center justify-center">
+              <canvas id="committeePieChart"></canvas>
+            </div>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+            <span>Cross-membership support</span>
+            <span class="font-bold text-emerald-600">Active</span>
+          </div>
         </div>
       </div>
 
-      <button onclick="switchTab('audit')" class="w-full bg-emerald-800 hover:bg-emerald-900 text-white font-extrabold py-3.5 rounded-xl text-xs uppercase tracking-wider shadow">
-        Back to Audit Dashboard
-      </button>
+      <!-- Live Recent Verified Ledger Entries -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="p-5 border-b border-slate-200 flex items-center justify-between">
+          <div>
+            <h4 class="text-base font-bold text-slate-900">Recent Immutable Transactions</h4>
+            <p class="text-xs text-slate-500">Approved transactions cryptographically hashed into the ledger</p>
+          </div>
+          <button onclick="switchTab('transactions')" class="text-xs font-bold text-emerald-600 hover:text-emerald-700 flex items-center gap-1">
+            <span>View Full Ledger</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </button>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr class="bg-slate-50 text-slate-500 font-semibold uppercase tracking-wider border-b border-slate-200">
+                <th class="py-3 px-4">Tx ID & Hash</th>
+                <th class="py-3 px-4">Timestamp</th>
+                <th class="py-3 px-4">Member</th>
+                <th class="py-3 px-4">SHG / Committee</th>
+                <th class="py-3 px-4">Type & Mode</th>
+                <th class="py-3 px-4 text-right">Amount</th>
+                <th class="py-3 px-4 text-center">Status</th>
+              </tr>
+            </thead>
+            <tbody id="dashboardRecentTxTable" class="divide-y divide-slate-100 font-medium">
+              <!-- Dynamically Populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
     </section>
 
-    <!-- Bottom Navigation Bar -->
-    <nav class="fixed bottom-0 max-w-md w-full bg-white border-t border-slate-200 px-3 py-2 flex justify-around items-center z-40">
-      <button onclick="switchTab('dashboard')" class="nav-btn text-emerald-800 flex flex-col items-center gap-0.5 text-[10px] font-semibold" data-target="dashboard">
-        <i class="fa-solid fa-house text-sm"></i> Dashboard
-      </button>
-      <button onclick="switchTab('transactions')" class="nav-btn text-slate-400 flex flex-col items-center gap-0.5 text-[10px] font-semibold" data-target="transactions">
-        <i class="fa-solid fa-file-lines text-sm"></i> Transactions
-      </button>
-      <button onclick="switchTab('loans')" class="nav-btn text-slate-400 flex flex-col items-center gap-0.5 text-[10px] font-semibold" data-target="loans">
-        <i class="fa-solid fa-indian-rupee-sign text-sm"></i> Loans
-      </button>
-      <button onclick="switchTab('members')" class="nav-btn text-slate-400 flex flex-col items-center gap-0.5 text-[10px] font-semibold" data-target="members">
-        <i class="fa-solid fa-users text-sm"></i> Members
-      </button>
-      <button onclick="switchTab('audit')" class="nav-btn text-slate-400 flex flex-col items-center gap-0.5 text-[10px] font-semibold" data-target="audit">
-        <i class="fa-solid fa-shield-halved text-sm"></i> Audit
-      </button>
-    </nav>
+    <!-- ======================================================== -->
+    <!-- TAB 2: SHGs & COMMITTEES HIERARCHY -->
+    <!-- ======================================================== -->
+    <section id="view-hierarchy" class="space-y-6 hidden">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <h3 class="text-xl font-extrabold text-slate-900">Self-Help Groups & Committees Hierarchy</h3>
+          <p class="text-xs text-slate-500">Hierarchical grouping: Self Help Groups &rarr; Specialized Committees &rarr; Multi-Enrolled Members</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="openNewShgModal()" class="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-xl text-xs flex items-center space-x-1.5 shadow">
+            <i data-lucide="folder-plus" class="w-4 h-4 text-emerald-400"></i>
+            <span>Create New SHG</span>
+          </button>
+          <button onclick="openNewCommitteeModal()" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl text-xs flex items-center space-x-1.5 shadow">
+            <i data-lucide="layers" class="w-4 h-4"></i>
+            <span>Add Committee</span>
+          </button>
+        </div>
+      </div>
 
+      <!-- SHGs Tree Container -->
+      <div id="shgHierarchyContainer" class="space-y-6">
+        <!-- Injected dynamically via JS -->
+      </div>
+    </section>
+
+    <!-- ======================================================== -->
+    <!-- TAB 3: MEMBER 360° DIRECTORY & PROFILES -->
+    <!-- ======================================================== -->
+    <section id="view-members" class="space-y-6 hidden">
+      <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+        <div>
+          <h3 class="text-xl font-extrabold text-slate-900">Member 360° Profile Hub</h3>
+          <p class="text-xs text-slate-500">Look up members by Name, Citizen ID, or Phone to view their joined SHGs, Committees, and Balances</p>
+        </div>
+        
+        <div class="flex flex-col sm:flex-row items-center gap-3">
+          <div class="relative w-full sm:w-80">
+            <i data-lucide="search" class="w-4 h-4 absolute left-3 top-3 text-slate-400"></i>
+            <input type="text" id="memberSearchInput" oninput="filterMembersList()" placeholder="Search by name, ID (e.g. 8839), phone..." class="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
+          </div>
+          <button onclick="openNewMemberModal()" class="w-full sm:w-auto px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl flex items-center justify-center space-x-2 shadow">
+            <i data-lucide="user-plus" class="w-4 h-4"></i>
+            <span>Enroll New Member</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Members Grid Cards -->
+      <div id="membersGridContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <!-- Rendered via JS -->
+      </div>
+    </section>
+
+    <!-- ======================================================== -->
+    <!-- TAB 4: COMPLETE LEDGER & ALL TRANSACTIONS -->
+    <!-- ======================================================== -->
+    <section id="view-transactions" class="space-y-6 hidden">
+      <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <h3 class="text-xl font-extrabold text-slate-900">Universal Financial Ledger</h3>
+          <p class="text-xs text-slate-500">Complete audit trail with SHA-256 block hash references and 2FA signer metadata</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <select id="filterTxType" onchange="renderAllTransactionsTable()" class="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-700">
+            <option value="ALL">All Transaction Types</option>
+            <option value="SAVINGS">Savings Deposits</option>
+            <option value="LOAN_DISBURSAL">Loan Disbursals</option>
+            <option value="LOAN_REPAYMENT">Loan Repayments</option>
+          </select>
+          <button onclick="exportLedgerCSV()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-xs flex items-center space-x-1.5">
+            <i data-lucide="download" class="w-4 h-4"></i>
+            <span>Export CSV</span>
+          </button>
+          <button onclick="openNewTransactionModal()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs flex items-center space-x-1.5 shadow">
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            <span>Record Transaction</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Ledger Table -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr class="bg-slate-50 text-slate-500 font-semibold uppercase tracking-wider border-b border-slate-200">
+                <th class="py-3.5 px-4">Tx ID & Block Hash</th>
+                <th class="py-3.5 px-4">Date & Time</th>
+                <th class="py-3.5 px-4">Member Name</th>
+                <th class="py-3.5 px-4">SHG / Committee</th>
+                <th class="py-3.5 px-4">Category</th>
+                <th class="py-3.5 px-4">Payment Method</th>
+                <th class="py-3.5 px-4 text-right">Amount (INR)</th>
+                <th class="py-3.5 px-4 text-center">2FA Auth</th>
+                <th class="py-3.5 px-4 text-center">Receipt</th>
+              </tr>
+            </thead>
+            <tbody id="fullLedgerTableBody" class="divide-y divide-slate-100 font-medium">
+              <!-- Dynamically Populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================== -->
+    <!-- TAB 5: MANAGER 2FA APPROVAL QUEUE -->
+    <!-- ======================================================== -->
+    <section id="view-approvals" class="space-y-6 hidden">
+      <div class="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div class="flex items-center space-x-3">
+          <div class="w-12 h-12 rounded-2xl bg-amber-500 text-slate-950 flex items-center justify-center font-bold shadow-lg shadow-amber-500/20">
+            <i data-lucide="key" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <h3 class="text-lg font-extrabold text-slate-900 flex items-center gap-2">
+              <span>Dual-Key 2FA Manager Approval Desk</span>
+              <span class="px-2 py-0.5 text-[10px] bg-amber-200 text-amber-900 font-bold rounded-full">Secure Gateway</span>
+            </h3>
+            <p class="text-xs text-slate-600">Pending transactions submitted by Field Officers require Manager authentication (PIN: <strong class="font-mono">8899</strong>) to enforce anti-fraud governance.</p>
+          </div>
+        </div>
+        <div class="text-right">
+          <span class="text-xs text-slate-500">Dual-Authorization Standard</span>
+          <p class="text-sm font-bold text-slate-800">RBI Micro-Finance Compliance Mode</p>
+        </div>
+      </div>
+
+      <!-- Pending Approval Cards Grid -->
+      <div id="pendingApprovalsList" class="space-y-4">
+        <!-- Dynamically rendered -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ======================================================== -->
+  <!-- MODAL 1: NEW TRANSACTION ENTRY (Maker / Field Officer) -->
+  <!-- ======================================================== -->
+  <div id="modalNewTransaction" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-xl w-full p-6 shadow-2xl border border-slate-100 overflow-y-auto max-h-[90vh]">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center">
+            <i data-lucide="receipt-text" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-extrabold text-slate-900">Initiate Ledger Transaction</h3>
+            <p class="text-xs text-slate-500">Savings Deposit, Loan Issuance, or Loan Repayment</p>
+          </div>
+        </div>
+        <button onclick="closeModal('modalNewTransaction')" class="p-1.5 text-slate-400 hover:text-slate-700 rounded-lg">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="txForm" onsubmit="handleCreateTransaction(event)" class="mt-4 space-y-4 text-xs">
+        
+        <!-- Step 1: Member Identification / Fetch -->
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Select Member (Fetch by Citizen ID / Name)</label>
+          <div class="flex gap-2">
+            <select id="txMemberSelect" onchange="onTxMemberSelected()" required class="flex-1 px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+              <option value="">-- Choose Member --</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Member Quick Info Banner -->
+        <div id="txMemberDetailsBox" class="p-3 bg-slate-50 rounded-xl border border-slate-200 hidden space-y-1">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-slate-800" id="txMemberNameDisp">Member Name</span>
+            <span class="font-mono text-[11px] bg-slate-200 px-2 py-0.5 rounded text-slate-700" id="txMemberIdDisp">ID: 0000</span>
+          </div>
+          <p class="text-[11px] text-slate-500" id="txMemberSummaryDisp">Committees: None</p>
+        </div>
+
+        <!-- Step 2: Transaction Category -->
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Transaction Category</label>
+          <div class="grid grid-cols-3 gap-2">
+            <label class="cursor-pointer border border-slate-200 rounded-xl p-2.5 text-center flex flex-col items-center hover:bg-emerald-50 transition peer-checked:border-emerald-600 has-[:checked]:border-emerald-600 has-[:checked]:bg-emerald-50 has-[:checked]:text-emerald-900">
+              <input type="radio" name="txType" value="SAVINGS" checked onchange="onTxTypeChanged()" class="sr-only" />
+              <i data-lucide="piggy-bank" class="w-4 h-4 mb-1 text-emerald-600"></i>
+              <span class="font-bold">Savings Deposit</span>
+            </label>
+            <label class="cursor-pointer border border-slate-200 rounded-xl p-2.5 text-center flex flex-col items-center hover:bg-emerald-50 transition has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50 has-[:checked]:text-blue-900">
+              <input type="radio" name="txType" value="LOAN_DISBURSAL" onchange="onTxTypeChanged()" class="sr-only" />
+              <i data-lucide="hand-coins" class="w-4 h-4 mb-1 text-blue-600"></i>
+              <span class="font-bold">Issue Loan</span>
+            </label>
+            <label class="cursor-pointer border border-slate-200 rounded-xl p-2.5 text-center flex flex-col items-center hover:bg-emerald-50 transition has-[:checked]:border-violet-600 has-[:checked]:bg-violet-50 has-[:checked]:text-violet-900">
+              <input type="radio" name="txType" value="LOAN_REPAYMENT" onchange="onTxTypeChanged()" class="sr-only" />
+              <i data-lucide="rotate-ccw" class="w-4 h-4 mb-1 text-violet-600"></i>
+              <span class="font-bold">Repay Loan</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Step 3: Committee Selection (Filtered to Member's joined committees) -->
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Target SHG & Committee</label>
+          <select id="txCommitteeSelect" required onchange="onTxCommitteeSelected()" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+            <option value="">-- Choose Joined Committee --</option>
+          </select>
+        </div>
+
+        <!-- Conditional Loan Selector for Repayments -->
+        <div id="txLoanPickerGroup" class="hidden">
+          <label class="block font-bold text-slate-700 mb-1">Select Active Loan to Repay</label>
+          <select id="txActiveLoanSelect" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+            <option value="">-- Select Loan --</option>
+          </select>
+        </div>
+
+        <!-- Step 4: Payment Channel / Mode -->
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Payment Method / Channel</label>
+          <select id="txPaymentMode" required class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+            <option value="UPI">UPI / QR Code Transfer</option>
+            <option value="CASH">Physical Cash Collection</option>
+            <option value="BANK_TRANSFER">Direct Bank Account Transfer (NEFT/IMPS)</option>
+            <option value="DEBIT_CARD">Debit Card / Micro-ATM</option>
+          </select>
+        </div>
+
+        <!-- Step 5: Amount & Notes -->
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Amount (₹ INR)</label>
+            <input type="number" id="txAmount" min="10" step="1" required placeholder="e.g. 2000" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold font-mono text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Collector / Officer ID</label>
+            <input type="text" id="txOfficerId" value="EMP-OFFICER-419" readonly class="w-full px-3 py-2.5 bg-slate-100 border border-slate-200 rounded-xl font-mono text-slate-500 font-semibold" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Purpose / Remarks</label>
+          <input type="text" id="txRemarks" placeholder="e.g. Monthly committee savings pool contribution" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
+        </div>
+
+        <!-- Governance 2FA Notice -->
+        <div class="p-3 bg-amber-50 rounded-xl border border-amber-200 flex items-start space-x-2 text-amber-900 text-[11px]">
+          <i data-lucide="shield-alert" class="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5"></i>
+          <span>This entry will be created in <strong class="font-semibold">PENDING_APPROVAL</strong> state. The transaction balance will only credit/debit once approved via 2FA Manager PIN.</span>
+        </div>
+
+        <div class="flex items-center justify-end space-x-2 pt-3 border-t border-slate-100">
+          <button type="button" onclick="closeModal('modalNewTransaction')" class="px-4 py-2.5 text-slate-600 font-bold hover:bg-slate-100 rounded-xl">Cancel</button>
+          <button type="submit" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md shadow-emerald-600/20">Submit for 2FA Authorization</button>
+        </div>
+      </form>
+    </div>
   </div>
 
-  <!-- JavaScript Logic -->
+  <!-- ======================================================== -->
+  <!-- MODAL 2: 2FA MANAGER PIN AUTHENTICATION MODAL -->
+  <!-- ======================================================== -->
+  <div id="modal2FAAuth" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-md flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200 text-center">
+      <div class="w-14 h-14 rounded-2xl bg-amber-100 text-amber-600 mx-auto flex items-center justify-center mb-3 shadow-inner">
+        <i data-lucide="shield-check" class="w-8 h-8"></i>
+      </div>
+      <h3 class="text-lg font-extrabold text-slate-900">Manager 2FA Authorization</h3>
+      <p class="text-xs text-slate-500 mt-1">Authenticate transaction settlement to the immutable ledger</p>
+
+      <!-- Transaction Preview Card -->
+      <div class="my-4 p-3.5 bg-slate-50 rounded-2xl border border-slate-200 text-left text-xs space-y-1.5">
+        <div class="flex justify-between font-bold">
+          <span class="text-slate-600">Transaction ID:</span>
+          <span class="font-mono text-slate-900" id="auth2faTxId">TX-0000</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-slate-500">Member:</span>
+          <span class="font-bold text-slate-800" id="auth2faMember">Member Name</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-slate-500">Committee / Type:</span>
+          <span class="font-semibold text-slate-700" id="auth2faCommittee">Committee (Type)</span>
+        </div>
+        <div class="flex justify-between text-sm pt-1 border-t border-slate-200">
+          <span class="font-bold text-slate-700">Total Settlement:</span>
+          <span class="font-extrabold font-mono text-emerald-600" id="auth2faAmount">₹0</span>
+        </div>
+      </div>
+
+      <!-- PIN Input -->
+      <div class="space-y-3">
+        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Enter 4-Digit Manager Security PIN</label>
+        <div class="flex justify-center gap-3">
+          <input type="password" maxlength="4" id="managerPinInput" placeholder="••••" class="w-36 text-center tracking-[0.6em] text-2xl font-bold py-2 bg-slate-100 border-2 border-slate-300 rounded-xl focus:border-amber-500 focus:outline-none focus:bg-white font-mono" />
+        </div>
+        <p class="text-[11px] text-slate-400">Default demo PIN: <span class="font-mono font-bold text-slate-600">8899</span></p>
+        <div id="pinErrorMsg" class="text-xs text-rose-600 font-bold hidden">Invalid PIN. Please enter the correct 4-digit manager PIN.</div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 mt-6">
+        <button onclick="handleRejectPendingTx()" class="w-full py-2.5 bg-slate-100 hover:bg-rose-50 hover:text-rose-600 text-slate-700 font-bold text-xs rounded-xl transition">
+          Reject & Cancel
+        </button>
+        <button onclick="handleApprovePendingTx()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-lg shadow-emerald-600/20 transition flex items-center justify-center gap-1.5">
+          <i data-lucide="check" class="w-4 h-4"></i>
+          <span>Authorize & Seal</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL 3: MEMBER 360° PROFILE VIEW -->
+  <!-- ======================================================== -->
+  <div id="modalMemberProfile" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-2xl border border-slate-100 overflow-y-auto max-h-[90vh]">
+      <div class="flex items-start justify-between pb-4 border-b border-slate-100">
+        <div class="flex items-center space-x-3">
+          <div id="profileAvatar" class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-500 text-white flex items-center justify-center font-bold text-lg shadow-md">
+            RK
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <h3 class="text-lg font-extrabold text-slate-900" id="profileName">Member Name</h3>
+              <span class="px-2 py-0.5 text-[10px] font-bold bg-emerald-100 text-emerald-800 rounded-full">KYC Verified</span>
+            </div>
+            <p class="text-xs text-slate-500 flex items-center gap-2 mt-0.5">
+              <span id="profileCitizenId" class="font-mono">Citizen ID: •••• •••• 9821</span>
+              <span>•</span>
+              <span id="profilePhone">+91 98765 43210</span>
+            </p>
+          </div>
+        </div>
+        <button onclick="closeModal('modalMemberProfile')" class="p-1.5 text-slate-400 hover:text-slate-700 rounded-lg">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Financial Balance Snapshot -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 my-4">
+        <div class="p-3 bg-emerald-50 rounded-2xl border border-emerald-100">
+          <span class="text-[10px] uppercase font-bold text-emerald-800">Total Savings Balance</span>
+          <h4 class="text-base font-extrabold text-emerald-900 font-mono mt-1" id="profileSavingsBalance">₹0</h4>
+        </div>
+        <div class="p-3 bg-blue-50 rounded-2xl border border-blue-100">
+          <span class="text-[10px] uppercase font-bold text-blue-800">Outstanding Loans</span>
+          <h4 class="text-base font-extrabold text-blue-900 font-mono mt-1" id="profileLoanBalance">₹0</h4>
+        </div>
+        <div class="p-3 bg-violet-50 rounded-2xl border border-violet-100 col-span-2 sm:col-span-1">
+          <span class="text-[10px] uppercase font-bold text-violet-800">Joined Committees</span>
+          <h4 class="text-base font-extrabold text-violet-900 font-mono mt-1" id="profileCommitteeCount">0</h4>
+        </div>
+      </div>
+
+      <!-- Joined SHGs and Committees Breakdown -->
+      <div class="space-y-3">
+        <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+          <i data-lucide="network" class="w-4 h-4 text-emerald-600"></i>
+          <span>Enrolled SHGs & Committee Affiliations</span>
+        </h4>
+        <div id="profileCommitteesList" class="space-y-2">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <!-- Active Loans Section -->
+      <div class="space-y-3 mt-5">
+        <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+          <i data-lucide="landmark" class="w-4 h-4 text-blue-600"></i>
+          <span>Active Loan Accounts</span>
+        </h4>
+        <div id="profileLoansList" class="space-y-2">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <!-- Member Specific Ledger History -->
+      <div class="space-y-3 mt-5">
+        <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+          <i data-lucide="history" class="w-4 h-4 text-slate-600"></i>
+          <span>Personal Ledger Transactions</span>
+        </h4>
+        <div class="border border-slate-200 rounded-xl overflow-hidden max-h-48 overflow-y-auto">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-50 text-slate-500 font-semibold uppercase">
+              <tr>
+                <th class="p-2.5">Date</th>
+                <th class="p-2.5">Type / Committee</th>
+                <th class="p-2.5 text-right">Amount</th>
+                <th class="p-2.5 text-center">Status</th>
+              </tr>
+            </thead>
+            <tbody id="profileLedgerTable" class="divide-y divide-slate-100">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="mt-6 pt-3 border-t border-slate-100 flex justify-end">
+        <button onclick="closeModal('modalMemberProfile')" class="px-5 py-2 bg-slate-900 text-white font-bold text-xs rounded-xl">Close Profile</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL 4: ENROLL NEW MEMBER -->
+  <!-- ======================================================== -->
+  <div id="modalNewMember" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 overflow-y-auto max-h-[90vh]">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-9 h-9 rounded-xl bg-violet-100 text-violet-700 flex items-center justify-center">
+            <i data-lucide="user-plus" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-extrabold text-slate-900">Enroll New Member</h3>
+            <p class="text-xs text-slate-500">Add member and assign to multiple SHG committees</p>
+          </div>
+        </div>
+        <button onclick="closeModal('modalNewMember')" class="p-1.5 text-slate-400 hover:text-slate-700 rounded-lg">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="memberEnrollForm" onsubmit="handleEnrollMember(event)" class="mt-4 space-y-4 text-xs">
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Full Legal Name</label>
+          <input type="text" id="newMemberName" required placeholder="e.g. Anita Devi" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Citizen / National ID</label>
+            <input type="text" id="newMemberCitizenId" required placeholder="e.g. 8839 2019 4482" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-mono focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Mobile Phone Number</label>
+            <input type="tel" id="newMemberPhone" required placeholder="e.g. 9876543210" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Assign Initial Committee Affiliations</label>
+          <div id="newMemberCommitteeCheckboxes" class="max-h-36 overflow-y-auto border border-slate-200 rounded-xl p-3 bg-slate-50 space-y-2">
+            <!-- Dynamically injected -->
+          </div>
+          <p class="text-[11px] text-slate-400 mt-1">Select one or more committees across any registered Self-Help Group.</p>
+        </div>
+
+        <div class="flex items-center justify-end space-x-2 pt-3 border-t border-slate-100">
+          <button type="button" onclick="closeModal('modalNewMember')" class="px-4 py-2.5 text-slate-600 font-bold hover:bg-slate-100 rounded-xl">Cancel</button>
+          <button type="submit" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow">Register & Create Profile</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL 5: CREATE SHG -->
+  <!-- ======================================================== -->
+  <div id="modalNewShg" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+        <h3 class="text-base font-extrabold text-slate-900">Create Self-Help Group (SHG)</h3>
+        <button onclick="closeModal('modalNewShg')" class="p-1.5 text-slate-400 hover:text-slate-700">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <form id="shgCreateForm" onsubmit="handleCreateShg(event)" class="mt-4 space-y-4 text-xs">
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">SHG Name</label>
+          <input type="text" id="newShgName" required placeholder="e.g. Pragati Mahila Swayam Sahayata Samuh" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Village / Ward / Location</label>
+          <input type="text" id="newShgLocation" required placeholder="e.g. Rampur Village, Block-2" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Designated Leader / President</label>
+          <input type="text" id="newShgLeader" required placeholder="e.g. Sunita Sharma" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
+        </div>
+        <div class="flex items-center justify-end space-x-2 pt-3">
+          <button type="button" onclick="closeModal('modalNewShg')" class="px-4 py-2 text-slate-600 font-bold">Cancel</button>
+          <button type="submit" class="px-5 py-2.5 bg-slate-900 text-white font-bold rounded-xl">Create SHG</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL 6: CREATE COMMITTEE -->
+  <!-- ======================================================== -->
+  <div id="modalNewCommittee" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+        <h3 class="text-base font-extrabold text-slate-900">Add Functional Committee</h3>
+        <button onclick="closeModal('modalNewCommittee')" class="p-1.5 text-slate-400 hover:text-slate-700">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <form id="committeeCreateForm" onsubmit="handleCreateCommittee(event)" class="mt-4 space-y-4 text-xs">
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Parent Self-Help Group</label>
+          <select id="newCommitteeParentShg" required class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+            <!-- Dynamically populated -->
+          </select>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Committee Name</label>
+          <input type="text" id="newCommitteeName" required placeholder="e.g. Micro-Dairy Investment Pool" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Committee Mandate / Purpose</label>
+          <input type="text" id="newCommitteePurpose" required placeholder="e.g. Collective equipment purchase & emergency loans" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
+        </div>
+        <div class="flex items-center justify-end space-x-2 pt-3">
+          <button type="button" onclick="closeModal('modalNewCommittee')" class="px-4 py-2 text-slate-600 font-bold">Cancel</button>
+          <button type="submit" class="px-5 py-2.5 bg-emerald-600 text-white font-bold rounded-xl shadow">Create Committee</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toastContainer" class="fixed bottom-5 right-5 z-50 space-y-2 pointer-events-none"></div>
+
+  <!-- JAVASCRIPT APPLICATION CORE -->
   <script>
-    let selectedType = 'Contribution';
-    
-    // Hindi Member Name Mapping
-    const memberHindiNames = {
-      'Rani': 'रानी',
-      'Sita': 'सीता',
-      'Priya': 'प्रिया',
-      'Meena': 'मीना'
+    /* ========================================================
+       DATA STORE & PERSISTENCE ENGINE (localStorage)
+       ======================================================== */
+    const STORAGE_KEY = 'VISHWAS_SHG_LEDGER_DATA_V2';
+    const MANAGER_PIN = '8899'; // Default secure 2FA PIN
+
+    // Sample initial state designed for rich hackathon evaluation
+    const initialSeedData = {
+      role: 'EMPLOYEE', // EMPLOYEE or MANAGER
+      voiceFeedback: true,
+      shgs: [
+        {
+          id: 'SHG-101',
+          name: 'Pragati Mahila SHG',
+          location: 'Ward 4, Kalyanpur',
+          leader: 'Sunita Sharma',
+          createdDate: '2026-01-15'
+        },
+        {
+          id: 'SHG-102',
+          name: 'Udaan Krishi SHG',
+          location: 'Bikramganj Agri Zone',
+          leader: 'Manju Devi',
+          createdDate: '2026-02-10'
+        },
+        {
+          id: 'SHG-103',
+          name: 'Shakti Vikas Samuh',
+          location: 'Danapur Sector 3',
+          leader: 'Kavita Kumari',
+          createdDate: '2026-03-01'
+        }
+      ],
+      committees: [
+        {
+          id: 'COM-1',
+          shgId: 'SHG-101',
+          name: 'Emergency Health & Savings Fund',
+          purpose: 'Immediate medical assistance & contingency buffer'
+        },
+        {
+          id: 'COM-2',
+          shgId: 'SHG-101',
+          name: 'Micro-Enterprise & Craft Collective',
+          purpose: 'Artisan loans for raw materials & handlooms'
+        },
+        {
+          id: 'COM-3',
+          shgId: 'SHG-102',
+          name: 'Agritech & Seed Capital Committee',
+          purpose: 'High-yield seeds, solar pumps & collective fertilizer purchase'
+        },
+        {
+          id: 'COM-4',
+          shgId: 'SHG-103',
+          name: 'Education & Skill Development Fund',
+          purpose: 'Children schooling loans & vocational sewing courses'
+        }
+      ],
+      members: [
+        {
+          id: 'MEM-8801',
+          name: 'Radha Devi',
+          citizenId: '•••• •••• 9821',
+          phone: '+91 98350 11223',
+          committeeIds: ['COM-1', 'COM-2'],
+          joinedDate: '2026-01-20'
+        },
+        {
+          id: 'MEM-8802',
+          name: 'Sushila Singh',
+          citizenId: '•••• •••• 4410',
+          phone: '+91 94702 44331',
+          committeeIds: ['COM-2', 'COM-3'],
+          joinedDate: '2026-02-12'
+        },
+        {
+          id: 'MEM-8803',
+          name: 'Pooja Verma',
+          citizenId: '•••• •••• 1092',
+          phone: '+91 91223 88776',
+          committeeIds: ['COM-1', 'COM-4'],
+          joinedDate: '2026-02-25'
+        },
+        {
+          id: 'MEM-8804',
+          name: 'Geeta Kumari',
+          citizenId: '•••• •••• 6534',
+          phone: '+91 99341 55667',
+          committeeIds: ['COM-3', 'COM-4'],
+          joinedDate: '2026-03-05'
+        }
+      ],
+      loans: [
+        {
+          id: 'LN-501',
+          memberId: 'MEM-8801',
+          committeeId: 'COM-2',
+          principal: 25000,
+          remaining: 15000,
+          tenureMonths: 12,
+          interestRate: 6.0,
+          status: 'ACTIVE',
+          disbursedAt: '2026-04-10'
+        },
+        {
+          id: 'LN-502',
+          memberId: 'MEM-8802',
+          committeeId: 'COM-3',
+          principal: 40000,
+          remaining: 32000,
+          tenureMonths: 18,
+          interestRate: 7.5,
+          status: 'ACTIVE',
+          disbursedAt: '2026-05-02'
+        }
+      ],
+      transactions: [
+        {
+          id: 'TX-901',
+          memberId: 'MEM-8801',
+          committeeId: 'COM-1',
+          type: 'SAVINGS', // SAVINGS, LOAN_DISBURSAL, LOAN_REPAYMENT
+          loanId: null,
+          amount: 2500,
+          paymentMode: 'UPI',
+          officerId: 'EMP-OFFICER-419',
+          status: 'APPROVED', // PENDING_APPROVAL, APPROVED, REJECTED
+          managerPinAuth: true,
+          approverId: 'MGR-LEAD-01',
+          timestamp: '2026-07-10 10:30 AM',
+          blockHash: '0x8f2d91a...c71'
+        },
+        {
+          id: 'TX-902',
+          memberId: 'MEM-8801',
+          committeeId: 'COM-2',
+          type: 'LOAN_DISBURSAL',
+          loanId: 'LN-501',
+          amount: 25000,
+          paymentMode: 'BANK_TRANSFER',
+          officerId: 'EMP-OFFICER-419',
+          status: 'APPROVED',
+          managerPinAuth: true,
+          approverId: 'MGR-LEAD-01',
+          timestamp: '2026-07-15 02:15 PM',
+          blockHash: '0x3e1b74a...902'
+        },
+        {
+          id: 'TX-903',
+          memberId: 'MEM-8801',
+          committeeId: 'COM-2',
+          type: 'LOAN_REPAYMENT',
+          loanId: 'LN-501',
+          amount: 5000,
+          paymentMode: 'CASH',
+          officerId: 'EMP-OFFICER-419',
+          status: 'APPROVED',
+          managerPinAuth: true,
+          approverId: 'MGR-LEAD-01',
+          timestamp: '2026-08-01 11:45 AM',
+          blockHash: '0x5c90ab2...44f'
+        },
+        {
+          id: 'TX-904',
+          memberId: 'MEM-8803',
+          committeeId: 'COM-4',
+          type: 'SAVINGS',
+          loanId: null,
+          amount: 3000,
+          paymentMode: 'UPI',
+          officerId: 'EMP-OFFICER-419',
+          status: 'PENDING_APPROVAL',
+          managerPinAuth: false,
+          approverId: null,
+          timestamp: '2026-08-22 04:20 PM',
+          blockHash: 'UNCOMMITTED'
+        },
+        {
+          id: 'TX-905',
+          memberId: 'MEM-8802',
+          committeeId: 'COM-3',
+          type: 'LOAN_REPAYMENT',
+          loanId: 'LN-502',
+          amount: 4000,
+          paymentMode: 'DEBIT_CARD',
+          officerId: 'EMP-OFFICER-419',
+          status: 'PENDING_APPROVAL',
+          managerPinAuth: false,
+          approverId: null,
+          timestamp: '2026-08-23 09:10 AM',
+          blockHash: 'UNCOMMITTED'
+        }
+      ]
     };
 
-    let members = [
-      { id: 'MEM-001', name: 'Rani', savings: 15500, loan: 0, repaid: 0, pin: '1234', avatar: '👩🏽' },
-      { id: 'MEM-002', name: 'Sita', savings: 12500, loan: 10000, repaid: 4500, pin: '5678', avatar: '👩🏾' },
-      { id: 'MEM-003', name: 'Priya', savings: 18000, loan: 0, repaid: 2000, pin: '9012', avatar: '👩🏻' },
-      { id: 'MEM-004', name: 'Meena', savings: 14000, loan: 8000, repaid: 2000, pin: '3456', avatar: '👵🏽' }
-    ];
+    // Load from localStorage or initialize
+    let appState = loadState();
 
-    let transactions = [
-      {
-        id: 'TXN-20260822-001',
-        time: '22 Aug 2026, 11:31 PM',
-        member: 'Rani',
-        type: 'Contribution',
-        amount: 500,
-        note: 'Monthly savings',
-        prevHash: '9f3a7b2e4c6d8f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5',
-        hash: 'b1c4e8f9d2a7c3b6e5d4c3b2a1f0e9d8c7b6a5f4e3d2c1b0a9f8e7d6c5b4a3'
-      },
-      {
-        id: 'TXN-20260822-002',
-        time: '22 Aug 2026, 10:15 PM',
-        member: 'Sita',
-        type: 'Loan',
-        amount: 5000,
-        note: 'Agri equipment',
-        prevHash: 'b1c4e8f9d2a7c3b6e5d4c3b2a1f0e9d8c7b6a5f4e3d2c1b0a9f8e7d6c5b4a3',
-        hash: 'c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2'
+    function loadState() {
+      try {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored) return JSON.parse(stored);
+      } catch (e) {
+        console.error('Storage error:', e);
       }
-    ];
-
-    // Pre-load Hindi voices into memory
-    let availableVoices = [];
-    function loadVoices() {
-      availableVoices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
-    }
-    if ('speechSynthesis' in window) {
-      loadVoices();
-      window.speechSynthesis.onvoiceschanged = loadVoices;
+      return JSON.parse(JSON.stringify(initialSeedData));
     }
 
-    function switchTab(tabId) {
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-      const target = document.getElementById('view-' + tabId);
-      if (target) target.classList.add('active');
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+      } catch (e) {
+        console.error('Save error:', e);
+      }
+    }
 
-      document.querySelectorAll('.nav-btn').forEach(btn => {
-        if (btn.dataset.target === tabId) {
-          btn.className = "nav-btn text-emerald-800 flex flex-col items-center gap-0.5 text-[10px] font-semibold";
+    function resetToSampleData() {
+      if (confirm('Reset application to original sample hackathon demo dataset?')) {
+        appState = JSON.parse(JSON.stringify(initialSeedData));
+        saveState();
+        initApp();
+        showToast('Application reset to initial seed state', 'info');
+      }
+    }
+
+    /* ========================================================
+       APPLICATION INITIALIZATION & UI SYNC
+       ======================================================== */
+    let financeChartInstance = null;
+    let committeeChartInstance = null;
+    let selectedPendingTxId = null;
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initApp();
+    });
+
+    function initApp() {
+      syncRoleUI();
+      renderDashboardStats();
+      renderHierarchy();
+      renderMembersGrid();
+      renderAllTransactionsTable();
+      renderApprovalsDesk();
+      populateDropdowns();
+      initCharts();
+      lucide.createIcons();
+    }
+
+    /* ========================================================
+       ROLE SWITCHING & DUAL GOVERNANCE (Maker vs Checker)
+       ======================================================== */
+    function setRole(role) {
+      appState.role = role;
+      saveState();
+      syncRoleUI();
+      if (role === 'MANAGER') {
+        speakText('Manager mode active. 2FA dual-authorization enabled.');
+        showToast('Switched to Manager Mode (2FA Approver)', 'info');
+      } else {
+        speakText('Field Officer mode active.');
+        showToast('Switched to Field Officer Mode (Maker)', 'info');
+      }
+      lucide.createIcons();
+    }
+
+    function syncRoleUI() {
+      const empBtn = document.getElementById('roleBtnEmployee');
+      const mgrBtn = document.getElementById('roleBtnManager');
+      const roleText = document.getElementById('currentRoleText');
+
+      if (appState.role === 'MANAGER') {
+        mgrBtn.className = 'flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all bg-amber-500 text-slate-950 shadow-sm';
+        empBtn.className = 'flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-300 hover:text-white';
+        roleText.textContent = 'Current Mode: SHG Manager (Checker / 2FA Gatekeeper)';
+      } else {
+        empBtn.className = 'flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all bg-emerald-600 text-white shadow-sm';
+        mgrBtn.className = 'flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-300 hover:text-white';
+        roleText.textContent = 'Current Mode: Field Officer (Maker)';
+      }
+
+      // Update pending count badges
+      const pendingCount = appState.transactions.filter(t => t.status === 'PENDING_APPROVAL').length;
+      const navBadge = document.getElementById('pendingBadgeNav');
+      const tabBadge = document.getElementById('pendingBadgeTab');
+
+      if (pendingCount > 0) {
+        navBadge.textContent = pendingCount;
+        navBadge.classList.remove('hidden');
+        tabBadge.textContent = `${pendingCount} Pending`;
+        tabBadge.classList.remove('hidden');
+      } else {
+        navBadge.classList.add('hidden');
+        tabBadge.classList.add('hidden');
+      }
+    }
+
+    /* ========================================================
+       TAB NAVIGATION
+       ======================================================== */
+    function switchTab(tabKey) {
+      const views = ['dashboard', 'hierarchy', 'members', 'transactions', 'approvals'];
+      views.forEach(v => {
+        const el = document.getElementById(`view-${v}`);
+        const btn = document.getElementById(`tabBtn-${v}`);
+        if (v === tabKey) {
+          el.classList.remove('hidden');
+          btn.className = 'tab-btn active-tab flex items-center space-x-2 px-4 py-2 rounded-lg text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200';
         } else {
-          btn.className = "nav-btn text-slate-400 flex flex-col items-center gap-0.5 text-[10px] font-semibold";
+          el.classList.add('hidden');
+          btn.className = 'tab-btn flex items-center space-x-2 px-4 py-2 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100';
         }
       });
-      render();
+      lucide.createIcons();
     }
 
-    function setType(type) {
-      selectedType = type;
-      document.querySelectorAll('.type-btn').forEach(btn => {
-        btn.className = "type-btn p-3 rounded-xl flex flex-col items-center gap-1.5 bg-white border text-slate-700";
-      });
-      const activeBtn = document.getElementById('type-' + type);
-      if (type === 'Contribution') activeBtn.className = "type-btn p-3 rounded-xl flex flex-col items-center gap-1.5 bg-emerald-600 text-white shadow-md";
-      if (type === 'Loan') activeBtn.className = "type-btn p-3 rounded-xl flex flex-col items-center gap-1.5 bg-amber-600 text-white shadow-md";
-      if (type === 'Repayment') activeBtn.className = "type-btn p-3 rounded-xl flex flex-col items-center gap-1.5 bg-blue-600 text-white shadow-md";
+    /* ========================================================
+       DASHBOARD METRICS & CHARTS
+       ======================================================== */
+    function renderDashboardStats() {
+      // Total approved savings
+      const totalSavings = appState.transactions
+        .filter(t => t.type === 'SAVINGS' && t.status === 'APPROVED')
+        .reduce((sum, t) => sum + Number(t.amount), 0);
+
+      // Total active loans outstanding
+      const totalActiveLoanOutstanding = appState.loans
+        .filter(l => l.status === 'ACTIVE')
+        .reduce((sum, l) => sum + Number(l.remaining), 0);
+
+      const activeLoanCount = appState.loans.filter(l => l.status === 'ACTIVE').length;
+      const pendingCount = appState.transactions.filter(t => t.status === 'PENDING_APPROVAL').length;
+
+      document.getElementById('statTotalSavings').textContent = '₹' + totalSavings.toLocaleString('en-IN');
+      document.getElementById('statTotalLoans').textContent = '₹' + totalActiveLoanOutstanding.toLocaleString('en-IN');
+      document.getElementById('statActiveLoanCount').textContent = `${activeLoanCount} Active Micro-Loans`;
+      document.getElementById('statTotalMembers').textContent = appState.members.length;
+      document.getElementById('statShgCommitteesCount').textContent = `${appState.shgs.length} SHGs • ${appState.committees.length} Committees`;
+      document.getElementById('statPendingApprovals').textContent = pendingCount;
+
+      // Render recent transactions table
+      const recentTxs = [...appState.transactions]
+        .filter(t => t.status === 'APPROVED')
+        .reverse()
+        .slice(0, 5);
+
+      const tableBody = document.getElementById('dashboardRecentTxTable');
+      if (recentTxs.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="7" class="py-6 text-center text-slate-400">No settled transactions yet.</td></tr>`;
+      } else {
+        tableBody.innerHTML = recentTxs.map(t => {
+          const member = appState.members.find(m => m.id === t.memberId) || { name: 'Unknown' };
+          const comm = appState.committees.find(c => c.id === t.committeeId) || { name: 'General' };
+          const badgeColor = t.type === 'SAVINGS' ? 'bg-emerald-100 text-emerald-800' : t.type === 'LOAN_DISBURSAL' ? 'bg-blue-100 text-blue-800' : 'bg-violet-100 text-violet-800';
+          
+          return `
+            <tr class="hover:bg-slate-50 transition">
+              <td class="py-3 px-4 font-mono font-bold text-slate-900">
+                ${t.id}
+                <span class="block text-[10px] text-slate-400 font-mono">${t.blockHash || '0x...'}</span>
+              </td>
+              <td class="py-3 px-4 text-slate-500">${t.timestamp}</td>
+              <td class="py-3 px-4 font-bold text-slate-800">${escapeHtml(member.name)}</td>
+              <td class="py-3 px-4 text-slate-600">${escapeHtml(comm.name)}</td>
+              <td class="py-3 px-4">
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${badgeColor}">
+                  ${t.type.replace('_', ' ')} • ${t.paymentMode}
+                </span>
+              </td>
+              <td class="py-3 px-4 text-right font-mono font-bold text-slate-900">₹${Number(t.amount).toLocaleString('en-IN')}</td>
+              <td class="py-3 px-4 text-center">
+                <span class="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
+                  <i data-lucide="shield-check" class="w-3 h-3"></i> 2FA Sealed
+                </span>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
     }
 
-    function promptDualSign() {
-      const memberName = document.getElementById('input-member').value;
-      const amt = Number(document.getElementById('input-amount').value);
-      const note = document.getElementById('input-note').value;
-      const memberObj = members.find(m => m.name === memberName);
+    function initCharts() {
+      // 1. Finance Flow Bar Chart
+      const flowCtx = document.getElementById('financeFlowChart');
+      if (flowCtx) {
+        if (financeChartInstance) financeChartInstance.destroy();
 
-      const enteredPin = prompt(`Hand device to ${memberName} to authorize ₹${amt}.\nEnter 4-digit PIN (Demo: ${memberObj.pin}):`);
-      if (enteredPin !== memberObj.pin) {
-        alert("Incorrect PIN! Transaction rejected (Fraud Prevention).");
+        const totalSavings = appState.transactions
+          .filter(t => t.type === 'SAVINGS' && t.status === 'APPROVED')
+          .reduce((sum, t) => sum + Number(t.amount), 0);
+
+        const totalLoansDisbursed = appState.transactions
+          .filter(t => t.type === 'LOAN_DISBURSAL' && t.status === 'APPROVED')
+          .reduce((sum, t) => sum + Number(t.amount), 0);
+
+        const totalRepayments = appState.transactions
+          .filter(t => t.type === 'LOAN_REPAYMENT' && t.status === 'APPROVED')
+          .reduce((sum, t) => sum + Number(t.amount), 0);
+
+        financeChartInstance = new Chart(flowCtx, {
+          type: 'bar',
+          data: {
+            labels: ['Total Savings Mobilized', 'Loans Disbursed', 'Repayments Collected'],
+            datasets: [{
+              label: 'Amount (INR)',
+              data: [totalSavings, totalLoansDisbursed, totalRepayments],
+              backgroundColor: ['#10b981', '#3b82f6', '#8b5cf6'],
+              borderRadius: 8,
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                grid: { color: '#f1f5f9' },
+                ticks: {
+                  callback: function(val) { return '₹' + val.toLocaleString('en-IN'); }
+                }
+              },
+              x: { grid: { display: false } }
+            }
+          }
+        });
+      }
+
+      // 2. Committee Distribution Doughnut
+      const commCtx = document.getElementById('committeePieChart');
+      if (commCtx) {
+        if (committeeChartInstance) committeeChartInstance.destroy();
+
+        const labels = appState.committees.map(c => c.name.slice(0, 18) + '...');
+        const dataCounts = appState.committees.map(c => {
+          return appState.members.filter(m => m.committeeIds.includes(c.id)).length;
+        });
+
+        committeeChartInstance = new Chart(commCtx, {
+          type: 'doughnut',
+          data: {
+            labels: labels,
+            datasets: [{
+              data: dataCounts,
+              backgroundColor: ['#10b981', '#06b6d4', '#6366f1', '#f59e0b'],
+              borderWidth: 2,
+              borderColor: '#ffffff'
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } }
+            },
+            cutout: '68%'
+          }
+        });
+      }
+    }
+
+    /* ========================================================
+       SHG & COMMITTEE HIERARCHY TREE
+       ======================================================== */
+    function renderHierarchy() {
+      const container = document.getElementById('shgHierarchyContainer');
+      if (!container) return;
+
+      if (appState.shgs.length === 0) {
+        container.innerHTML = `<div class="p-8 text-center bg-white rounded-2xl border border-slate-200 text-slate-400">No Self Help Groups created yet.</div>`;
         return;
       }
 
-      const prevHash = transactions[0] ? transactions[0].hash : "0";
-      const timeStr = "23 Aug 2026, 12:00 AM";
-      const currentHash = CryptoJS.SHA256(prevHash + memberName + selectedType + amt + timeStr).toString();
+      container.innerHTML = appState.shgs.map(shg => {
+        const shgCommittees = appState.committees.filter(c => c.shgId === shg.id);
+        const shgMemberCount = appState.members.filter(m => {
+          return m.committeeIds.some(cId => shgCommittees.some(sc => sc.id === cId));
+        }).length;
 
-      const newTx = {
-        id: `TXN-20260823-00${transactions.length + 1}`,
-        time: timeStr,
-        member: memberName,
-        type: selectedType,
-        amount: amt,
-        note: note || 'Monthly savings',
-        prevHash: prevHash,
-        hash: currentHash
-      };
+        return `
+          <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-5">
+            <!-- SHG Header -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-100 gap-3">
+              <div class="flex items-center space-x-3.5">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-slate-900 to-slate-800 text-emerald-400 flex items-center justify-center font-extrabold text-base shadow">
+                  <i data-lucide="building" class="w-6 h-6"></i>
+                </div>
+                <div>
+                  <div class="flex items-center space-x-2">
+                    <h4 class="text-base font-extrabold text-slate-900">${escapeHtml(shg.name)}</h4>
+                    <span class="font-mono text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-semibold">${shg.id}</span>
+                  </div>
+                  <p class="text-xs text-slate-500">Location: <span class="font-medium text-slate-700">${escapeHtml(shg.location)}</span> • Leader: <span class="font-medium text-slate-700">${escapeHtml(shg.leader)}</span></p>
+                </div>
+              </div>
 
-      transactions.unshift(newTx);
-      
-      // FORCED PURE HINDI SOUNDBOX (DEVANAGARI SCRIPT)
-      if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel(); // Clear any pending speech
+              <div class="flex items-center gap-2">
+                <span class="text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1 rounded-xl font-bold">
+                  ${shgMemberCount} Associated Members
+                </span>
+              </div>
+            </div>
 
-        const actionHindi = {
-          'Contribution': 'जमा',
-          'Loan': 'ऋण दिया गया',
-          'Repayment': 'ऋण वापसी'
-        };
+            <!-- Committees under this SHG -->
+            <div class="space-y-3">
+              <h5 class="text-xs font-bold uppercase tracking-wider text-slate-400">Functional Committees (${shgCommittees.length})</h5>
+              
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                ${shgCommittees.map(comm => {
+                  const commMembers = appState.members.filter(m => m.committeeIds.includes(comm.id));
+                  const commSavings = appState.transactions
+                    .filter(t => t.committeeId === comm.id && t.type === 'SAVINGS' && t.status === 'APPROVED')
+                    .reduce((sum, t) => sum + Number(t.amount), 0);
 
-        const hName = memberHindiNames[memberName] || memberName;
-        const hAction = actionHindi[selectedType] || 'राशि';
-        const pureHindiText = `${hName} जी के ${amt} रुपये ${hAction} सफलतापूर्वक दर्ज किए गए।`;
+                  return `
+                    <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200 hover:border-emerald-300 transition space-y-3">
+                      <div class="flex items-start justify-between">
+                        <div>
+                          <span class="text-[10px] font-mono text-emerald-600 font-bold">${comm.id}</span>
+                          <h6 class="text-sm font-extrabold text-slate-900">${escapeHtml(comm.name)}</h6>
+                          <p class="text-xs text-slate-500 mt-0.5">${escapeHtml(comm.purpose)}</p>
+                        </div>
+                      </div>
 
-        const u = new SpeechSynthesisUtterance(pureHindiText);
-        u.lang = 'hi-IN';
-        u.rate = 0.85; // Natural rhythm
+                      <div class="pt-2 border-t border-slate-200/60 flex items-center justify-between text-xs">
+                        <span class="text-slate-500 font-medium">${commMembers.length} Members Enrolled</span>
+                        <span class="font-bold font-mono text-emerald-700">₹${commSavings.toLocaleString('en-IN')} Saved</span>
+                      </div>
 
-        // Match Hindi engine specifically
-        const hindiVoice = availableVoices.find(v => v.lang === 'hi-IN' || v.lang.startsWith('hi') || v.name.includes('Hindi'));
-        if (hindiVoice) {
-          u.voice = hindiVoice;
-        }
+                      <!-- Enrolled Members Avatars -->
+                      <div class="flex items-center -space-x-1.5 overflow-hidden pt-1">
+                        ${commMembers.map(m => `
+                          <div title="${m.name}" class="w-6 h-6 rounded-full bg-slate-800 text-white font-bold text-[9px] flex items-center justify-center border-2 border-white">
+                            ${getInitials(m.name)}
+                          </div>
+                        `).join('')}
+                        ${commMembers.length === 0 ? '<span class="text-[11px] text-slate-400">No members assigned yet</span>' : ''}
+                      </div>
+                    </div>
+                  `;
+                }).join('')}
+                ${shgCommittees.length === 0 ? '<div class="col-span-2 text-xs text-slate-400 italic">No committees added under this SHG.</div>' : ''}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
 
-        window.speechSynthesis.speak(u);
+    /* ========================================================
+       MEMBER DIRECTORY & 360° PROFILE
+       ======================================================== */
+    function renderMembersGrid(filterQuery = '') {
+      const container = document.getElementById('membersGridContainer');
+      if (!container) return;
+
+      const query = filterQuery.toLowerCase().trim();
+      const filtered = appState.members.filter(m => {
+        return m.name.toLowerCase().includes(query) ||
+               m.id.toLowerCase().includes(query) ||
+               m.citizenId.toLowerCase().includes(query) ||
+               m.phone.toLowerCase().includes(query);
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<div class="col-span-3 p-8 text-center bg-white rounded-2xl border border-slate-200 text-slate-400">No members matching search query.</div>`;
+        return;
       }
 
-      switchTab('transactions');
+      container.innerHTML = filtered.map(m => {
+        // Calculate member savings
+        const memberSavings = appState.transactions
+          .filter(t => t.memberId === m.id && t.type === 'SAVINGS' && t.status === 'APPROVED')
+          .reduce((sum, t) => sum + Number(t.amount), 0);
+
+        // Calculate member active loan outstanding
+        const memberLoans = appState.loans.filter(l => l.memberId === m.id && l.status === 'ACTIVE');
+        const totalLoanOutstanding = memberLoans.reduce((sum, l) => sum + Number(l.remaining), 0);
+
+        // Get committee names
+        const joinedCommittees = appState.committees.filter(c => m.committeeIds.includes(c.id));
+
+        return `
+          <div class="bg-white rounded-3xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between space-y-4">
+            <div>
+              <div class="flex items-start justify-between">
+                <div class="flex items-center space-x-3">
+                  <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-500 text-white flex items-center justify-center font-bold text-sm shadow">
+                    ${getInitials(m.name)}
+                  </div>
+                  <div>
+                    <h4 class="text-sm font-extrabold text-slate-900">${escapeHtml(m.name)}</h4>
+                    <span class="font-mono text-[10px] text-slate-400">${m.citizenId}</span>
+                  </div>
+                </div>
+                <span class="text-[10px] font-bold bg-slate-100 text-slate-600 px-2 py-0.5 rounded">${m.id}</span>
+              </div>
+
+              <!-- Metrics -->
+              <div class="grid grid-cols-2 gap-2 mt-4 p-3 bg-slate-50 rounded-2xl text-xs">
+                <div>
+                  <span class="text-[10px] text-slate-400 font-semibold block uppercase">Total Savings</span>
+                  <span class="font-bold font-mono text-emerald-700">₹${memberSavings.toLocaleString('en-IN')}</span>
+                </div>
+                <div>
+                  <span class="text-[10px] text-slate-400 font-semibold block uppercase">Active Loan</span>
+                  <span class="font-bold font-mono text-blue-700">₹${totalLoanOutstanding.toLocaleString('en-IN')}</span>
+                </div>
+              </div>
+
+              <!-- Committees joined -->
+              <div class="mt-3">
+                <span class="text-[10px] font-bold uppercase text-slate-400 block mb-1.5">Joined Committees (${joinedCommittees.length})</span>
+                <div class="flex flex-wrap gap-1">
+                  ${joinedCommittees.map(c => `
+                    <span class="text-[10px] bg-emerald-50 text-emerald-800 border border-emerald-200 px-2 py-0.5 rounded-md font-medium">
+                      ${escapeHtml(c.name)}
+                    </span>
+                  `).join('')}
+                </div>
+              </div>
+            </div>
+
+            <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+              <span class="text-[11px] text-slate-400">${m.phone}</span>
+              <button onclick="openMemberProfileModal('${m.id}')" class="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl transition flex items-center space-x-1 shadow-sm">
+                <span>360° Profile</span>
+                <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
     }
 
-    function startVoiceInput() {
-      const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (!SpeechRec) return alert("Browser does not support Speech Recognition");
-      const rec = new SpeechRec();
-      rec.lang = 'hi-IN';
-      rec.onresult = (e) => {
-        const transcript = e.results[0][0].transcript;
-        const num = transcript.match(/\d+/);
-        if (num) document.getElementById('input-amount').value = num[0];
+    function filterMembersList() {
+      const q = document.getElementById('memberSearchInput').value;
+      renderMembersGrid(q);
+      lucide.createIcons();
+    }
+
+    function openMemberProfileModal(memberId) {
+      const member = appState.members.find(m => m.id === memberId);
+      if (!member) return;
+
+      document.getElementById('profileAvatar').textContent = getInitials(member.name);
+      document.getElementById('profileName').textContent = member.name;
+      document.getElementById('profileCitizenId').textContent = `Citizen ID: ${member.citizenId}`;
+      document.getElementById('profilePhone').textContent = member.phone;
+
+      // Balances
+      const memberSavings = appState.transactions
+        .filter(t => t.memberId === member.id && t.type === 'SAVINGS' && t.status === 'APPROVED')
+        .reduce((sum, t) => sum + Number(t.amount), 0);
+
+      const memberLoans = appState.loans.filter(l => l.memberId === member.id && l.status === 'ACTIVE');
+      const totalLoanOutstanding = memberLoans.reduce((sum, l) => sum + Number(l.remaining), 0);
+
+      document.getElementById('profileSavingsBalance').textContent = '₹' + memberSavings.toLocaleString('en-IN');
+      document.getElementById('profileLoanBalance').textContent = '₹' + totalLoanOutstanding.toLocaleString('en-IN');
+      document.getElementById('profileCommitteeCount').textContent = member.committeeIds.length;
+
+      // Committees List
+      const commList = document.getElementById('profileCommitteesList');
+      const joinedComms = appState.committees.filter(c => member.committeeIds.includes(c.id));
+      
+      commList.innerHTML = joinedComms.map(c => {
+        const parentShg = appState.shgs.find(s => s.id === c.shgId) || { name: 'SHG' };
+        const commSavings = appState.transactions
+          .filter(t => t.memberId === member.id && t.committeeId === c.id && t.type === 'SAVINGS' && t.status === 'APPROVED')
+          .reduce((sum, t) => sum + Number(t.amount), 0);
+
+        return `
+          <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between text-xs">
+            <div>
+              <span class="font-bold text-slate-800">${escapeHtml(c.name)}</span>
+              <span class="block text-[11px] text-slate-500">Under: ${escapeHtml(parentShg.name)}</span>
+            </div>
+            <div class="text-right">
+              <span class="text-[10px] text-slate-400 block font-semibold">Member Savings</span>
+              <span class="font-bold font-mono text-emerald-700">₹${commSavings.toLocaleString('en-IN')}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Loans List
+      const loansContainer = document.getElementById('profileLoansList');
+      if (memberLoans.length === 0) {
+        loansContainer.innerHTML = `<div class="p-3 text-slate-400 text-xs bg-slate-50 rounded-xl border border-slate-100">No active loans outstanding.</div>`;
+      } else {
+        loansContainer.innerHTML = memberLoans.map(l => {
+          const comm = appState.committees.find(c => c.id === l.committeeId) || { name: 'General' };
+          const progressPct = Math.round(((l.principal - l.remaining) / l.principal) * 100);
+
+          return `
+            <div class="p-3.5 bg-blue-50/50 border border-blue-200 rounded-xl space-y-2 text-xs">
+              <div class="flex justify-between items-start">
+                <div>
+                  <span class="font-mono font-bold text-blue-900">${l.id}</span>
+                  <span class="text-slate-600 block">${escapeHtml(comm.name)}</span>
+                </div>
+                <span class="px-2 py-0.5 bg-blue-100 text-blue-800 text-[10px] font-bold rounded-full">Rate: ${l.interestRate}% p.a.</span>
+              </div>
+              <div class="flex justify-between text-[11px] text-slate-600">
+                <span>Principal: ₹${l.principal.toLocaleString('en-IN')}</span>
+                <span class="font-bold text-blue-800">Remaining: ₹${l.remaining.toLocaleString('en-IN')}</span>
+              </div>
+              <div class="w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">
+                <div class="bg-blue-600 h-1.5 rounded-full" style="width: ${progressPct}%"></div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // Member personal ledger
+      const memberLedger = appState.transactions.filter(t => t.memberId === member.id).reverse();
+      const ledgerTable = document.getElementById('profileLedgerTable');
+      ledgerTable.innerHTML = memberLedger.map(t => {
+        const comm = appState.committees.find(c => c.id === t.committeeId) || { name: 'General' };
+        const statusBadge = t.status === 'APPROVED' ? 'text-emerald-600' : t.status === 'PENDING_APPROVAL' ? 'text-amber-600' : 'text-rose-600';
+        return `
+          <tr class="hover:bg-slate-50">
+            <td class="p-2.5 font-mono text-slate-500">${t.timestamp.split(' ')[0]}</td>
+            <td class="p-2.5 font-semibold text-slate-800">${t.type.replace('_', ' ')} (${escapeHtml(comm.name)})</td>
+            <td class="p-2.5 text-right font-mono font-bold text-slate-900">₹${Number(t.amount).toLocaleString('en-IN')}</td>
+            <td class="p-2.5 text-center font-bold ${statusBadge}">${t.status}</td>
+          </tr>
+        `;
+      }).join('');
+
+      openModal('modalMemberProfile');
+      lucide.createIcons();
+    }
+
+    /* ========================================================
+       FULL TRANSACTIONS LEDGER TABLE
+       ======================================================== */
+    function renderAllTransactionsTable() {
+      const filterType = document.getElementById('filterTxType') ? document.getElementById('filterTxType').value : 'ALL';
+      const tableBody = document.getElementById('fullLedgerTableBody');
+      if (!tableBody) return;
+
+      let txList = [...appState.transactions].reverse();
+      if (filterType !== 'ALL') {
+        txList = txList.filter(t => t.type === filterType);
+      }
+
+      if (txList.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="9" class="p-8 text-center text-slate-400">No transactions recorded under this filter.</td></tr>`;
+        return;
+      }
+
+      tableBody.innerHTML = txList.map(t => {
+        const member = appState.members.find(m => m.id === t.memberId) || { name: 'Unknown' };
+        const comm = appState.committees.find(c => c.id === t.committeeId) || { name: 'General', shgId: '' };
+        const shg = appState.shgs.find(s => s.id === comm.shgId) || { name: 'SHG' };
+
+        const typeColor = t.type === 'SAVINGS' ? 'bg-emerald-100 text-emerald-800' : t.type === 'LOAN_DISBURSAL' ? 'bg-blue-100 text-blue-800' : 'bg-violet-100 text-violet-800';
+        const statusBadge = t.status === 'APPROVED' 
+          ? `<span class="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full"><i data-lucide="check" class="w-3 h-3"></i> Approved</span>`
+          : t.status === 'PENDING_APPROVAL'
+          ? `<button onclick="prompt2FAAuth('${t.id}')" class="inline-flex items-center gap-1 text-[10px] font-bold text-amber-900 bg-amber-100 hover:bg-amber-200 border border-amber-300 px-2.5 py-1 rounded-full animate-pulse"><i data-lucide="key" class="w-3 h-3"></i> 2FA Sign</button>`
+          : `<span class="text-[10px] font-bold text-rose-700 bg-rose-50 border border-rose-200 px-2 py-0.5 rounded-full">Rejected</span>`;
+
+        return `
+          <tr class="hover:bg-slate-50 transition">
+            <td class="py-3 px-4 font-mono font-bold text-slate-900">
+              ${t.id}
+              <span class="block text-[10px] font-mono text-slate-400">${t.blockHash || 'UNCOMMITTED'}</span>
+            </td>
+            <td class="py-3 px-4 text-slate-500">${t.timestamp}</td>
+            <td class="py-3 px-4 font-bold text-slate-800">${escapeHtml(member.name)}</td>
+            <td class="py-3 px-4">
+              <span class="font-medium text-slate-800 block">${escapeHtml(comm.name)}</span>
+              <span class="text-[10px] text-slate-400">${escapeHtml(shg.name)}</span>
+            </td>
+            <td class="py-3 px-4">
+              <span class="px-2 py-0.5 rounded-md text-[10px] font-bold ${typeColor}">
+                ${t.type.replace('_', ' ')}
+              </span>
+            </td>
+            <td class="py-3 px-4 font-mono text-slate-600">${t.paymentMode}</td>
+            <td class="py-3 px-4 text-right font-mono font-bold text-slate-900 text-sm">₹${Number(t.amount).toLocaleString('en-IN')}</td>
+            <td class="py-3 px-4 text-center">${statusBadge}</td>
+            <td class="py-3 px-4 text-center">
+              <button onclick="printTransactionReceipt('${t.id}')" class="p-1 text-slate-400 hover:text-emerald-600 transition" title="Print / Share Receipt">
+                <i data-lucide="printer" class="w-4 h-4"></i>
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+      lucide.createIcons();
+    }
+
+    /* ========================================================
+       2FA APPROVAL QUEUE (Checker / Manager Desk)
+       ======================================================== */
+    function renderApprovalsDesk() {
+      const container = document.getElementById('pendingApprovalsList');
+      if (!container) return;
+
+      const pendingTxs = appState.transactions.filter(t => t.status === 'PENDING_APPROVAL');
+
+      if (pendingTxs.length === 0) {
+        container.innerHTML = `
+          <div class="bg-white rounded-3xl p-10 text-center border border-slate-200 shadow-sm space-y-3">
+            <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-600 mx-auto flex items-center justify-center">
+              <i data-lucide="check-check" class="w-6 h-6"></i>
+            </div>
+            <h4 class="text-base font-bold text-slate-900">All Clear! No Pending 2FA Authorizations</h4>
+            <p class="text-xs text-slate-500 max-w-md mx-auto">Every field transaction has been verified by the Manager PIN and settled into the immutable ledger.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = pendingTxs.map(t => {
+        const member = appState.members.find(m => m.id === t.memberId) || { name: 'Unknown' };
+        const comm = appState.committees.find(c => c.id === t.committeeId) || { name: 'General', shgId: '' };
+        const shg = appState.shgs.find(s => s.id === comm.shgId) || { name: 'SHG' };
+
+        return `
+          <div class="bg-white rounded-3xl p-5 border-2 border-amber-200 shadow-md flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div class="flex items-start space-x-3.5">
+              <div class="w-10 h-10 rounded-2xl bg-amber-500 text-slate-950 flex items-center justify-center font-bold flex-shrink-0">
+                <i data-lucide="shield-alert" class="w-5 h-5"></i>
+              </div>
+              <div class="space-y-1">
+                <div class="flex items-center space-x-2">
+                  <span class="font-mono font-bold text-slate-900">${t.id}</span>
+                  <span class="px-2 py-0.5 text-[10px] font-bold bg-amber-100 text-amber-900 rounded-full">Awaiting Manager PIN</span>
+                  <span class="text-xs text-slate-400">• ${t.timestamp}</span>
+                </div>
+                <h4 class="text-sm font-extrabold text-slate-800">
+                  ${t.type.replace('_', ' ')}: <span class="font-mono text-emerald-700">₹${Number(t.amount).toLocaleString('en-IN')}</span>
+                </h4>
+                <p class="text-xs text-slate-500">
+                  Member: <strong class="text-slate-700">${escapeHtml(member.name)}</strong> (${member.id}) • Committee: <strong class="text-slate-700">${escapeHtml(comm.name)}</strong> [${escapeHtml(shg.name)}]
+                </p>
+                <p class="text-[11px] text-slate-400">Initiated by: <span class="font-mono">${t.officerId}</span> via ${t.paymentMode}</p>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2 w-full md:w-auto justify-end">
+              <button onclick="prompt2FAAuth('${t.id}')" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md shadow-emerald-600/20 flex items-center space-x-1.5 transition">
+                <i data-lucide="key" class="w-4 h-4"></i>
+                <span>Review & Enter PIN</span>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+      lucide.createIcons();
+    }
+
+    /* ========================================================
+       2FA AUTHENTICATION FLOW
+       ======================================================== */
+    function prompt2FAAuth(txId) {
+      selectedPendingTxId = txId;
+      const tx = appState.transactions.find(t => t.id === txId);
+      if (!tx) return;
+
+      const member = appState.members.find(m => m.id === tx.memberId) || { name: 'Unknown' };
+      const comm = appState.committees.find(c => c.id === tx.committeeId) || { name: 'General' };
+
+      document.getElementById('auth2faTxId').textContent = tx.id;
+      document.getElementById('auth2faMember').textContent = member.name;
+      document.getElementById('auth2faCommittee').textContent = `${comm.name} (${tx.type.replace('_', ' ')})`;
+      document.getElementById('auth2faAmount').textContent = '₹' + Number(tx.amount).toLocaleString('en-IN');
+      document.getElementById('managerPinInput').value = '';
+      document.getElementById('pinErrorMsg').classList.add('hidden');
+
+      openModal('modal2FAAuth');
+      setTimeout(() => document.getElementById('managerPinInput').focus(), 150);
+    }
+
+    function handleApprovePendingTx() {
+      const pin = document.getElementById('managerPinInput').value.trim();
+      if (pin !== MANAGER_PIN) {
+        document.getElementById('pinErrorMsg').classList.remove('hidden');
+        speakText('Galat PIN. Kripya sahi PIN darj karein.');
+        return;
+      }
+
+      const tx = appState.transactions.find(t => t.id === selectedPendingTxId);
+      if (!tx) return;
+
+      // Cryptographic hash simulation (SHA-256 block reference)
+      const mockBlockHash = '0x' + Array.from({length: 12}, () => Math.floor(Math.random()*16).toString(16)).join('') + '...seal';
+
+      tx.status = 'APPROVED';
+      tx.managerPinAuth = true;
+      tx.approverId = 'MGR-LEAD-01';
+      tx.blockHash = mockBlockHash;
+
+      // Handle loan balance deduction if loan repayment
+      if (tx.type === 'LOAN_REPAYMENT' && tx.loanId) {
+        const loan = appState.loans.find(l => l.id === tx.loanId);
+        if (loan) {
+          loan.remaining = Math.max(0, loan.remaining - Number(tx.amount));
+          if (loan.remaining === 0) loan.status = 'CLOSED';
+        }
+      }
+
+      // Handle new loan activation if loan disbursal
+      if (tx.type === 'LOAN_DISBURSAL' && !tx.loanId) {
+        const newLoanId = 'LN-' + (500 + appState.loans.length + 1);
+        appState.loans.push({
+          id: newLoanId,
+          memberId: tx.memberId,
+          committeeId: tx.committeeId,
+          principal: Number(tx.amount),
+          remaining: Number(tx.amount),
+          tenureMonths: 12,
+          interestRate: 6.5,
+          status: 'ACTIVE',
+          disbursedAt: new Date().toISOString().split('T')[0]
+        });
+        tx.loanId = newLoanId;
+      }
+
+      saveState();
+      closeModal('modal2FAAuth');
+      initApp();
+
+      speakText(`Len-den safal hua. Rupees ${tx.amount} ledger mein darj ho gaya.`);
+      showToast(`Transaction ${tx.id} authorized by Manager PIN!`, 'success');
+    }
+
+    function handleRejectPendingTx() {
+      if (!confirm('Reject and cancel this pending transaction entry?')) return;
+      const tx = appState.transactions.find(t => t.id === selectedPendingTxId);
+      if (tx) {
+        tx.status = 'REJECTED';
+        saveState();
+        closeModal('modal2FAAuth');
+        initApp();
+        showToast(`Transaction ${tx.id} rejected.`, 'error');
+      }
+    }
+
+    /* ========================================================
+       TRANSACTION CREATION HANDLER
+       ======================================================== */
+    function handleCreateTransaction(e) {
+      e.preventDefault();
+      const memberId = document.getElementById('txMemberSelect').value;
+      const committeeId = document.getElementById('txCommitteeSelect').value;
+      const type = document.querySelector('input[name="txType"]:checked').value;
+      const paymentMode = document.getElementById('txPaymentMode').value;
+      const amount = Number(document.getElementById('txAmount').value);
+      const officerId = document.getElementById('txOfficerId').value;
+      const loanId = (type === 'LOAN_REPAYMENT') ? document.getElementById('txActiveLoanSelect').value : null;
+
+      if (!memberId || !committeeId || !amount) {
+        showToast('Please fill all required transaction fields.', 'error');
+        return;
+      }
+
+      const newTxId = 'TX-' + (900 + appState.transactions.length + 1);
+      const now = new Date();
+      const timestamp = now.toISOString().replace('T', ' ').slice(0, 16);
+
+      const newTx = {
+        id: newTxId,
+        memberId,
+        committeeId,
+        type,
+        loanId,
+        amount,
+        paymentMode,
+        officerId,
+        status: 'PENDING_APPROVAL',
+        managerPinAuth: false,
+        approverId: null,
+        timestamp,
+        blockHash: 'UNCOMMITTED'
       };
-      rec.start();
+
+      appState.transactions.push(newTx);
+      saveState();
+      closeModal('modalNewTransaction');
+      document.getElementById('txForm').reset();
+      initApp();
+
+      showToast(`Transaction ${newTxId} submitted. Manager 2FA PIN approval needed.`, 'info');
+      speakText('Transaction request queued for manager PIN verification.');
+
+      // Automatically switch to approvals if in manager mode
+      if (appState.role === 'MANAGER') {
+        switchTab('approvals');
+      }
     }
 
-    function viewDetail(tx) {
-      document.getElementById('detail-type').innerText = tx.type;
-      document.getElementById('detail-member').innerText = tx.member;
-      document.getElementById('detail-time').innerText = tx.time;
-      document.getElementById('detail-amount').innerText = '₹' + tx.amount.toLocaleString();
-      document.getElementById('detail-id').innerText = tx.id;
-      document.getElementById('detail-info-member').innerText = tx.member;
-      document.getElementById('detail-note').innerText = tx.note;
-      document.getElementById('detail-prevhash').innerText = tx.prevHash;
-      document.getElementById('detail-curhash').innerText = tx.hash;
-      switchTab('detail');
+    /* ========================================================
+       FORM HELPERS & DYNAMIC SELECTORS
+       ======================================================== */
+    function populateDropdowns() {
+      // 1. Transaction member select
+      const memberSelect = document.getElementById('txMemberSelect');
+      if (memberSelect) {
+        memberSelect.innerHTML = '<option value="">-- Choose Member --</option>' +
+          appState.members.map(m => `<option value="${m.id}">${m.name} (${m.citizenId})</option>`).join('');
+      }
+
+      // 2. Parent SHG for committee creation
+      const parentShgSelect = document.getElementById('newCommitteeParentShg');
+      if (parentShgSelect) {
+        parentShgSelect.innerHTML = appState.shgs.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+      }
+
+      // 3. New member committee checkboxes
+      const commCheckboxes = document.getElementById('newMemberCommitteeCheckboxes');
+      if (commCheckboxes) {
+        commCheckboxes.innerHTML = appState.committees.map(c => {
+          const shg = appState.shgs.find(s => s.id === c.shgId) || { name: 'SHG' };
+          return `
+            <label class="flex items-center space-x-2 text-slate-700 cursor-pointer">
+              <input type="checkbox" value="${c.id}" name="memberCommitteeGroup" class="rounded text-emerald-600 focus:ring-emerald-500" />
+              <span><strong>${escapeHtml(c.name)}</strong> <span class="text-slate-400">(${escapeHtml(shg.name)})</span></span>
+            </label>
+          `;
+        }).join('');
+      }
     }
 
-    function simulateTamperCheck() {
-      switchTab('tamper');
+    function onTxMemberSelected() {
+      const memberId = document.getElementById('txMemberSelect').value;
+      const detailsBox = document.getElementById('txMemberDetailsBox');
+      const commSelect = document.getElementById('txCommitteeSelect');
+
+      if (!memberId) {
+        detailsBox.classList.add('hidden');
+        commSelect.innerHTML = '<option value="">-- Choose Joined Committee --</option>';
+        return;
+      }
+
+      const member = appState.members.find(m => m.id === memberId);
+      if (!member) return;
+
+      detailsBox.classList.remove('hidden');
+      document.getElementById('txMemberNameDisp').textContent = member.name;
+      document.getElementById('txMemberIdDisp').textContent = `ID: ${member.id}`;
+
+      const joinedComms = appState.committees.filter(c => member.committeeIds.includes(c.id));
+      document.getElementById('txMemberSummaryDisp').textContent = `Active Committees: ${joinedComms.map(c => c.name).join(', ') || 'None'}`;
+
+      commSelect.innerHTML = '<option value="">-- Choose Joined Committee --</option>' +
+        joinedComms.map(c => {
+          const shg = appState.shgs.find(s => s.id === c.shgId) || { name: 'SHG' };
+          return `<option value="${c.id}">${c.name} [${shg.name}]</option>`;
+        }).join('');
+
+      onTxTypeChanged();
     }
 
-    function render() {
-      const dashList = document.getElementById('dash-recent-list');
-      dashList.innerHTML = transactions.slice(0, 2).map(tx => `
-        <div onclick='viewDetail(${JSON.stringify(tx)})' class="flex justify-between items-center text-xs py-1.5 border-b border-slate-50 last:border-0 cursor-pointer">
-          <div>
-            <p class="text-[10px] text-slate-400">${tx.time}</p>
-            <p class="font-semibold text-slate-800 mt-0.5">${tx.member} <span class="font-normal text-slate-500">· ${tx.type}</span></p>
-          </div>
-          <span class="font-bold ${tx.type === 'Loan' ? 'text-blue-700' : 'text-emerald-700'}">₹${tx.amount.toLocaleString()}</span>
-        </div>
-      `).join('');
+    function onTxTypeChanged() {
+      const type = document.querySelector('input[name="txType"]:checked').value;
+      const loanPicker = document.getElementById('txLoanPickerGroup');
+      const memberId = document.getElementById('txMemberSelect').value;
 
-      const txBody = document.getElementById('tx-table-body');
-      txBody.innerHTML = transactions.map(tx => `
-        <div onclick='viewDetail(${JSON.stringify(tx)})' class="grid grid-cols-5 p-2.5 text-[11px] items-center hover:bg-slate-50 cursor-pointer">
-          <div class="col-span-2">
-            <p class="font-semibold text-slate-800">${tx.time.split(',')[0]}</p>
-            <p class="text-[9px] text-slate-400">${tx.time.split(',')[1] || ''}</p>
-          </div>
-          <span class="font-medium text-slate-700">${tx.member}</span>
-          <span class="text-[10px] font-bold ${tx.type === 'Contribution' ? 'text-emerald-700' : tx.type === 'Loan' ? 'text-amber-700' : 'text-blue-700'}">${tx.type}</span>
-          <div class="text-right flex items-center justify-end gap-1 font-bold text-slate-900">
-            <span>${tx.amount.toLocaleString()}</span>
-            <i class="fa-solid fa-lock text-[9px] text-emerald-600"></i>
-          </div>
-        </div>
-      `).join('');
-
-      const loanList = document.getElementById('loan-card-list');
-      loanList.innerHTML = members.filter(m => m.loan > 0).map(m => `
-        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-3">
-          <div class="flex items-center gap-3">
-            <span class="text-2xl">${m.avatar}</span>
-            <div>
-              <h3 class="font-bold text-sm text-slate-800">${m.name}</h3>
-              <p class="text-[10px] text-slate-400">Member ID: ${m.id}</p>
-            </div>
-          </div>
-          <div class="grid grid-cols-3 gap-2 bg-slate-50 p-2.5 rounded-xl text-center">
-            <div><p class="text-[9px] text-slate-400 font-medium">Loan</p><p class="text-xs font-black text-slate-800">₹${m.loan.toLocaleString()}</p></div>
-            <div><p class="text-[9px] text-slate-400 font-medium">Repaid</p><p class="text-xs font-black text-emerald-700">₹${m.repaid.toLocaleString()}</p></div>
-            <div><p class="text-[9px] text-slate-400 font-medium">Outstanding</p><p class="text-xs font-black text-rose-600">₹${(m.loan - m.repaid).toLocaleString()}</p></div>
-          </div>
-          <div>
-            <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
-              <div class="bg-emerald-600 h-full" style="width: ${(m.repaid / m.loan) * 100}%"></div>
-            </div>
-            <p class="text-right text-[9px] text-slate-400 font-bold mt-1">${Math.round((m.repaid / m.loan) * 100)}% Repaid</p>
-          </div>
-        </div>
-      `).join('');
-
-      const memberList = document.getElementById('member-card-list');
-      memberList.innerHTML = members.map(m => `
-        <div class="bg-white p-3.5 rounded-2xl border border-slate-200 flex items-center justify-between">
-          <div class="flex items-center gap-3">
-            <span class="text-2xl">${m.avatar}</span>
-            <div>
-              <h4 class="font-bold text-xs text-slate-800">${m.name}</h4>
-              <p class="text-[10px] text-slate-400">${m.id}</p>
-            </div>
-          </div>
-          <div class="text-right">
-            <p class="text-[10px] text-slate-400">Savings</p>
-            <p class="text-xs font-bold text-emerald-700">₹${m.savings.toLocaleString()}</p>
-          </div>
-        </div>
-      `).join('');
+      if (type === 'LOAN_REPAYMENT' && memberId) {
+        loanPicker.classList.remove('hidden');
+        const activeLoans = appState.loans.filter(l => l.memberId === memberId && l.status === 'ACTIVE');
+        const select = document.getElementById('txActiveLoanSelect');
+        select.innerHTML = activeLoans.map(l => {
+          return `<option value="${l.id}">${l.id} - Remaining ₹${l.remaining.toLocaleString('en-IN')}</option>`;
+        }).join('');
+        if (activeLoans.length === 0) {
+          select.innerHTML = '<option value="">No Active Loans Found for Member</option>';
+        }
+      } else {
+        loanPicker.classList.add('hidden');
+      }
     }
 
-    render();
+    function onTxCommitteeSelected() {
+      // Refresh loan selector if needed
+      onTxTypeChanged();
+    }
+
+    /* ========================================================
+       CREATION HANDLERS FOR SHG, COMMITTEE, MEMBER
+       ======================================================== */
+    function handleEnrollMember(e) {
+      e.preventDefault();
+      const name = document.getElementById('newMemberName').value.trim();
+      const citizenRaw = document.getElementById('newMemberCitizenId').value.trim();
+      const phone = document.getElementById('newMemberPhone').value.trim();
+
+      const selectedCommCheckboxes = Array.from(document.querySelectorAll('input[name="memberCommitteeGroup"]:checked')).map(cb => cb.value);
+
+      if (selectedCommCheckboxes.length === 0) {
+        showToast('Please assign at least one committee to this member.', 'error');
+        return;
+      }
+
+      // Citizen ID masking for privacy
+      const maskedId = citizenRaw.length >= 4 
+        ? '•••• •••• ' + citizenRaw.slice(-4) 
+        : '•••• •••• 9999';
+
+      const newMember = {
+        id: 'MEM-' + (8800 + appState.members.length + 1),
+        name,
+        citizenId: maskedId,
+        phone,
+        committeeIds: selectedCommCheckboxes,
+        joinedDate: new Date().toISOString().split('T')[0]
+      };
+
+      appState.members.push(newMember);
+      saveState();
+      closeModal('modalNewMember');
+      document.getElementById('memberEnrollForm').reset();
+      initApp();
+
+      showToast(`Member ${name} enrolled successfully!`, 'success');
+      speakText(`${name} ka safal panjikaran ho gaya.`);
+    }
+
+    function handleCreateShg(e) {
+      e.preventDefault();
+      const name = document.getElementById('newShgName').value.trim();
+      const location = document.getElementById('newShgLocation').value.trim();
+      const leader = document.getElementById('newShgLeader').value.trim();
+
+      const newShg = {
+        id: 'SHG-' + (100 + appState.shgs.length + 1),
+        name,
+        location,
+        leader,
+        createdDate: new Date().toISOString().split('T')[0]
+      };
+
+      appState.shgs.push(newShg);
+      saveState();
+      closeModal('modalNewShg');
+      document.getElementById('shgCreateForm').reset();
+      initApp();
+
+      showToast(`SHG "${name}" created!`, 'success');
+    }
+
+    function handleCreateCommittee(e) {
+      e.preventDefault();
+      const shgId = document.getElementById('newCommitteeParentShg').value;
+      const name = document.getElementById('newCommitteeName').value.trim();
+      const purpose = document.getElementById('newCommitteePurpose').value.trim();
+
+      const newComm = {
+        id: 'COM-' + (appState.committees.length + 1),
+        shgId,
+        name,
+        purpose
+      };
+
+      appState.committees.push(newComm);
+      saveState();
+      closeModal('modalNewCommittee');
+      document.getElementById('committeeCreateForm').reset();
+      initApp();
+
+      showToast(`Committee "${name}" added to SHG!`, 'success');
+    }
+
+    /* ========================================================
+       UTILITIES, MODAL CONTROLS, TOASTS & SPEECH
+       ======================================================== */
+    function openModal(id) {
+      document.getElementById(id).classList.remove('hidden');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.add('hidden');
+    }
+
+    function openNewTransactionModal() {
+      populateDropdowns();
+      openModal('modalNewTransaction');
+      lucide.createIcons();
+    }
+
+    function openNewMemberModal() {
+      populateDropdowns();
+      openModal('modalNewMember');
+      lucide.createIcons();
+    }
+
+    function openNewShgModal() {
+      openModal('modalNewShg');
+    }
+
+    function openNewCommitteeModal() {
+      populateDropdowns();
+      openModal('modalNewCommittee');
+    }
+
+    function getInitials(name) {
+      if (!name) return 'SH';
+      const parts = name.split(' ');
+      if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+      return name.slice(0, 2).toUpperCase();
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      const bg = type === 'success' ? 'bg-emerald-800 text-white' : type === 'error' ? 'bg-rose-800 text-white' : 'bg-slate-900 text-white';
+      
+      toast.className = `${bg} px-4 py-3 rounded-2xl shadow-xl border border-white/10 text-xs font-semibold flex items-center space-x-2 transition-all transform duration-300 pointer-events-auto`;
+      toast.innerHTML = `<span>${message}</span>`;
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(10px)';
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+
+    function speakText(text) {
+      if (!appState.voiceFeedback) return;
+      if ('speechSynthesis' in window) {
+        try {
+          window.speechSynthesis.cancel();
+          const utterance = new SpeechSynthesisUtterance(text);
+          utterance.rate = 1.0;
+          utterance.pitch = 1.0;
+          window.speechSynthesis.speak(utterance);
+        } catch (e) {
+          console.log('Speech synthesis inactive:', e);
+        }
+      }
+    }
+
+    function toggleAudioVoicePrompt() {
+      appState.voiceFeedback = !appState.voiceFeedback;
+      saveState();
+      const btn = document.getElementById('voiceToggleBtn');
+      if (appState.voiceFeedback) {
+        btn.innerHTML = '<i data-lucide="volume-2" class="w-5 h-5 text-emerald-400"></i>';
+        showToast('Voice Audio Feedback Enabled', 'info');
+        speakText('Voice feedback enabled.');
+      } else {
+        btn.innerHTML = '<i data-lucide="volume-x" class="w-5 h-5 text-slate-400"></i>';
+        showToast('Voice Audio Feedback Muted', 'info');
+      }
+      lucide.createIcons();
+    }
+
+    function printTransactionReceipt(txId) {
+      const tx = appState.transactions.find(t => t.id === txId);
+      if (!tx) return;
+      const member = appState.members.find(m => m.id === tx.memberId) || { name: 'Member' };
+      const comm = appState.committees.find(c => c.id === tx.committeeId) || { name: 'Committee' };
+
+      const receiptWindow = window.open('', '_blank', 'width=600,height=600');
+      receiptWindow.document.write(`
+        <html>
+        <head>
+          <title>VISHWAS Receipt - ${tx.id}</title>
+          <style>
+            body { font-family: sans-serif; padding: 30px; color: #1e293b; }
+            .header { text-align: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 15px; }
+            .title { font-size: 20px; font-weight: bold; color: #047857; margin: 0; }
+            .row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed #cbd5e1; font-size: 14px; }
+            .total { font-size: 18px; font-weight: bold; color: #0f172a; margin-top: 15px; }
+            .seal { margin-top: 30px; text-align: center; font-size: 12px; color: #059669; font-weight: bold; }
+          </style>
+        </head>
+        <body>
+          <div class="header">
+            <h2 class="title">VISHWAS SHG LEDGER RECEIPT</h2>
+            <p style="font-size: 12px; color: #64748b;">Government & SHG Dual-Key Certified Transaction</p>
+          </div>
+          <div style="margin-top: 20px;">
+            <div class="row"><span>Receipt / Tx ID:</span><strong>${tx.id}</strong></div>
+            <div class="row"><span>Date & Time:</span><span>${tx.timestamp}</span></div>
+            <div class="row"><span>Member Name:</span><strong>${member.name}</strong></div>
+            <div class="row"><span>Committee:</span><span>${comm.name}</span></div>
+            <div class="row"><span>Transaction Type:</span><span>${tx.type.replace('_', ' ')}</span></div>
+            <div class="row"><span>Payment Channel:</span><span>${tx.paymentMode}</span></div>
+            <div class="row"><span>Ledger Block Hash:</span><span style="font-family: monospace;">${tx.blockHash}</span></div>
+            <div class="row total"><span>Amount Settled:</span><span>₹${Number(tx.amount).toLocaleString('en-IN')}</span></div>
+          </div>
+          <div class="seal">
+            ✓ 2FA MANAGER PIN AUTHENTICATED & SEALED
+          </div>
+          <script>window.print();<\/script>
+        </body>
+        </html>
+      `);
+      receiptWindow.document.close();
+    }
+
+    function exportLedgerCSV() {
+      let csv = 'Transaction_ID,Timestamp,Member_Name,Committee_ID,Type,Payment_Mode,Amount_INR,Status,Block_Hash\n';
+      appState.transactions.forEach(t => {
+        const m = appState.members.find(x => x.id === t.memberId) || { name: 'Unknown' };
+        csv += `"${t.id}","${t.timestamp}","${m.name}","${t.committeeId}","${t.type}","${t.paymentMode}",${t.amount},"${t.status}","${t.blockHash}"\n`;
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.setAttribute('href', url);
+      a.setAttribute('download', `VISHWAS_SHG_Ledger_${new Date().toISOString().slice(0,10)}.csv`);
+      a.click();
+      showToast('Ledger CSV exported successfully', 'success');
+    }
   </script>
 </body>
 </html>
